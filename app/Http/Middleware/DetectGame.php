@@ -54,6 +54,15 @@ class DetectGame
      */
     public function handle(Request $request, Closure $next): Response
     {
+        // Onboarding route'larında oyun algılamayı atla (kullanıcı oyun seçecek)
+        if ($request->is('onboarding') || $request->is('onboarding/*')) {
+            // Sadece step0 için game context'i temizle
+            if ($request->is('onboarding') && auth()->check() && !auth()->user()->game_id) {
+                $this->clearGameContext();
+            }
+            return $next($request);
+        }
+        
         // Subdomain'i al
         $host = $request->getHost();
         $subdomain = $this->extractSubdomain($host);
