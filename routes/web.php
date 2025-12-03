@@ -60,10 +60,8 @@ if ($isLocalhost) {
         require __DIR__.'/main.php';
     });
     
-    // Oyun subdomain'leri (pubg.takimsistemi.test, cod.takimsistemi.test, vb.)
-    Route::domain('{game}.' . $domain)
-        ->middleware(['web', 'game'])
-        ->group(base_path('routes/game-subdomain.php'));
+    // Oyun subdomain'leri için DetectGame middleware otomatik çalışacak
+    // Tüm route'lar aşağıda tanımlı
 }
 
 // Localhost veya subdomain için ortak route'lar
@@ -403,85 +401,13 @@ Route::middleware(['auth', 'admin', 'log.admin'])->prefix('admin')->name('admin.
         Route::get('/statistics', [AdminReportController::class, 'apiStatistics'])->name('statistics');
     });
     
-    // LFG İlanları Yönetimi
-    Route::middleware(['permission:lfg.view'])->group(function () {
-        Route::get('/lfg-posts', [\App\Http\Controllers\Admin\LfgPostController::class, 'index'])->name('lfg-posts.index');
-        Route::get('/lfg-posts/{id}', [\App\Http\Controllers\Admin\LfgPostController::class, 'show'])->name('lfg-posts.show');
-    });
+    // LFG İlanları Yönetimi - ESKİ TANIMLAR SİLİNDİ (Aşağıda yeni prefix grubu var)
     
-    Route::middleware(['permission:lfg.edit'])->group(function () {
-        Route::get('/lfg-posts/{id}/edit', [\App\Http\Controllers\Admin\LfgPostController::class, 'edit'])->name('lfg-posts.edit');
-        Route::put('/lfg-posts/{id}', [\App\Http\Controllers\Admin\LfgPostController::class, 'update'])->name('lfg-posts.update');
-        Route::post('/lfg-posts/{id}/toggle-featured', [\App\Http\Controllers\Admin\LfgPostController::class, 'toggleFeatured'])->name('lfg-posts.toggle-featured');
-        Route::post('/lfg-posts/{id}/close', [\App\Http\Controllers\Admin\LfgPostController::class, 'close'])->name('lfg-posts.close');
-        Route::post('/lfg-posts/bulk-close', [\App\Http\Controllers\Admin\LfgPostController::class, 'bulkClose'])->name('lfg-posts.bulk-close');
-    });
+    // Klan Yönetimi - ESKİ TANIMLAR SİLİNDİ (Aşağıda yeni prefix grubu var)
     
-    Route::middleware(['permission:lfg.delete'])->group(function () {
-        Route::delete('/lfg-posts/{id}', [\App\Http\Controllers\Admin\LfgPostController::class, 'destroy'])->name('lfg-posts.destroy');
-        Route::delete('/lfg-posts/bulk-delete', [\App\Http\Controllers\Admin\LfgPostController::class, 'bulkDelete'])->name('lfg-posts.bulk-delete');
-    });
+    // Rehber Yönetimi - ESKİ TANIMLAR SİLİNDİ (Aşağıda yeni prefix grubu var)
     
-    // Klan Yönetimi
-    Route::middleware(['permission:clans.view'])->group(function () {
-        Route::get('/clans', [AdminClanController::class, 'index'])->name('clans.index');
-        Route::get('/clans/applications', [AdminClanController::class, 'applications'])->name('clans.applications');
-        Route::get('/clans/{clan}', [AdminClanController::class, 'show'])->name('clans.show');
-    });
-    
-    Route::middleware(['permission:clans.edit'])->group(function () {
-        Route::post('/clans/applications/{id}/update-status', [AdminClanController::class, 'updateApplicationStatus'])->name('clans.update-application-status');
-        Route::get('/clans/{clan}/edit', [AdminClanController::class, 'edit'])->name('clans.edit');
-        Route::put('/clans/{clan}', [AdminClanController::class, 'update'])->name('clans.update');
-    });
-    
-    Route::middleware(['permission:clans.verify'])->group(function () {
-        Route::post('/clans/{clan}/toggle-verified', [AdminClanController::class, 'toggleVerified'])->name('clans.toggle-verified');
-        Route::put('/clans/{clan}/verify', [AdminClanController::class, 'verify'])->name('clans.verify');
-    });
-    
-    Route::delete('/clans/{clan}', [AdminClanController::class, 'destroy'])
-        ->middleware(['permission:clans.delete'])
-        ->name('clans.destroy');
-    
-    // Rehber Yönetimi
-    Route::middleware(['permission:guides.view'])->group(function () {
-        Route::get('/guides', [\App\Http\Controllers\Admin\GuideController::class, 'index'])->name('guides.index');
-        Route::get('/guides/{id}', [\App\Http\Controllers\Admin\GuideController::class, 'show'])->name('guides.show');
-    });
-    
-    Route::middleware(['permission:guides.edit'])->group(function () {
-        Route::get('/guides/{id}/edit', [\App\Http\Controllers\Admin\GuideController::class, 'edit'])->name('guides.edit');
-        Route::put('/guides/{id}', [\App\Http\Controllers\Admin\GuideController::class, 'update'])->name('guides.update');
-        Route::post('/guides/{id}/toggle-published', [\App\Http\Controllers\Admin\GuideController::class, 'togglePublished'])->name('guides.toggle-published');
-        Route::post('/guides/{id}/toggle-featured', [\App\Http\Controllers\Admin\GuideController::class, 'toggleFeatured'])->name('guides.toggle-featured');
-        Route::post('/guides/bulk-publish', [\App\Http\Controllers\Admin\GuideController::class, 'bulkPublish'])->name('guides.bulk-publish');
-        Route::post('/guides/bulk-unpublish', [\App\Http\Controllers\Admin\GuideController::class, 'bulkUnpublish'])->name('guides.bulk-unpublish');
-    });
-    
-    Route::middleware(['permission:guides.delete'])->group(function () {
-        Route::delete('/guides/{id}', [\App\Http\Controllers\Admin\GuideController::class, 'destroy'])->name('guides.destroy');
-        Route::delete('/guides/bulk-delete', [\App\Http\Controllers\Admin\GuideController::class, 'bulkDelete'])->name('guides.bulk-delete');
-    });
-    
-    // Topluluk Gönderileri Yönetimi
-    Route::middleware(['permission:community.view'])->group(function () {
-        Route::get('/community-posts', [\App\Http\Controllers\Admin\CommunityPostController::class, 'index'])->name('community-posts.index');
-        Route::get('/community-posts/{id}', [\App\Http\Controllers\Admin\CommunityPostController::class, 'show'])->name('community-posts.show');
-    });
-    
-    Route::middleware(['permission:community.edit'])->group(function () {
-        Route::get('/community-posts/{id}/edit', [\App\Http\Controllers\Admin\CommunityPostController::class, 'edit'])->name('community-posts.edit');
-        Route::put('/community-posts/{id}', [\App\Http\Controllers\Admin\CommunityPostController::class, 'update'])->name('community-posts.update');
-        Route::post('/community-posts/{id}/toggle-featured', [\App\Http\Controllers\Admin\CommunityPostController::class, 'toggleFeatured'])->name('community-posts.toggle-featured');
-        Route::post('/community-posts/bulk-feature', [\App\Http\Controllers\Admin\CommunityPostController::class, 'bulkFeature'])->name('community-posts.bulk-feature');
-        Route::post('/community-posts/bulk-unfeature', [\App\Http\Controllers\Admin\CommunityPostController::class, 'bulkUnfeature'])->name('community-posts.bulk-unfeature');
-    });
-    
-    Route::middleware(['permission:community.delete'])->group(function () {
-        Route::delete('/community-posts/{id}', [\App\Http\Controllers\Admin\CommunityPostController::class, 'destroy'])->name('community-posts.destroy');
-        Route::delete('/community-posts/bulk-delete', [\App\Http\Controllers\Admin\CommunityPostController::class, 'bulkDelete'])->name('community-posts.bulk-delete');
-    });
+    // Topluluk Gönderileri Yönetimi - ESKİ TANIMLAR SİLİNDİ (Aşağıda yeni prefix grubu var)
     
     // XP & Badges Yönetimi
     Route::middleware(['permission:xp.view'])->group(function () {
