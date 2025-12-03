@@ -30,6 +30,43 @@ use App\Http\Controllers\Admin\SeoController;
 use App\Http\Controllers\Admin\QueueController;
 use App\Http\Controllers\PageController;
 
+/*
+|--------------------------------------------------------------------------
+| Multi-Game Platform Routes
+|--------------------------------------------------------------------------
+|
+| Bu route dosyası subdomain tabanlı multi-game routing destekler.
+| - Ana domain (takimsistemi.com) → main.php route'ları
+| - Oyun subdomains (pubg.takimsistemi.com) → Aşağıdaki route'lar
+|
+*/
+
+// Ana domain route'ları (Landing Page)
+$domain = config('app.domain', 'takimsistemi.test');
+
+// Localhost kontrolü
+$host = request()->getHost();
+$isLocalhost = in_array($host, ['localhost', '127.0.0.1']) || 
+               str_contains($host, 'localhost:') || 
+               str_contains($host, '127.0.0.1:');
+
+if ($isLocalhost) {
+    // Localhost: Ana sayfa için main.php route'larını yükle
+    require __DIR__.'/main.php';
+} else {
+    // Production: Subdomain routing
+    // Ana domain (takimsistemi.test) için landing page
+    Route::domain($domain)->group(function () {
+        require __DIR__.'/main.php';
+    });
+    
+    // Oyun subdomain'leri (pubg.takimsistemi.test, cod.takimsistemi.test, vb.)
+    Route::domain('{game}.' . $domain)
+        ->middleware(['web', 'game'])
+        ->group(base_path('routes/game-subdomain.php'));
+}
+
+// Localhost veya subdomain için ortak route'lar
 // Ana sayfa
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
@@ -192,6 +229,7 @@ Route::get('/profil/{user}', [\App\Http\Controllers\Web\ProfileController::class
 
 Route::middleware(['auth', 'check.onboarding'])->group(function () {
     Route::get('/profilim', [\App\Http\Controllers\Web\ProfileController::class, 'index'])->name('profile.index');
+    Route::get('/profilim/tum-oyunlar', [\App\Http\Controllers\Web\ProfileController::class, 'multiGameDashboard'])->name('profile.multi-game');
     Route::get('/profilim/duzenle', [\App\Http\Controllers\Web\ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profilim/duzenle', [\App\Http\Controllers\Web\ProfileController::class, 'update'])->name('profile.update');
     Route::post('/profilim/avatar', [\App\Http\Controllers\Web\ProfileController::class, 'uploadAvatar'])->name('profile.avatar.upload');

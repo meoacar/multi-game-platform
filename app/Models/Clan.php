@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\GameScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -9,13 +10,15 @@ use Illuminate\Support\Str;
 
 /**
  * Clan Model
- * Oyuncu klanları
+ * Oyuncu klanları - Oyuna özel
  * 
  * İlişkiler:
  * - belongsTo: User (lider)
  * - belongsTo: Game
  * - belongsToMany: User (üyeler - pivot: clan_members)
  * - hasMany: ClanApplication (başvurular)
+ * 
+ * Global Scope: GameScope (otomatik game_id filtreleme)
  */
 class Clan extends Model
 {
@@ -48,17 +51,32 @@ class Clan extends Model
 
     /**
      * Model boot
-     * Slug otomatik oluştur
+     * GameScope ekle, slug ve game_id otomatik ata
      */
     protected static function boot()
     {
         parent::boot();
 
         static::creating(function ($clan) {
+            // Slug otomatik oluştur
             if (empty($clan->slug)) {
                 $clan->slug = Str::slug($clan->name);
             }
+
+            // Otomatik game_id ata
+            if (!$clan->game_id && session('game_id')) {
+                $clan->game_id = session('game_id');
+            }
         });
+    }
+
+    /**
+     * Model booted
+     * Global scope ekle
+     */
+    protected static function booted(): void
+    {
+        static::addGlobalScope(new GameScope());
     }
 
     /**
@@ -152,6 +170,47 @@ class Clan extends Model
     {
         $this->update([
             'member_count' => $this->members()->count()
+        ]);
+    }
+
+    /**
+     * Scope: Belirli bir oyuna göre filtrele
+     * 
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param int $gameId
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeForGame($query, int $gameId)
+    {
+        return $query->where('game_id', $gameId);
+    }
+
+    /**
+     * Scope: Eager load ile ilişkileri yükle (N+1 prevention - Requirements 15.3)
+     * 
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeWithRelations($query)
+    {
+        return $query->with([
+            'leader.profile',
+            'game',
+            'members.profile'
+        ]);
+    }
+
+    /**
+     * Scope: Sadece temel ilişkileri yükle (hafif versiyon)
+     * 
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeWithBasicRelations($query)
+    {
+        return $query->with([
+            'leader.profile',
+            'game'
         ]);
     }
 }

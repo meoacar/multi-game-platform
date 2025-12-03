@@ -95,6 +95,10 @@
 
                         <!-- Quick Actions -->
                         <div class="flex flex-col gap-3">
+                            <a href="{{ route('profile.multi-game') }}" 
+                               class="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl font-bold hover:from-purple-600 hover:to-pink-600 transition-all transform hover:scale-105 shadow-lg text-center">
+                                🎮 Tüm Oyunlar
+                            </a>
                             <a href="{{ route('profile.edit') }}" 
                                class="px-6 py-3 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-xl font-bold hover:from-orange-600 hover:to-red-600 transition-all transform hover:scale-105 shadow-lg text-center">
                                 ✏️ Düzenle

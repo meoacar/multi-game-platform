@@ -1,0 +1,36 @@
+/* 🏆 League of Legends Teması */
+
+:root {
+    --game-primary: #C89B3C;
+    --game-secondary: #0A323C;
+    --game-accent: #0AC8B9;
+    --game-dark: #0A323C;
+}
+
+body {
+    background: linear-gradient(135deg, #0A323C 0%, #1C1C1F 100%);
+}
+
+.btn-game-primary {
+    background: linear-gradient(135deg, #C89B3C, #F0E6D2);
+    color: #0A323C;
+    box-shadow: 0 4px 15px rgba(200, 155, 60, 0.4);
+}
+
+.btn-game-primary:hover {
+    box-shadow: 0 6px 20px rgba(200, 155, 60, 0.6);
+}
+
+.card-game {
+    border: 2px solid var(--game-primary);
+    background: rgba(200, 155, 60, 0.05);
+}
+
+.badge-game {
+    background: var(--game-primary);
+    color: #0A323C;
+}
+
+.hero-game {
+    background: linear-gradient(135deg, rgba(200, 155, 60, 0.9), rgba(10, 50, 60, 0.9));
+}

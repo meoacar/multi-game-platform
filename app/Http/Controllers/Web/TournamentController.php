@@ -21,7 +21,8 @@ class TournamentController extends Controller
      */
     public function index(Request $request): View
     {
-        $query = Tournament::with(['organizer.profile', 'game', 'teams']);
+        // Eager loading ile N+1 query prevention (Requirements 15.3)
+        $query = Tournament::withBasicRelations();
 
         // Filtreleme
         if ($request->has('status')) {
@@ -33,7 +34,11 @@ class TournamentController extends Controller
         }
 
         $tournaments = $query->latest()->paginate(12);
-        $games = Game::where('is_active', true)->get();
+        
+        // Aktif oyunları cache'den al (Requirements 15.1)
+        $games = \Cache::remember('active_games', 3600, function () {
+            return Game::where('is_active', true)->get();
+        });
 
         return view('tournaments.index', compact('tournaments', 'games'));
     }
@@ -43,7 +48,8 @@ class TournamentController extends Controller
      */
     public function show(string $slug): View
     {
-        $tournament = Tournament::with(['organizer.profile', 'game', 'teams.captain.profile'])
+        // Tüm ilişkileri eager load et (Requirements 15.3)
+        $tournament = Tournament::withRelations()
             ->where('slug', $slug)
             ->firstOrFail();
 
@@ -55,7 +61,11 @@ class TournamentController extends Controller
      */
     public function create(): View
     {
-        $games = Game::where('is_active', true)->get();
+        // Aktif oyunları cache'den al (Requirements 15.1)
+        $games = \Cache::remember('active_games', 3600, function () {
+            return Game::where('is_active', true)->get();
+        });
+        
         return view('tournaments.create', compact('games'));
     }
 
@@ -164,7 +174,8 @@ class TournamentController extends Controller
      */
     public function bracket(string $slug): View
     {
-        $tournament = Tournament::with(['organizer', 'teams.captain'])
+        // Eager loading ile N+1 prevention (Requirements 15.3)
+        $tournament = Tournament::with(['organizer.profile', 'game', 'teams.captain.profile'])
             ->where('slug', $slug)
             ->firstOrFail();
 

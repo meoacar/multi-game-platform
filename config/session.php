@@ -154,9 +154,13 @@ return [
     | available to. By default, the cookie will be available to the root
     | domain and all subdomains. Typically, this shouldn't be changed.
     |
+    | For multi-game platform with subdomains (pubg.takimsistemi.com, etc.),
+    | we use a wildcard domain (.takimsistemi.com) to share sessions across
+    | all game subdomains.
+    |
     */
 
-    'domain' => env('SESSION_DOMAIN'),
+    'domain' => env('SESSION_DOMAIN', null),
 
     /*
     |--------------------------------------------------------------------------

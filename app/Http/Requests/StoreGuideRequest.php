@@ -14,7 +14,7 @@ class StoreGuideRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'game_id' => 'nullable|exists:games,id',
+            'game_id' => ['nullable', new \App\Rules\ValidGameId()],
             'title' => 'required|string|max:255',
             'content' => 'required|string|min:100',
             'is_published' => 'boolean',

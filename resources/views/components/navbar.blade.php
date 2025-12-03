@@ -15,6 +15,9 @@
 
             <!-- Desktop Menu -->
             <div class="hidden lg:flex items-center space-x-1">
+                <!-- Game Switcher Component -->
+                <x-game-switcher />
+                
                 <a href="{{ route('home') }}" class="px-3 py-2 text-gray-300 hover:text-white hover:bg-white/5 rounded-xl font-semibold transition-all {{ request()->routeIs('home') ? 'bg-white/5 text-white' : '' }}">
                     🏠 Ana Sayfa
                 </a>
@@ -171,6 +174,11 @@
 
         <!-- Mobile Menu -->
         <div x-show="mobileMenu" x-transition class="lg:hidden py-4 space-y-2 border-t border-white/10">
+            <!-- Game Switcher Component (Mobile) -->
+            <div class="px-4 pb-2 border-b border-white/10 mb-2">
+                <x-game-switcher />
+            </div>
+            
             <a href="{{ route('home') }}" class="block px-4 py-2 rounded-lg hover:bg-white/5 transition-colors {{ request()->routeIs('home') ? 'bg-white/5 text-white' : '' }}">🏠 Ana Sayfa</a>
             <a href="{{ route('lfg.index') }}" class="block px-4 py-2 rounded-lg hover:bg-white/5 transition-colors {{ request()->routeIs('lfg.*') ? 'bg-white/5 text-white' : '' }}">🎯 İlanlar</a>
             <a href="{{ route('matchmaking.index') }}" class="block px-4 py-2 rounded-lg hover:bg-white/5 transition-colors {{ request()->routeIs('matchmaking.*') ? 'bg-white/5 text-white' : '' }}">🎮 Eşleşme Bul</a>

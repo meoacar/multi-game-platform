@@ -1,0 +1,36 @@
+/* 🔫 CS:GO Teması */
+
+:root {
+    --game-primary: #F7B73C;
+    --game-secondary: #1B2838;
+    --game-accent: #66C0F4;
+    --game-dark: #1B2838;
+}
+
+body {
+    background: linear-gradient(135deg, #1B2838 0%, #2A475E 100%);
+}
+
+.btn-game-primary {
+    background: linear-gradient(135deg, #F7B73C, #FFA000);
+    color: #1B2838;
+    box-shadow: 0 4px 15px rgba(247, 183, 60, 0.4);
+}
+
+.btn-game-primary:hover {
+    box-shadow: 0 6px 20px rgba(247, 183, 60, 0.6);
+}
+
+.card-game {
+    border: 2px solid var(--game-primary);
+    background: rgba(247, 183, 60, 0.05);
+}
+
+.badge-game {
+    background: var(--game-primary);
+    color: #1B2838;
+}
+
+.hero-game {
+    background: linear-gradient(135deg, rgba(247, 183, 60, 0.9), rgba(27, 40, 56, 0.9));
+}

@@ -56,6 +56,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Application Domain
+    |--------------------------------------------------------------------------
+    |
+    | This is the base domain for the multi-game platform. Subdomains will
+    | be created for each game (e.g., pubg.takimsistemi.com).
+    |
+    */
+
+    'domain' => env('APP_DOMAIN', 'takimsistemi.com'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Application Timezone
     |--------------------------------------------------------------------------
     |
@@ -122,5 +134,20 @@ return [
         'driver' => env('APP_MAINTENANCE_DRIVER', 'file'),
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Multi-Game Platform Configuration
+    |--------------------------------------------------------------------------
+    |
+    | These settings are used for the multi-game platform functionality.
+    | The domain is used to construct subdomain URLs for each game.
+    | The url_protocol determines whether to use http or https.
+    |
+    */
+
+    'domain' => env('APP_DOMAIN', 'squadbul.com'),
+    
+    'url_protocol' => env('APP_URL_PROTOCOL', 'https'),
 
 ];

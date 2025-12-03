@@ -9,10 +9,15 @@ use Illuminate\Support\Str;
 /**
  * Game Model
  * 
- * Oyun listesi - PUBG Mobile, Call of Duty Mobile, MLBB, etc.
+ * Multi-game platform için oyun yönetimi
  * 
  * İlişkiler:
- * - hasMany: LfgPost, Clan, GuidePost
+ * - hasMany: Tournament, Clan, LfgPost, Badge, GuidePost, CommunityPost
+ * 
+ * Özellikler:
+ * - Subdomain routing için slug
+ * - Oyuna özel tema ayarları (settings JSON)
+ * - Aktif/inaktif durum kontrolü
  */
 class Game extends Model
 {
@@ -26,9 +31,12 @@ class Game extends Model
     protected $fillable = [
         'name',
         'slug',
+        'logo',
         'icon',
         'description',
+        'status',
         'is_active',
+        'settings',
         'order',
     ];
 
@@ -40,6 +48,7 @@ class Game extends Model
     protected $casts = [
         'is_active' => 'boolean',
         'order' => 'integer',
+        'settings' => 'array',
     ];
 
     /**
@@ -57,15 +66,23 @@ class Game extends Model
     }
 
     /**
-     * Sadece aktif oyunları getir
+     * Scope: Sadece aktif oyunları getir
      */
     public function scopeActive($query)
     {
-        return $query->where('is_active', true);
+        return $query->where('status', 'active');
     }
 
     /**
-     * Oyunları sıralı getir
+     * Scope: Slug'a göre oyun bul
+     */
+    public function scopeBySlug($query, string $slug)
+    {
+        return $query->where('slug', $slug);
+    }
+
+    /**
+     * Scope: Oyunları sıralı getir
      */
     public function scopeOrdered($query)
     {
@@ -73,12 +90,62 @@ class Game extends Model
     }
 
     /**
-     * Oyun ikonunun URL'ini al
+     * Helper: Oyun tema rengini al
+     */
+    public function getThemeColor(): string
+    {
+        return $this->settings['theme_color'] ?? '#FF6B00';
+    }
+
+    /**
+     * Helper: Maksimum takım boyutunu al
+     */
+    public function getMaxTeamSize(): int
+    {
+        return $this->settings['max_team_size'] ?? 4;
+    }
+
+    /**
+     * Helper: Desteklenen platformları al
+     */
+    public function getPlatforms(): array
+    {
+        return $this->settings['platforms'] ?? [];
+    }
+
+    /**
+     * Helper: Oyun özelliklerini kontrol et
+     */
+    public function hasFeature(string $feature): bool
+    {
+        return $this->settings['features'][$feature] ?? false;
+    }
+
+    /**
+     * Accessor: Oyun logo URL'ini al
+     */
+    public function getLogoUrlAttribute(): string
+    {
+        if ($this->logo) {
+            return asset('storage/' . $this->logo);
+        }
+
+        // Varsayılan logo
+        return asset('images/default-game-logo.png');
+    }
+
+    /**
+     * Accessor: Oyun ikonunun URL'ini al (backward compatibility)
      */
     public function getIconUrlAttribute(): string
     {
         if ($this->icon) {
             return asset('storage/' . $this->icon);
+        }
+
+        // Logo varsa onu kullan
+        if ($this->logo) {
+            return $this->logo_url;
         }
 
         // Varsayılan ikon
@@ -90,11 +157,11 @@ class Game extends Model
      */
     
     /**
-     * Oyuna ait LFG ilanları
+     * Oyuna ait turnuvalar
      */
-    public function lfgPosts()
+    public function tournaments()
     {
-        return $this->hasMany(LfgPost::class);
+        return $this->hasMany(Tournament::class);
     }
 
     /**
@@ -106,10 +173,34 @@ class Game extends Model
     }
 
     /**
+     * Oyuna ait LFG ilanları
+     */
+    public function lfgPosts()
+    {
+        return $this->hasMany(LfgPost::class);
+    }
+
+    /**
+     * Oyuna ait rozetler
+     */
+    public function badges()
+    {
+        return $this->hasMany(Badge::class);
+    }
+
+    /**
      * Oyuna ait rehberler
      */
     public function guides()
     {
         return $this->hasMany(GuidePost::class);
+    }
+
+    /**
+     * Oyuna ait topluluk gönderileri
+     */
+    public function communityPosts()
+    {
+        return $this->hasMany(CommunityPost::class);
     }
 }

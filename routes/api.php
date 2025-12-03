@@ -34,7 +34,7 @@ Route::prefix('v1')->group(function () {
 
     // Oyunlar (public)
     Route::get('/games', [GameController::class, 'index']);
-    Route::get('/games/{id}', [GameController::class, 'show']);
+    Route::get('/games/{idOrSlug}', [GameController::class, 'show']);
 
     // Cihazlar (public - herkes görebilir)
     Route::get('/devices', [DeviceController::class, 'index']);

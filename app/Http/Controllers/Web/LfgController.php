@@ -19,8 +19,8 @@ class LfgController extends Controller
      */
     public function index(Request $request)
     {
-        $query = LfgPost::with(['user.profile', 'game'])
-            ->open();
+        // Eager loading ile N+1 query prevention (Requirements 15.3)
+        $query = LfgPost::withBasicRelations()->open();
 
         // Filtreler
         if ($request->has('game_id')) {
@@ -41,13 +41,18 @@ class LfgController extends Controller
 
         $posts = $query->latest()->paginate(20);
 
-        // Filtre için veriler
-        $games = Game::active()->ordered()->get();
-        $cities = LfgPost::select('city')
-            ->distinct()
-            ->whereNotNull('city')
-            ->orderBy('city')
-            ->pluck('city');
+        // Filtre için veriler - cache kullan (Requirements 15.1)
+        $games = \Cache::remember('active_games', 3600, function () {
+            return Game::active()->ordered()->get();
+        });
+        
+        $cities = \Cache::remember('lfg_cities', 3600, function () {
+            return LfgPost::select('city')
+                ->distinct()
+                ->whereNotNull('city')
+                ->orderBy('city')
+                ->pluck('city');
+        });
 
         return view('lfg.index', compact('posts', 'games', 'cities'));
     }
@@ -58,8 +63,8 @@ class LfgController extends Controller
      */
     public function show($id)
     {
-        $post = LfgPost::with(['user.profile', 'game', 'applications.user.profile'])
-            ->findOrFail($id);
+        // Tüm ilişkileri eager load et (Requirements 15.3)
+        $post = LfgPost::withRelations()->findOrFail($id);
 
         // Görüntülenme sayısını artır
         $post->incrementViews();
@@ -81,7 +86,10 @@ class LfgController extends Controller
      */
     public function create()
     {
-        $games = Game::active()->ordered()->get();
+        // Aktif oyunları cache'den al (Requirements 15.1)
+        $games = \Cache::remember('active_games', 3600, function () {
+            return Game::active()->ordered()->get();
+        });
         
         return view('lfg.create', compact('games'));
     }
@@ -132,7 +140,10 @@ class LfgController extends Controller
             abort(403, 'Bu işlem için yetkiniz yok');
         }
 
-        $games = Game::active()->ordered()->get();
+        // Aktif oyunları cache'den al (Requirements 15.1)
+        $games = \Cache::remember('active_games', 3600, function () {
+            return Game::active()->ordered()->get();
+        });
 
         return view('lfg.edit', compact('post', 'games'));
     }
@@ -232,13 +243,15 @@ class LfgController extends Controller
      */
     public function applications($id)
     {
-        $post = LfgPost::with(['user.profile', 'game'])->findOrFail($id);
+        // Eager loading ile N+1 prevention (Requirements 15.3)
+        $post = LfgPost::withBasicRelations()->findOrFail($id);
 
         // Sadece ilan sahibi görebilir
         if ($post->user_id !== auth()->id()) {
             abort(403, 'Bu işlem için yetkiniz yok');
         }
 
+        // Başvuruları da eager load et
         $applications = $post->applications()
             ->with('user.profile')
             ->latest()

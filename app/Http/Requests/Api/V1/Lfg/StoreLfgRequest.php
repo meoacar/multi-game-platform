@@ -26,7 +26,7 @@ class StoreLfgRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'game_id' => 'required|exists:games,id',
+            'game_id' => ['required', new \App\Rules\ValidGameId()],
             'title' => 'required|string|max:255|min:5',
             'description' => 'required|string|min:10',
             'min_rank' => 'nullable|string',

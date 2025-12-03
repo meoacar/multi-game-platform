@@ -85,22 +85,53 @@
         </div>
 
         <!-- Filter Tabs -->
-        <div class="flex flex-wrap gap-3 mb-8" x-data="{ filter: '{{ request('filter', 'all') }}' }">
-            <a href="{{ route('notifications.index', ['filter' => 'all']) }}" 
-               class="px-6 py-3 rounded-xl font-bold transition-all duration-300"
-               :class="filter === 'all' ? 'bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-lg shadow-orange-500/50' : 'bg-white/5 text-gray-400 hover:bg-white/10'">
-                🔔 Tümü
-            </a>
-            <a href="{{ route('notifications.index', ['filter' => 'unread']) }}" 
-               class="px-6 py-3 rounded-xl font-bold transition-all duration-300"
-               :class="filter === 'unread' ? 'bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-lg shadow-orange-500/50' : 'bg-white/5 text-gray-400 hover:bg-white/10'">
-                🔴 Okunmamış
-            </a>
-            <a href="{{ route('notifications.index', ['filter' => 'read']) }}" 
-               class="px-6 py-3 rounded-xl font-bold transition-all duration-300"
-               :class="filter === 'read' ? 'bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-lg shadow-orange-500/50' : 'bg-white/5 text-gray-400 hover:bg-white/10'">
-                ✅ Okundu
-            </a>
+        <div class="mb-8">
+            <!-- Status Filters -->
+            <div class="flex flex-wrap gap-3 mb-4" x-data="{ filter: '{{ request('filter', 'all') }}' }">
+                <a href="{{ route('notifications.index', ['filter' => 'all', 'game' => request('game')]) }}" 
+                   class="px-6 py-3 rounded-xl font-bold transition-all duration-300"
+                   :class="filter === 'all' ? 'bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-lg shadow-orange-500/50' : 'bg-white/5 text-gray-400 hover:bg-white/10'">
+                    🔔 Tümü
+                </a>
+                <a href="{{ route('notifications.index', ['filter' => 'unread', 'game' => request('game')]) }}" 
+                   class="px-6 py-3 rounded-xl font-bold transition-all duration-300"
+                   :class="filter === 'unread' ? 'bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-lg shadow-orange-500/50' : 'bg-white/5 text-gray-400 hover:bg-white/10'">
+                    🔴 Okunmamış
+                </a>
+                <a href="{{ route('notifications.index', ['filter' => 'read', 'game' => request('game')]) }}" 
+                   class="px-6 py-3 rounded-xl font-bold transition-all duration-300"
+                   :class="filter === 'read' ? 'bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-lg shadow-orange-500/50' : 'bg-white/5 text-gray-400 hover:bg-white/10'">
+                    ✅ Okundu
+                </a>
+            </div>
+
+            <!-- Game Filters (Unified Notification Center) -->
+            @if(isset($games) && $games->count() > 0)
+                <div class="flex flex-wrap gap-3" x-data="{ gameFilter: '{{ request('game', 'all') }}' }">
+                    <a href="{{ route('notifications.index', ['filter' => request('filter', 'all'), 'game' => 'all']) }}" 
+                       class="px-6 py-3 rounded-xl font-bold transition-all duration-300"
+                       :class="gameFilter === 'all' ? 'bg-gradient-to-r from-purple-500 to-blue-500 text-white shadow-lg shadow-purple-500/50' : 'bg-white/5 text-gray-400 hover:bg-white/10'">
+                        🌐 Tüm Oyunlar
+                    </a>
+                    <a href="{{ route('notifications.index', ['filter' => request('filter', 'all'), 'game' => 'platform']) }}" 
+                       class="px-6 py-3 rounded-xl font-bold transition-all duration-300"
+                       :class="gameFilter === 'platform' ? 'bg-gradient-to-r from-purple-500 to-blue-500 text-white shadow-lg shadow-purple-500/50' : 'bg-white/5 text-gray-400 hover:bg-white/10'">
+                        ⭐ Platform Geneli
+                    </a>
+                    @foreach($games as $game)
+                        <a href="{{ route('notifications.index', ['filter' => request('filter', 'all'), 'game' => $game->id]) }}" 
+                           class="px-6 py-3 rounded-xl font-bold transition-all duration-300"
+                           :class="gameFilter === '{{ $game->id }}' ? 'bg-gradient-to-r from-purple-500 to-blue-500 text-white shadow-lg shadow-purple-500/50' : 'bg-white/5 text-gray-400 hover:bg-white/10'">
+                            🎮 {{ $game->name }}
+                            @if(isset($gameStats[$game->id]) && $gameStats[$game->id]->unread_count > 0)
+                                <span class="ml-2 px-2 py-1 bg-red-500 text-white text-xs rounded-full">
+                                    {{ $gameStats[$game->id]->unread_count }}
+                                </span>
+                            @endif
+                        </a>
+                    @endforeach
+                </div>
+            @endif
         </div>
 
         <!-- Notifications List -->
@@ -172,6 +203,20 @@
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                                                 </svg>
                                                 Okundu
+                                            </span>
+                                        @endif
+                                        @if(isset($notification->game_id))
+                                            @php
+                                                $notificationGame = $games->firstWhere('id', $notification->game_id);
+                                            @endphp
+                                            @if($notificationGame)
+                                                <span class="flex items-center gap-1 text-purple-400">
+                                                    🎮 {{ $notificationGame->name }}
+                                                </span>
+                                            @endif
+                                        @else
+                                            <span class="flex items-center gap-1 text-blue-400">
+                                                ⭐ Platform Geneli
                                             </span>
                                         @endif
                                     </div>

@@ -45,6 +45,164 @@ class ProfileController extends Controller
     }
 
     /**
+     * Multi-game activity dashboard
+     * GET /profilim/tum-oyunlar
+     */
+    public function multiGameDashboard(Request $request)
+    {
+        $user = $request->user();
+        
+        // Tüm aktif oyunları al
+        $games = \App\Models\Game::active()->get();
+        
+        // Her oyun için kullanıcının aktivitelerini topla
+        $gameActivities = [];
+        
+        foreach ($games as $game) {
+            // Global scope'u devre dışı bırakarak her oyun için veri çek
+            $activities = [
+                'game' => $game,
+                'tournaments' => \App\Models\Tournament::withoutGlobalScope(\App\Models\Scopes\GameScope::class)
+                    ->where('game_id', $game->id)
+                    ->where('organizer_id', $user->id)
+                    ->count(),
+                'clans' => \App\Models\Clan::withoutGlobalScope(\App\Models\Scopes\GameScope::class)
+                    ->where('game_id', $game->id)
+                    ->whereHas('members', function($query) use ($user) {
+                        $query->where('user_id', $user->id);
+                    })
+                    ->count(),
+                'lfg_posts' => \App\Models\LfgPost::withoutGlobalScope(\App\Models\Scopes\GameScope::class)
+                    ->where('game_id', $game->id)
+                    ->where('user_id', $user->id)
+                    ->count(),
+                'guide_posts' => \App\Models\GuidePost::withoutGlobalScope(\App\Models\Scopes\GameScope::class)
+                    ->where('game_id', $game->id)
+                    ->where('user_id', $user->id)
+                    ->count(),
+                'community_posts' => \App\Models\CommunityPost::withoutGlobalScope(\App\Models\Scopes\GameScope::class)
+                    ->where('game_id', $game->id)
+                    ->where('user_id', $user->id)
+                    ->count(),
+                'badges' => \App\Models\Badge::withoutGlobalScope(\App\Models\Scopes\GameScope::class)
+                    ->where('game_id', $game->id)
+                    ->whereHas('users', function($query) use ($user) {
+                        $query->where('user_id', $user->id);
+                    })
+                    ->count(),
+            ];
+            
+            // Toplam aktivite sayısı
+            $activities['total'] = $activities['tournaments'] + 
+                                  $activities['clans'] + 
+                                  $activities['lfg_posts'] + 
+                                  $activities['guide_posts'] + 
+                                  $activities['community_posts'];
+            
+            $gameActivities[] = $activities;
+        }
+        
+        // Cross-game aktiviteler (game_id olmayan)
+        $crossGameActivities = [
+            'messages' => \App\Models\Message::where('sender_id', $user->id)
+                ->orWhere('receiver_id', $user->id)
+                ->count(),
+            'friendships' => \App\Models\Friendship::where(function($query) use ($user) {
+                $query->where('user_id', $user->id)
+                      ->orWhere('friend_id', $user->id);
+            })->where('status', 'accepted')->count(),
+            'notifications' => $user->notifications()->count(),
+        ];
+        
+        // Toplam istatistikler
+        $totalStats = [
+            'total_games' => $games->count(),
+            'active_games' => collect($gameActivities)->filter(fn($a) => $a['total'] > 0)->count(),
+            'total_activities' => collect($gameActivities)->sum('total'),
+            'total_badges' => collect($gameActivities)->sum('badges'),
+        ];
+        
+        // Son aktiviteler (tüm oyunlardan)
+        $recentActivities = $this->getRecentCrossGameActivities($user);
+        
+        return view('profile.multi-game-dashboard', compact(
+            'user',
+            'games',
+            'gameActivities',
+            'crossGameActivities',
+            'totalStats',
+            'recentActivities'
+        ));
+    }
+    
+    /**
+     * Tüm oyunlardan son aktiviteleri getir
+     */
+    private function getRecentCrossGameActivities($user)
+    {
+        $activities = collect();
+        
+        // LFG Posts
+        $lfgPosts = \App\Models\LfgPost::withoutGlobalScope(\App\Models\Scopes\GameScope::class)
+            ->with('game')
+            ->where('user_id', $user->id)
+            ->latest()
+            ->take(5)
+            ->get()
+            ->map(function($post) {
+                return [
+                    'type' => 'lfg_post',
+                    'game' => $post->game,
+                    'title' => $post->title,
+                    'created_at' => $post->created_at,
+                    'url' => route('lfg.show', $post->id),
+                ];
+            });
+        
+        // Guide Posts
+        $guidePosts = \App\Models\GuidePost::withoutGlobalScope(\App\Models\Scopes\GameScope::class)
+            ->with('game')
+            ->where('user_id', $user->id)
+            ->latest()
+            ->take(5)
+            ->get()
+            ->map(function($post) {
+                return [
+                    'type' => 'guide_post',
+                    'game' => $post->game,
+                    'title' => $post->title,
+                    'created_at' => $post->created_at,
+                    'url' => route('guides.show', $post->id),
+                ];
+            });
+        
+        // Community Posts
+        $communityPosts = \App\Models\CommunityPost::withoutGlobalScope(\App\Models\Scopes\GameScope::class)
+            ->with('game')
+            ->where('user_id', $user->id)
+            ->latest()
+            ->take(5)
+            ->get()
+            ->map(function($post) {
+                return [
+                    'type' => 'community_post',
+                    'game' => $post->game,
+                    'title' => $post->title,
+                    'created_at' => $post->created_at,
+                    'url' => route('community.show', $post->id),
+                ];
+            });
+        
+        // Tüm aktiviteleri birleştir ve tarihe göre sırala
+        return $activities
+            ->concat($lfgPosts)
+            ->concat($guidePosts)
+            ->concat($communityPosts)
+            ->sortByDesc('created_at')
+            ->take(10);
+    }
+
+    /**
      * Profil düzenleme sayfası
      * GET /profilim/duzenle
      */

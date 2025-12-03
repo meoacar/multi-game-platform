@@ -14,7 +14,7 @@ class UpdateGuideRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'game_id' => 'nullable|exists:games,id',
+            'game_id' => ['nullable', new \App\Rules\ValidGameId()],
             'title' => 'sometimes|string|max:255',
             'content' => 'sometimes|string|min:100',
             'is_published' => 'boolean',

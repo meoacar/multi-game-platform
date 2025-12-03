@@ -4,10 +4,19 @@ namespace App\Policies;
 
 use App\Models\GuidePost;
 use App\Models\User;
+use App\Traits\HasGameContext;
 use Illuminate\Auth\Access\Response;
 
+/**
+ * Guide Post Policy
+ * Rehber yazıları için yetkilendirme kuralları
+ * 
+ * Game Context: Rehber yazıları oyuna özel kaynaklardır.
+ * Kullanıcılar sadece mevcut oyun bağlamındaki rehberlere erişebilir.
+ */
 class GuidePostPolicy
 {
+    use HasGameContext;
     /**
      * Herkes rehberleri görüntüleyebilir
      */
@@ -21,6 +30,17 @@ class GuidePostPolicy
      */
     public function view(?User $user, GuidePost $guidePost): bool
     {
+        // Admin kullanıcılar tüm oyunlardaki rehberleri görebilir
+        if ($user && $this->canBypassGameContext($user)) {
+            if ($guidePost->is_published) {
+                return true;
+            }
+            return $user->id === $guidePost->user_id || $user->is_admin;
+        }
+
+        // Game context kontrolü
+        $this->checkGameContext($guidePost);
+        
         if ($guidePost->is_published) {
             return true;
         }
@@ -41,6 +61,14 @@ class GuidePostPolicy
      */
     public function update(User $user, GuidePost $guidePost): bool
     {
+        // Admin kullanıcılar game context kontrolünden muaf
+        if ($this->canBypassGameContext($user)) {
+            return $user->id === $guidePost->user_id || $user->is_admin;
+        }
+
+        // Game context kontrolü
+        $this->checkGameContext($guidePost);
+        
         return $user->id === $guidePost->user_id || $user->is_admin;
     }
 
@@ -49,6 +77,14 @@ class GuidePostPolicy
      */
     public function delete(User $user, GuidePost $guidePost): bool
     {
+        // Admin kulanıcılar game context kontrolünden muaf
+        if ($this->canBypassGameContext($user)) {
+            return $user->id === $guidePost->user_id || $user->is_admin;
+        }
+
+        // Game context kontrolü
+        $this->checkGameContext($guidePost);
+        
         return $user->id === $guidePost->user_id || $user->is_admin;
     }
 

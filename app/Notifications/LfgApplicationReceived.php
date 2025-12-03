@@ -42,6 +42,7 @@ class LfgApplicationReceived extends Notification
             'post_title' => $this->postTitle,
             'url' => route('lfg.applications', $this->postId),
             'icon' => 'user-plus',
+            'game_id' => session('game_id'), // Oyuna özel bildirim
         ];
     }
 }

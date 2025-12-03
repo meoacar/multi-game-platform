@@ -34,11 +34,15 @@
     <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('favicon-16x16.png') }}">
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-touch-icon.png') }}">
     
-    <!-- Theme Color -->
-    <meta name="theme-color" content="#3B82F6">
-    <meta name="msapplication-TileColor" content="#3B82F6">
-    
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    
+    <!-- Oyuna Özel Tema CSS -->
+    @if(session('game'))
+        <link rel="stylesheet" href="{{ asset('css/themes/' . session('game')->slug . '.css') }}">
+    @endif
+    
+    <!-- Oyuna Özel Tema -->
+    <x-game-theme />
     
     <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>

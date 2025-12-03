@@ -2,12 +2,24 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\GameScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
+/**
+ * GuidePost Model
+ * Rehber gönderileri - Oyuna özel
+ * 
+ * İlişkiler:
+ * - belongsTo: User
+ * - belongsTo: Game
+ * - morphMany: Comment
+ * 
+ * Global Scope: GameScope (otomatik game_id filtreleme)
+ */
 class GuidePost extends Model
 {
     use HasFactory, SoftDeletes;
@@ -44,5 +56,34 @@ class GuidePost extends Model
     public function comments(): MorphMany
     {
         return $this->morphMany(Comment::class, 'commentable');
+    }
+
+    /**
+     * Model booted
+     * GameScope ekle ve otomatik game_id atama
+     */
+    protected static function booted(): void
+    {
+        // Global scope ekle
+        static::addGlobalScope(new GameScope());
+
+        // Yeni kayıt oluşturulurken otomatik game_id ata
+        static::creating(function ($guide) {
+            if (!$guide->game_id && session('game_id')) {
+                $guide->game_id = session('game_id');
+            }
+        });
+    }
+
+    /**
+     * Scope: Belirli bir oyuna göre filtrele
+     * 
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param int $gameId
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeForGame($query, int $gameId)
+    {
+        return $query->where('game_id', $gameId);
     }
 }

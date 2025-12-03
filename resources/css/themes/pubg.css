@@ -1,0 +1,424 @@
+/**
+ * PUBG Mobile Oyun Teması
+ * 
+ * Bu dosya PUBG Mobile için özel tema renklerini ve stillerini içerir.
+ * Oyun değiştiğinde dinamik olarak yüklenir.
+ */
+
+:root {
+    /* Ana Tema Renkleri */
+    --game-primary: #FF6B00;
+    --game-primary-dark: #E55D00;
+    --game-primary-light: #FF8533;
+    
+    --game-secondary: #FFB800;
+    --game-secondary-dark: #E5A500;
+    --game-secondary-light: #FFC933;
+    
+    /* Accent Renkler */
+    --game-accent: #00D9FF;
+    --game-accent-dark: #00C2E5;
+    --game-accent-light: #33E0FF;
+    
+    /* Durum Renkleri */
+    --game-success: #10B981;
+    --game-warning: #F59E0B;
+    --game-danger: #EF4444;
+    --game-info: #3B82F6;
+    
+    /* Arka Plan Renkleri */
+    --game-bg-primary: #0A0A0A;
+    --game-bg-secondary: #1A1A1A;
+    --game-bg-tertiary: #2A2A2A;
+    
+    /* Kart ve Panel Renkleri */
+    --game-card-bg: rgba(26, 26, 26, 0.8);
+    --game-card-border: rgba(255, 107, 0, 0.2);
+    --game-card-hover: rgba(255, 107, 0, 0.1);
+    
+    /* Metin Renkleri */
+    --game-text-primary: #FFFFFF;
+    --game-text-secondary: #A0A0A0;
+    --game-text-muted: #6B7280;
+    
+    /* Gradient'ler */
+    --game-gradient-primary: linear-gradient(135deg, #FF6B00 0%, #FFB800 100%);
+    --game-gradient-secondary: linear-gradient(135deg, #00D9FF 0%, #3B82F6 100%);
+    --game-gradient-dark: linear-gradient(180deg, #0A0A0A 0%, #1A1A1A 100%);
+    
+    /* Gölgeler */
+    --game-shadow-sm: 0 2px 4px rgba(255, 107, 0, 0.1);
+    --game-shadow-md: 0 4px 8px rgba(255, 107, 0, 0.15);
+    --game-shadow-lg: 0 8px 16px rgba(255, 107, 0, 0.2);
+    --game-shadow-xl: 0 12px 24px rgba(255, 107, 0, 0.25);
+    
+    /* Border Radius */
+    --game-radius-sm: 0.5rem;
+    --game-radius-md: 1rem;
+    --game-radius-lg: 1.5rem;
+    --game-radius-xl: 2rem;
+    
+    /* Transition */
+    --game-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Tema Utility Classes */
+.bg-game-primary {
+    background-color: var(--game-primary);
+}
+
+.bg-game-secondary {
+    background-color: var(--game-secondary);
+}
+
+.bg-game-gradient {
+    background: var(--game-gradient-primary);
+}
+
+.text-game-primary {
+    color: var(--game-primary);
+}
+
+.text-game-secondary {
+    color: var(--game-secondary);
+}
+
+.border-game-primary {
+    border-color: var(--game-primary);
+}
+
+.border-game-secondary {
+    border-color: var(--game-secondary);
+}
+
+/* Hover Effects */
+.hover-game-primary:hover {
+    background-color: var(--game-primary);
+    color: white;
+    transition: var(--game-transition);
+}
+
+.hover-game-glow:hover {
+    box-shadow: 0 0 20px rgba(255, 107, 0, 0.5);
+    transition: var(--game-transition);
+}
+
+/* PUBG Özel Buton Stilleri */
+.btn-game-primary {
+    background: var(--game-gradient-primary);
+    color: white;
+    font-weight: 700;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--game-radius-md);
+    border: none;
+    cursor: pointer;
+    transition: var(--game-transition);
+    box-shadow: var(--game-shadow-md);
+}
+
+.btn-game-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--game-shadow-lg);
+}
+
+.btn-game-primary:active {
+    transform: translateY(0);
+    box-shadow: var(--game-shadow-sm);
+}
+
+.btn-game-secondary {
+    background: var(--game-gradient-secondary);
+    color: white;
+    font-weight: 700;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--game-radius-md);
+    border: none;
+    cursor: pointer;
+    transition: var(--game-transition);
+    box-shadow: var(--game-shadow-md);
+}
+
+.btn-game-secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--game-shadow-lg);
+}
+
+.btn-game-outline {
+    background: transparent;
+    color: var(--game-primary);
+    font-weight: 700;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--game-radius-md);
+    border: 2px solid var(--game-primary);
+    cursor: pointer;
+    transition: var(--game-transition);
+}
+
+.btn-game-outline:hover {
+    background: var(--game-primary);
+    color: white;
+}
+
+/* PUBG Özel Kart Stilleri */
+.card-game {
+    background: var(--game-card-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--game-card-border);
+    border-radius: var(--game-radius-lg);
+    padding: 1.5rem;
+    transition: var(--game-transition);
+}
+
+.card-game:hover {
+    border-color: var(--game-primary);
+    box-shadow: var(--game-shadow-lg);
+    transform: translateY(-4px);
+}
+
+.card-game-featured {
+    background: var(--game-card-bg);
+    backdrop-filter: blur(10px);
+    border: 2px solid var(--game-primary);
+    border-radius: var(--game-radius-lg);
+    padding: 1.5rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.card-game-featured::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--game-gradient-primary);
+}
+
+/* PUBG Özel Badge Stilleri */
+.badge-game {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: var(--game-gradient-primary);
+    color: white;
+    font-size: 0.875rem;
+    font-weight: 600;
+    border-radius: var(--game-radius-md);
+    box-shadow: var(--game-shadow-sm);
+}
+
+.badge-game-outline {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: transparent;
+    color: var(--game-primary);
+    font-size: 0.875rem;
+    font-weight: 600;
+    border: 2px solid var(--game-primary);
+    border-radius: var(--game-radius-md);
+}
+
+/* PUBG Özel Input Stilleri */
+.input-game {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: var(--game-bg-secondary);
+    border: 2px solid var(--game-card-border);
+    border-radius: var(--game-radius-md);
+    color: var(--game-text-primary);
+    transition: var(--game-transition);
+}
+
+.input-game:focus {
+    outline: none;
+    border-color: var(--game-primary);
+    box-shadow: 0 0 0 3px rgba(255, 107, 0, 0.1);
+}
+
+.input-game::placeholder {
+    color: var(--game-text-muted);
+}
+
+/* PUBG Özel Progress Bar */
+.progress-game {
+    width: 100%;
+    height: 0.5rem;
+    background: var(--game-bg-tertiary);
+    border-radius: var(--game-radius-sm);
+    overflow: hidden;
+}
+
+.progress-game-bar {
+    height: 100%;
+    background: var(--game-gradient-primary);
+    border-radius: var(--game-radius-sm);
+    transition: width 0.5s ease;
+}
+
+/* PUBG Özel Divider */
+.divider-game {
+    height: 2px;
+    background: var(--game-gradient-primary);
+    margin: 2rem 0;
+    border-radius: var(--game-radius-sm);
+}
+
+/* PUBG Özel Alert Stilleri */
+.alert-game-success {
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid var(--game-success);
+    border-left: 4px solid var(--game-success);
+    border-radius: var(--game-radius-md);
+    padding: 1rem;
+    color: var(--game-text-primary);
+}
+
+.alert-game-warning {
+    background: rgba(245, 158, 11, 0.1);
+    border: 1px solid var(--game-warning);
+    border-left: 4px solid var(--game-warning);
+    border-radius: var(--game-radius-md);
+    padding: 1rem;
+    color: var(--game-text-primary);
+}
+
+.alert-game-danger {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid var(--game-danger);
+    border-left: 4px solid var(--game-danger);
+    border-radius: var(--game-radius-md);
+    padding: 1rem;
+    color: var(--game-text-primary);
+}
+
+.alert-game-info {
+    background: rgba(59, 130, 246, 0.1);
+    border: 1px solid var(--game-info);
+    border-left: 4px solid var(--game-info);
+    border-radius: var(--game-radius-md);
+    padding: 1rem;
+    color: var(--game-text-primary);
+}
+
+/* PUBG Özel Animasyonlar */
+@keyframes game-pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+}
+
+@keyframes game-glow {
+    0%, 100% {
+        box-shadow: 0 0 10px rgba(255, 107, 0, 0.3);
+    }
+    50% {
+        box-shadow: 0 0 20px rgba(255, 107, 0, 0.6);
+    }
+}
+
+@keyframes game-slide-in {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-game-pulse {
+    animation: game-pulse 2s ease-in-out infinite;
+}
+
+.animate-game-glow {
+    animation: game-glow 2s ease-in-out infinite;
+}
+
+.animate-game-slide-in {
+    animation: game-slide-in 0.5s ease-out;
+}
+
+/* PUBG Özel Scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--game-bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--game-primary);
+    border-radius: var(--game-radius-sm);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--game-primary-dark);
+}
+
+/* PUBG Özel Selection */
+::selection {
+    background: var(--game-primary);
+    color: white;
+}
+
+::-moz-selection {
+    background: var(--game-primary);
+    color: white;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    :root {
+        --game-radius-sm: 0.375rem;
+        --game-radius-md: 0.75rem;
+        --game-radius-lg: 1rem;
+        --game-radius-xl: 1.5rem;
+    }
+    
+    .btn-game-primary,
+    .btn-game-secondary,
+    .btn-game-outline {
+        padding: 0.625rem 1.25rem;
+        font-size: 0.875rem;
+    }
+    
+    .card-game,
+    .card-game-featured {
+        padding: 1rem;
+    }
+}
+
+/* Dark Mode Optimizations */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --game-bg-primary: #000000;
+        --game-bg-secondary: #0F0F0F;
+        --game-bg-tertiary: #1F1F1F;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .btn-game-primary,
+    .btn-game-secondary,
+    .btn-game-outline {
+        border: 1px solid #000;
+        box-shadow: none;
+    }
+    
+    .card-game,
+    .card-game-featured {
+        border: 1px solid #000;
+        box-shadow: none;
+    }
+}

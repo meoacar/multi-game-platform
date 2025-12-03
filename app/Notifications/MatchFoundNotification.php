@@ -49,6 +49,7 @@ class MatchFoundNotification extends Notification
             'url' => route('matchmaking.index'),
             'icon' => 'users',
             'action_required' => true,
+            'game_id' => session('game_id'), // Oyuna özel bildirim
         ];
     }
 }

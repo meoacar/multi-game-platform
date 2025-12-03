@@ -1,10 +1,50 @@
 # 📡 API Dokümantasyonu
 
-PUBG Mobile Topluluk Platformu RESTful API v1
+Takım Sistemi Multi-Game Platform RESTful API v1
 
 **Base URL**: `/api/v1`  
 **Authentication**: Bearer Token (Laravel Sanctum)  
 **Response Format**: JSON
+
+## 🆕 Multi-Game Platform Güncellemesi
+
+**Önemli:** 2025-12-03 tarihinden itibaren, tüm oyuna özel endpoint'ler `game_id` veya `game_slug` parametresi gerektirir.
+
+### Oyun Parametreleri
+
+Tüm oyuna özel endpoint'lerde şu parametrelerden biri kullanılmalıdır:
+
+- **`game_slug`** (önerilen): Oyun slug'ı (örn: `pubg`, `cod`)
+- **`game_id`**: Oyun ID'si (örn: `1`, `2`)
+
+**Örnek:**
+```http
+GET /api/v1/tournaments?game_slug=pubg
+GET /api/v1/clans?game_id=1
+```
+
+### Endpoint Kategorileri
+
+#### 🎮 Oyuna Özel Endpoint'ler
+Bu endpoint'ler `game_slug` veya `game_id` parametresi gerektirir:
+- Tournaments
+- Clans
+- LFG Posts
+- Squads
+- Community Posts
+- Guide Posts
+
+#### 🌐 Cross-Game Endpoint'ler
+Bu endpoint'ler oyun parametresi gerektirmez:
+- Authentication (register, login, logout)
+- User Profile
+- Messages
+- Notifications
+- Friendships
+
+### Migration Guide
+
+Eski API kullanımından yeni API'ye geçiş için: [API-MIGRATION-GUIDE.md](API-MIGRATION-GUIDE.md)
 
 ---
 
@@ -67,9 +107,141 @@ Authorization: Bearer {token}
 GET /api/v1/games
 ```
 
-### Get Game
+**Query Parameters**:
+- `status` (optional): `active` | `inactive` - Oyun durumu filtresi
+- `is_active` (optional): `1` | `0` - Backward compatibility için aktif/inaktif filtresi
+- `with_stats` (optional): `1` | `0` - İstatistiklerle birlikte getir
+
+**Response (200)**:
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": 1,
+      "name": "PUBG Mobile",
+      "slug": "pubg",
+      "logo": "storage/games/pubg-logo.png",
+      "icon": "storage/games/pubg-icon.png",
+      "description": "Battle Royale oyunu",
+      "status": "active",
+      "is_active": true,
+      "settings": {
+        "theme_color": "#FF6B00",
+        "secondary_color": "#FFB800",
+        "max_team_size": 4,
+        "platforms": ["Android", "iOS"],
+        "features": {
+          "tournaments": true,
+          "clans": true,
+          "lfg": true,
+          "matchmaking": true
+        }
+      },
+      "order": 1,
+      "created_at": "2025-12-01T00:00:00.000000Z",
+      "updated_at": "2025-12-01T00:00:00.000000Z",
+      "stats": {
+        "tournaments_count": 10,
+        "clans_count": 50,
+        "lfg_posts_count": 100,
+        "badges_count": 25,
+        "guides_count": 30,
+        "community_posts_count": 200
+      }
+    }
+  ],
+  "meta": {
+    "total": 1,
+    "active_count": 1,
+    "inactive_count": 0
+  }
+}
+```
+
+**Examples**:
+```bash
+# Tüm oyunları listele
+curl -X GET "https://takimsistemi.com/api/v1/games"
+
+# Sadece aktif oyunları listele
+curl -X GET "https://takimsistemi.com/api/v1/games?status=active"
+
+# İstatistiklerle birlikte listele
+curl -X GET "https://takimsistemi.com/api/v1/games?with_stats=1"
+
+# Backward compatibility - aktif oyunlar
+curl -X GET "https://takimsistemi.com/api/v1/games?is_active=1"
+```
+
+### Get Game by ID or Slug
 ```http
-GET /api/v1/games/{id}
+GET /api/v1/games/{idOrSlug}
+```
+
+**Path Parameters**:
+- `idOrSlug`: Oyun ID'si (örn: `1`) veya slug'ı (örn: `pubg`)
+
+**Query Parameters**:
+- `with_stats` (optional): `1` | `0` - İstatistiklerle birlikte getir
+
+**Response (200)**:
+```json
+{
+  "success": true,
+  "data": {
+    "id": 1,
+    "name": "PUBG Mobile",
+    "slug": "pubg",
+    "logo": "storage/games/pubg-logo.png",
+    "icon": "storage/games/pubg-icon.png",
+    "description": "Battle Royale oyunu",
+    "status": "active",
+    "is_active": true,
+    "settings": {
+      "theme_color": "#FF6B00",
+      "secondary_color": "#FFB800",
+      "max_team_size": 4,
+      "platforms": ["Android", "iOS"],
+      "features": {
+        "tournaments": true,
+        "clans": true,
+        "lfg": true,
+        "matchmaking": true
+      }
+    },
+    "order": 1,
+    "created_at": "2025-12-01T00:00:00.000000Z",
+    "updated_at": "2025-12-01T00:00:00.000000Z",
+    "stats": {
+      "tournaments_count": 10,
+      "clans_count": 50,
+      "lfg_posts_count": 100,
+      "badges_count": 25,
+      "guides_count": 30,
+      "community_posts_count": 200
+    }
+  }
+}
+```
+
+**Response (404)** - Oyun bulunamadı:
+```json
+{
+  "message": "No query results for model [App\\Models\\Game]."
+}
+```
+
+**Examples**:
+```bash
+# ID ile oyun detayı
+curl -X GET "https://takimsistemi.com/api/v1/games/1"
+
+# Slug ile oyun detayı
+curl -X GET "https://takimsistemi.com/api/v1/games/pubg"
+
+# İstatistiklerle birlikte
+curl -X GET "https://takimsistemi.com/api/v1/games/pubg?with_stats=1"
 ```
 
 ---
@@ -137,16 +309,31 @@ Content-Type: application/json
 
 ## 🔍 LFG (Looking For Group)
 
+⚠️ **Oyuna Özel Endpoint** - `game_slug` veya `game_id` parametresi gerektirir
+
 ### List LFG Posts
 ```http
-GET /api/v1/lfg?game_id=1&city=İstanbul&status=open
+GET /api/v1/lfg?game_slug=pubg&city=İstanbul&status=open
 ```
 
 **Query Parameters**:
-- `game_id` (optional)
-- `city` (optional)
-- `play_style_tag` (optional)
-- `status` (optional): open, closed
+- `game_slug` (required): Oyun slug'ı (örn: `pubg`, `cod`)
+- `game_id` (alternative): Oyun ID'si (örn: `1`, `2`)
+- `city` (optional): Şehir filtresi
+- `play_style_tag` (optional): Oyun stili filtresi
+- `status` (optional): `open`, `closed` - İlan durumu
+
+**Examples**:
+```bash
+# PUBG LFG ilanları
+curl -X GET "https://takimsistemi.com/api/v1/lfg?game_slug=pubg"
+
+# COD Mobile LFG ilanları (İstanbul)
+curl -X GET "https://takimsistemi.com/api/v1/lfg?game_slug=cod&city=İstanbul"
+
+# Game ID ile
+curl -X GET "https://takimsistemi.com/api/v1/lfg?game_id=1&status=open"
+```
 
 ### Get LFG Post
 ```http
@@ -170,6 +357,9 @@ Content-Type: application/json
   "city": "İstanbul",
   "play_style_tag": "try-hard"
 }
+```
+
+**Note:** `game_id` alanı zorunludur. Mevcut oyun bağlamından otomatik alınmaz.
 ```
 
 ### Update LFG Post
@@ -760,3 +950,272 @@ Tüm liste endpoint'leri sayfalama destekler:
 
 **API Version**: 1.0.0  
 **Last Updated**: 24 Kasım 2025
+
+
+---
+
+## 🎮 Multi-Game API Kullanım Örnekleri
+
+### Senaryo 1: Tüm Oyunları Listele ve Bir Oyun Seç
+
+```javascript
+// 1. Tüm oyunları al
+const gamesResponse = await fetch('https://takimsistemi.com/api/v1/games');
+const games = await gamesResponse.json();
+
+// 2. Kullanıcı PUBG'yi seçti
+const selectedGame = games.data.find(g => g.slug === 'pubg');
+
+// 3. PUBG turnuvalarını al
+const tournamentsResponse = await fetch(
+  `https://takimsistemi.com/api/v1/tournaments?game_slug=${selectedGame.slug}`
+);
+const tournaments = await tournamentsResponse.json();
+```
+
+### Senaryo 2: Oyuna Özel İçerik Oluşturma
+
+```javascript
+// 1. Oyun seç
+const gameSlug = 'pubg'; // veya 'cod'
+
+// 2. LFG ilanı oluştur
+const response = await fetch('https://takimsistemi.com/api/v1/lfg', {
+  method: 'POST',
+  headers: {
+    'Authorization': `Bearer ${token}`,
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    game_id: 1, // PUBG
+    title: 'Akşam squad',
+    description: 'Mikrofon şart',
+    // ...
+  })
+});
+```
+
+### Senaryo 3: Cross-Game Mesajlaşma
+
+```javascript
+// Mesajlar oyun bağlamından bağımsızdır
+const messagesResponse = await fetch('https://takimsistemi.com/api/v1/messages', {
+  headers: {
+    'Authorization': `Bearer ${token}`
+  }
+});
+
+// Kullanıcı hangi oyunda olursa olsun tüm mesajları görür
+const messages = await messagesResponse.json();
+```
+
+### Senaryo 4: Kullanıcının Tüm Oyunlardaki Aktivitesi
+
+```javascript
+// 1. Kullanıcı profili (cross-game)
+const profileResponse = await fetch('https://takimsistemi.com/api/v1/me', {
+  headers: { 'Authorization': `Bearer ${token}` }
+});
+
+// 2. PUBG turnuvaları
+const pubgTournaments = await fetch(
+  'https://takimsistemi.com/api/v1/tournaments?game_slug=pubg',
+  { headers: { 'Authorization': `Bearer ${token}` } }
+);
+
+// 3. COD klanları
+const codClans = await fetch(
+  'https://takimsistemi.com/api/v1/clans?game_slug=cod',
+  { headers: { 'Authorization': `Bearer ${token}` } }
+);
+```
+
+---
+
+## 📋 Best Practices
+
+### 1. Oyun Parametresi Kullanımı
+
+**✅ Önerilen:**
+```javascript
+// Slug kullan (daha okunabilir)
+fetch('/api/v1/tournaments?game_slug=pubg')
+
+// Cache'lenebilir oyun listesi
+const games = await getGames(); // Cache'den al
+const gameId = games.find(g => g.slug === 'pubg').id;
+```
+
+**❌ Önerilmeyen:**
+```javascript
+// Hard-coded ID kullanma
+fetch('/api/v1/tournaments?game_id=1') // ID değişebilir
+```
+
+### 2. Error Handling
+
+```javascript
+async function getTournaments(gameSlug) {
+  try {
+    const response = await fetch(
+      `/api/v1/tournaments?game_slug=${gameSlug}`
+    );
+    
+    if (!response.ok) {
+      if (response.status === 404) {
+        throw new Error('Oyun bulunamadı');
+      }
+      throw new Error('API hatası');
+    }
+    
+    return await response.json();
+  } catch (error) {
+    console.error('Tournament fetch error:', error);
+    throw error;
+  }
+}
+```
+
+### 3. Caching Stratejisi
+
+```javascript
+// Oyun listesini cache'le (nadiren değişir)
+const CACHE_TTL = 3600000; // 1 saat
+let gamesCache = null;
+let gamesCacheTime = 0;
+
+async function getGames() {
+  const now = Date.now();
+  
+  if (gamesCache && (now - gamesCacheTime) < CACHE_TTL) {
+    return gamesCache;
+  }
+  
+  const response = await fetch('/api/v1/games');
+  gamesCache = await response.json();
+  gamesCacheTime = now;
+  
+  return gamesCache;
+}
+```
+
+### 4. Pagination
+
+```javascript
+// Sayfalama ile veri çekme
+async function getAllTournaments(gameSlug) {
+  let page = 1;
+  let allTournaments = [];
+  let hasMore = true;
+  
+  while (hasMore) {
+    const response = await fetch(
+      `/api/v1/tournaments?game_slug=${gameSlug}&page=${page}`
+    );
+    const data = await response.json();
+    
+    allTournaments = [...allTournaments, ...data.data];
+    hasMore = data.meta.current_page < data.meta.last_page;
+    page++;
+  }
+  
+  return allTournaments;
+}
+```
+
+---
+
+## 🔒 Security Best Practices
+
+### 1. Token Yönetimi
+
+```javascript
+// Token'ı güvenli sakla
+localStorage.setItem('auth_token', token); // ❌ XSS riski
+sessionStorage.setItem('auth_token', token); // ✅ Daha güvenli
+
+// veya HTTP-only cookie kullan (en güvenli)
+```
+
+### 2. Input Validation
+
+```javascript
+// Kullanıcı girdilerini validate et
+function validateGameSlug(slug) {
+  const validSlugs = ['pubg', 'cod', 'valorant'];
+  if (!validSlugs.includes(slug)) {
+    throw new Error('Geçersiz oyun slug');
+  }
+  return slug;
+}
+```
+
+### 3. Rate Limiting
+
+```javascript
+// Rate limit'e takılma
+const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+async function batchRequests(requests) {
+  const results = [];
+  
+  for (const request of requests) {
+    results.push(await request());
+    await delay(100); // 100ms bekle
+  }
+  
+  return results;
+}
+```
+
+---
+
+## 📊 Response Codes
+
+| Code | Meaning | Description |
+|------|---------|-------------|
+| 200 | OK | İstek başarılı |
+| 201 | Created | Kaynak oluşturuldu |
+| 204 | No Content | İstek başarılı, içerik yok |
+| 400 | Bad Request | Geçersiz istek |
+| 401 | Unauthorized | Kimlik doğrulama gerekli |
+| 403 | Forbidden | Yetki yok |
+| 404 | Not Found | Kaynak bulunamadı |
+| 422 | Unprocessable Entity | Validation hatası |
+| 429 | Too Many Requests | Rate limit aşıldı |
+| 500 | Internal Server Error | Sunucu hatası |
+
+---
+
+## 🔄 Versioning
+
+API versiyonlama URL'de belirtilir:
+
+- **v1** (current): `/api/v1/...`
+- **v2** (future): `/api/v2/...`
+
+**Deprecation Policy:**
+- Yeni versiyon yayınlandıktan 6 ay sonra eski versiyon deprecated olur
+- Deprecated endpoint'ler response header'ında uyarı içerir
+- 12 ay sonra eski versiyon tamamen kaldırılır
+
+---
+
+## 📞 Support
+
+**Dokümantasyon:**
+- Architecture: [MULTI-GAME-ARCHITECTURE.md](MULTI-GAME-ARCHITECTURE.md)
+- Migration Guide: [MULTI-GAME-MIGRATION-GUIDE.md](MULTI-GAME-MIGRATION-GUIDE.md)
+- API Migration: [API-MIGRATION-GUIDE.md](API-MIGRATION-GUIDE.md)
+
+**İletişim:**
+- GitHub Issues: [repo-url]/issues
+- Email: api@takimsistemi.com
+- Discord: [discord-server]
+
+---
+
+**API Version:** 1.0.0  
+**Platform Version:** 2.0.0 (Multi-Game)  
+**Son Güncelleme:** 2025-12-03  
+**Yazar:** Takım Sistemi Development Team

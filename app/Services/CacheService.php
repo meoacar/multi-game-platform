@@ -102,6 +102,28 @@ class CacheService
     {
         return $this->clear('query.*');
     }
+    
+    /**
+     * Oyun cache'lerini temizle
+     * 
+     * @return bool
+     */
+    public function clearGames(): bool
+    {
+        $prefix = config('games.cache.prefix', 'game');
+        
+        // Oyun ile ilgili tüm cache'leri temizle
+        Cache::forget("{$prefix}s.active");
+        Cache::forget('platform.stats');
+        
+        // Bireysel oyun cache'lerini temizle
+        $keys = $this->getKeysByPattern("{$prefix}.*");
+        foreach ($keys as $key) {
+            Cache::forget($key);
+        }
+        
+        return true;
+    }
 
     /**
      * Cache istatistiklerini getir

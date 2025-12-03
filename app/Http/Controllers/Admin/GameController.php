@@ -10,7 +10,9 @@ class GameController extends Controller
 {
     public function index()
     {
+        // Eager loading ile count'ları al (Requirements 15.3)
         $games = Game::withCount(['lfgPosts', 'clans', 'guides'])->get();
+        
         return view('admin.games.index', compact('games'));
     }
 

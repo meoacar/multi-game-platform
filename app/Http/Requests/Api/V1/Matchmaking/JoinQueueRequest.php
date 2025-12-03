@@ -42,7 +42,7 @@ class JoinQueueRequest extends FormRequest
             'play_style' => 'nullable|in:aggressive,balanced,defensive',
             
             // Oyun ID'si (zorunlu)
-            'game_id' => 'required|exists:games,id',
+            'game_id' => ['required', new \App\Rules\ValidGameId()],
         ];
     }
 

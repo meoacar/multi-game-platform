@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Profile;
 use App\Models\AdminRole;
 use App\Models\AdminPermission;
+use App\Models\AdminActivityLog;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -26,7 +27,7 @@ class MiddlewareTest extends TestCase
 
         $response->assertStatus(403)
             ->assertJson([
-                'message' => 'Your account has been banned.'
+                'message' => 'Hesabınız yasaklanmış durumda. Lütfen destek ekibi ile iletişime geçin.'
             ]);
     }
 
@@ -482,5 +483,199 @@ class MiddlewareTest extends TestCase
         // Log sayısının değişmediğini kontrol et
         $logCountAfter = AdminActivityLog::count();
         $this->assertEquals($logCountBefore, $logCountAfter);
+    }
+
+    /** @test */
+    public function detect_game_middleware_gecerli_subdomain_ile_oyun_algilar()
+    {
+        // PUBG oyunu oluştur
+        $game = \App\Models\Game::create([
+            'name' => 'PUBG Mobile',
+            'slug' => 'pubg',
+            'status' => 'active',
+            'settings' => [
+                'theme_color' => '#FF6B00',
+                'max_team_size' => 4,
+            ],
+        ]);
+
+        // Middleware'i doğrudan test et
+        $middleware = new \App\Http\Middleware\DetectGame(
+            app(\App\Services\GameService::class),
+            app(\App\Services\SecurityLogService::class)
+        );
+        
+        $request = \Illuminate\Http\Request::create('http://pubg.takimsistemi.com/test', 'GET');
+        $request->headers->set('Host', 'pubg.takimsistemi.com');
+        
+        $response = $middleware->handle($request, function ($req) {
+            return response()->json([
+                'game_id' => session('game_id'),
+                'game_slug' => session('game_slug'),
+            ]);
+        });
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $data = json_decode($response->getContent(), true);
+        $this->assertEquals($game->id, $data['game_id']);
+        $this->assertEquals('pubg', $data['game_slug']);
+    }
+
+    /** @test */
+    public function detect_game_middleware_gecersiz_subdomain_ile_ana_sayfaya_yonlendirir()
+    {
+        // Middleware'i doğrudan test et
+        $middleware = new \App\Http\Middleware\DetectGame(
+            app(\App\Services\GameService::class),
+            app(\App\Services\SecurityLogService::class)
+        );
+        
+        $request = \Illuminate\Http\Request::create('http://invalid.takimsistemi.com/test', 'GET');
+        $request->headers->set('Host', 'invalid.takimsistemi.com');
+        
+        $response = $middleware->handle($request, function ($req) {
+            return response()->json(['success' => true]);
+        });
+
+        // Ana sayfaya yönlendirme bekleniyor
+        $this->assertTrue($response->isRedirect());
+    }
+
+    /** @test */
+    public function detect_game_middleware_inaktif_oyun_ile_ana_sayfaya_yonlendirir()
+    {
+        // İnaktif oyun oluştur
+        $game = \App\Models\Game::create([
+            'name' => 'COD Mobile',
+            'slug' => 'cod',
+            'status' => 'inactive',
+            'settings' => [],
+        ]);
+
+        // Middleware'i doğrudan test et
+        $middleware = new \App\Http\Middleware\DetectGame(
+            app(\App\Services\GameService::class),
+            app(\App\Services\SecurityLogService::class)
+        );
+        
+        $request = \Illuminate\Http\Request::create('http://cod.takimsistemi.com/test', 'GET');
+        $request->headers->set('Host', 'cod.takimsistemi.com');
+        
+        $response = $middleware->handle($request, function ($req) {
+            return response()->json(['success' => true]);
+        });
+
+        // Ana sayfaya yönlendirme bekleniyor
+        $this->assertTrue($response->isRedirect());
+    }
+
+    /** @test */
+    public function detect_game_middleware_ana_domain_ile_game_context_temizler()
+    {
+        // Önce bir oyun context'i ayarla
+        session(['game_id' => 1, 'game_slug' => 'pubg']);
+
+        // Test route'u oluştur
+        \Route::get('/test-main-domain', function () {
+            return response()->json([
+                'game_id' => session('game_id'),
+                'has_game' => session()->has('game_id'),
+            ]);
+        })->middleware(['web', 'game']);
+
+        // Ana domain'den istek (subdomain yok)
+        $response = $this->get('/test-main-domain', [
+            'HTTP_HOST' => 'takimsistemi.com'
+        ]);
+
+        $response->assertStatus(200);
+        $response->assertJson([
+            'game_id' => null,
+            'has_game' => false,
+        ]);
+    }
+
+    /** @test */
+    public function detect_game_middleware_www_subdomain_ile_game_context_temizler()
+    {
+        // Test route'u oluştur
+        \Route::get('/test-www-subdomain', function () {
+            return response()->json([
+                'has_game' => session()->has('game_id'),
+            ]);
+        })->middleware(['web', 'game']);
+
+        // www subdomain'i ile istek
+        $response = $this->get('/test-www-subdomain', [
+            'HTTP_HOST' => 'www.takimsistemi.com'
+        ]);
+
+        $response->assertStatus(200);
+        $response->assertJson([
+            'has_game' => false,
+        ]);
+    }
+
+    /** @test */
+    public function detect_game_middleware_api_istegi_icin_json_hata_doner()
+    {
+        // Middleware'i doğrudan test et
+        $middleware = new \App\Http\Middleware\DetectGame(
+            app(\App\Services\GameService::class),
+            app(\App\Services\SecurityLogService::class)
+        );
+        
+        $request = \Illuminate\Http\Request::create('http://invalid.takimsistemi.com/api/test', 'GET');
+        $request->headers->set('Host', 'invalid.takimsistemi.com');
+        $request->headers->set('Accept', 'application/json');
+        
+        $response = $middleware->handle($request, function ($req) {
+            return response()->json(['success' => true]);
+        });
+
+        $this->assertEquals(404, $response->getStatusCode());
+        $data = json_decode($response->getContent(), true);
+        $this->assertEquals('Geçersiz oyun seçimi', $data['error']);
+    }
+
+    /** @test */
+    public function detect_game_middleware_kullanici_son_ziyaret_edilen_oyunu_kaydeder()
+    {
+        // Kullanıcı oluştur
+        $user = User::factory()->create();
+
+        // PUBG oyunu oluştur
+        $game = \App\Models\Game::create([
+            'name' => 'PUBG Mobile',
+            'slug' => 'pubg',
+            'status' => 'active',
+            'settings' => [],
+        ]);
+
+        // Kullanıcı olarak giriş yap
+        $this->actingAs($user);
+
+        // Middleware'i doğrudan test et
+        $middleware = new \App\Http\Middleware\DetectGame(
+            app(\App\Services\GameService::class),
+            app(\App\Services\SecurityLogService::class)
+        );
+        
+        $request = \Illuminate\Http\Request::create('http://pubg.takimsistemi.com/test', 'GET');
+        $request->headers->set('Host', 'pubg.takimsistemi.com');
+        $request->setUserResolver(function () use ($user) {
+            return $user;
+        });
+        
+        $response = $middleware->handle($request, function ($req) {
+            return response()->json(['success' => true]);
+        });
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        // Son ziyaret edilen oyunun kaydedildiğini kontrol et
+        $gameService = app(\App\Services\GameService::class);
+        $lastGameId = $gameService->getLastVisitedGame($user->id);
+        $this->assertEquals($game->id, $lastGameId);
     }
 }

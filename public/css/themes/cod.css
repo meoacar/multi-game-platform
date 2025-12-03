@@ -1,0 +1,36 @@
+/* 🎯 Call of Duty Mobile Teması */
+
+:root {
+    --game-primary: #FF6B00;
+    --game-secondary: #FFB800;
+    --game-accent: #00FF00;
+    --game-dark: #0a0a0a;
+    --game-darker: #000000;
+}
+
+body {
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+}
+
+.btn-game-primary {
+    background: linear-gradient(135deg, #FF6B00, #FF0000);
+    box-shadow: 0 4px 15px rgba(255, 107, 0, 0.4);
+}
+
+.btn-game-primary:hover {
+    box-shadow: 0 6px 20px rgba(255, 0, 0, 0.6);
+    transform: translateY(-2px);
+}
+
+.card-game {
+    border: 2px solid var(--game-primary);
+    background: rgba(255, 107, 0, 0.08);
+}
+
+.badge-game {
+    background: linear-gradient(135deg, var(--game-primary), #FF0000);
+}
+
+.hero-game {
+    background: linear-gradient(135deg, rgba(255, 107, 0, 0.95), rgba(255, 0, 0, 0.95));
+}

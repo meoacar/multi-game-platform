@@ -19,6 +19,7 @@ class MatchmakingController extends Controller
 
     public function __construct(MatchmakingService $matchmakingService)
     {
+        $this->middleware('auth'); // Tüm metodlar için auth zorunlu
         $this->matchmakingService = $matchmakingService;
     }
 

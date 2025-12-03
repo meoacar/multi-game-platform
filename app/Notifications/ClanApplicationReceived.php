@@ -42,6 +42,7 @@ class ClanApplicationReceived extends Notification
             'clan_name' => $this->clanName,
             'url' => route('clans.applications', $this->clanSlug),
             'icon' => 'users',
+            'game_id' => session('game_id'), // Oyuna özel bildirim
         ];
     }
 }

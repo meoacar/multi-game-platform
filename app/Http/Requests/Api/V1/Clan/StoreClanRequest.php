@@ -26,7 +26,7 @@ class StoreClanRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'game_id' => 'required|exists:games,id',
+            'game_id' => ['required', new \App\Rules\ValidGameId()],
             'name' => 'required|string|max:255|min:3',
             'description' => 'required|string|min:10',
             'requirements' => 'nullable|string',

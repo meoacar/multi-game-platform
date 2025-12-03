@@ -20,7 +20,8 @@ class ClanController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Clan::with(['leader.profile', 'game']);
+        // Eager loading ile N+1 query prevention (Requirements 15.3)
+        $query = Clan::withBasicRelations();
 
         // Filtreler
         if ($request->has('game_id') && $request->game_id) {
@@ -51,13 +52,18 @@ class ClanController extends Controller
 
         $clans = $query->paginate(20)->withQueryString();
 
-        // Filtre için veriler
-        $games = Game::active()->ordered()->get();
-        $cities = Clan::select('city')
-            ->distinct()
-            ->whereNotNull('city')
-            ->orderBy('city')
-            ->pluck('city');
+        // Filtre için veriler - cache kullan (Requirements 15.1)
+        $games = \Cache::remember('active_games', 3600, function () {
+            return Game::active()->ordered()->get();
+        });
+        
+        $cities = \Cache::remember('clan_cities', 3600, function () {
+            return Clan::select('city')
+                ->distinct()
+                ->whereNotNull('city')
+                ->orderBy('city')
+                ->pluck('city');
+        });
 
         return view('clans.index', compact('clans', 'games', 'cities'));
     }
@@ -68,8 +74,9 @@ class ClanController extends Controller
      */
     public function show($slug)
     {
-        $clan = Clan::where('slug', $slug)
-            ->with(['leader.profile', 'game', 'members.profile'])
+        // Tüm ilişkileri eager load et (Requirements 15.3)
+        $clan = Clan::withRelations()
+            ->where('slug', $slug)
             ->firstOrFail();
 
         // Kullanıcının başvurusu var mı?
@@ -93,7 +100,10 @@ class ClanController extends Controller
      */
     public function create()
     {
-        $games = Game::active()->ordered()->get();
+        // Aktif oyunları cache'den al (Requirements 15.1)
+        $games = \Cache::remember('active_games', 3600, function () {
+            return Game::active()->ordered()->get();
+        });
         
         return view('clans.create', compact('games'));
     }
@@ -159,7 +169,10 @@ class ClanController extends Controller
             abort(403, 'Bu işlem için yetkiniz yok');
         }
 
-        $games = Game::active()->ordered()->get();
+        // Aktif oyunları cache'den al (Requirements 15.1)
+        $games = \Cache::remember('active_games', 3600, function () {
+            return Game::active()->ordered()->get();
+        });
 
         return view('clans.edit', compact('clan', 'games'));
     }
@@ -240,8 +253,9 @@ class ClanController extends Controller
      */
     public function applications($slug)
     {
-        $clan = Clan::where('slug', $slug)
-            ->with(['leader.profile', 'game'])
+        // Eager loading ile N+1 prevention (Requirements 15.3)
+        $clan = Clan::withBasicRelations()
+            ->where('slug', $slug)
             ->firstOrFail();
 
         // Sadece klan lideri görebilir
@@ -249,6 +263,7 @@ class ClanController extends Controller
             abort(403, 'Bu işlem için yetkiniz yok');
         }
 
+        // Başvuruları da eager load et
         $applications = $clan->applications()
             ->with('user.profile')
             ->latest()

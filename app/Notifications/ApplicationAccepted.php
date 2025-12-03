@@ -48,6 +48,7 @@ class ApplicationAccepted extends Notification
             'target_title' => $this->title,
             'url' => $url,
             'icon' => 'check-circle',
+            'game_id' => session('game_id'), // Oyuna özel bildirim
         ];
     }
 }

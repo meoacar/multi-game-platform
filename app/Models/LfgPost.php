@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\GameScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -9,12 +10,14 @@ use Illuminate\Support\Str;
 
 /**
  * LFG (Looking For Group) Post Model
- * Takım arama ilanları
+ * Takım arama ilanları - Oyuna özel
  * 
  * İlişkiler:
  * - belongsTo: User (ilan sahibi)
  * - belongsTo: Game
  * - hasMany: LfgApplication (başvurular)
+ * 
+ * Global Scope: GameScope (otomatik game_id filtreleme)
  */
 class LfgPost extends Model
 {
@@ -157,5 +160,63 @@ class LfgPost extends Model
     public function isExpired(): bool
     {
         return $this->expires_at && $this->expires_at->isPast();
+    }
+
+    /**
+     * Model booted
+     * GameScope ekle ve otomatik game_id atama
+     */
+    protected static function booted(): void
+    {
+        // Global scope ekle
+        static::addGlobalScope(new GameScope());
+
+        // Yeni kayıt oluşturulurken otomatik game_id ata
+        static::creating(function ($lfgPost) {
+            if (!$lfgPost->game_id && session('game_id')) {
+                $lfgPost->game_id = session('game_id');
+            }
+        });
+    }
+
+    /**
+     * Scope: Belirli bir oyuna göre filtrele
+     * 
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param int $gameId
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeForGame($query, int $gameId)
+    {
+        return $query->where('game_id', $gameId);
+    }
+
+    /**
+     * Scope: Eager load ile ilişkileri yükle (N+1 prevention - Requirements 15.3)
+     * 
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeWithRelations($query)
+    {
+        return $query->with([
+            'user.profile',
+            'game',
+            'applications.user.profile'
+        ]);
+    }
+
+    /**
+     * Scope: Sadece temel ilişkileri yükle (hafif versiyon)
+     * 
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeWithBasicRelations($query)
+    {
+        return $query->with([
+            'user.profile',
+            'game'
+        ]);
     }
 }
