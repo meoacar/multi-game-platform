@@ -219,6 +219,10 @@ class ProfileController extends Controller
      */
     public function update(Request $request)
     {
+        // Debug: Gelen veriyi logla
+        \Log::info('=== PROFILE UPDATE BAŞLADI ===');
+        \Log::info('Request Data:', $request->all());
+        
         $validated = $request->validate([
             'nickname' => 'nullable|string|max:255',
             'pubg_id' => 'nullable|string|max:255',
@@ -244,19 +248,37 @@ class ProfileController extends Controller
             'settings.allow_friend_requests' => 'nullable|boolean',
         ]);
 
+        \Log::info('Validated Data:', $validated);
+
         $user = $request->user();
         $profile = $user->profile;
+        
+        \Log::info('User ID:', ['id' => $user->id]);
+        \Log::info('Profile var mı?', ['exists' => $profile ? 'Evet' : 'Hayır']);
         
         // Profil yoksa oluştur
         if (!$profile) {
             $profile = $user->profile()->create([]);
+            \Log::info('✅ Yeni profile oluşturuldu', ['profile_id' => $profile->id]);
         }
         
         $wasComplete = $profile->is_complete;
         
         // Profil bilgilerini güncelle
         $profileData = collect($validated)->except('settings')->toArray();
+        \Log::info('Profile Data (settings hariç):', $profileData);
+        
         $profile->update($profileData);
+        \Log::info('✅ Profile güncellendi');
+        
+        // Güncellenmiş veriyi kontrol et
+        $profile->refresh();
+        \Log::info('Güncellenmiş Profile:', [
+            'nickname' => $profile->nickname,
+            'pubg_id' => $profile->pubg_id,
+            'rank' => $profile->rank,
+        ]);
+        
         $profile->checkCompletion();
 
         // Gizlilik ayarlarını güncelle
