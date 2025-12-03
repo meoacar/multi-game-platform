@@ -246,6 +246,12 @@ class ProfileController extends Controller
 
         $user = $request->user();
         $profile = $user->profile;
+        
+        // Profil yoksa oluştur
+        if (!$profile) {
+            $profile = $user->profile()->create([]);
+        }
+        
         $wasComplete = $profile->is_complete;
         
         // Profil bilgilerini güncelle
