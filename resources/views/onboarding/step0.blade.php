@@ -42,15 +42,22 @@
                             <!-- Oyun Logosu/İkonu -->
                             <div class="relative">
                                 @if($game->logo)
-                                    <div class="w-24 h-24 rounded-xl overflow-hidden ring-4 ring-gray-700 group-hover:ring-purple-500 transition-all duration-300">
-                                        <img src="{{ $game->logo_url }}" 
+                                    <div class="w-24 h-24 rounded-xl overflow-hidden ring-4 ring-gray-700 group-hover:ring-purple-500 transition-all duration-300 bg-white/10 backdrop-blur-sm">
+                                        <img src="{{ asset($game->logo) }}" 
                                              alt="{{ $game->name }}" 
-                                             class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500">
+                                             class="w-full h-full object-contain p-2 transform group-hover:scale-110 transition-transform duration-500"
+                                             onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'w-full h-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center\'><span class=\'text-white font-black text-4xl\'>{{ substr($game->name, 0, 1) }}</span></div>';">
                                     </div>
                                 @else
-                                    <div class="w-24 h-24 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center ring-4 ring-gray-700 group-hover:ring-purple-500 transition-all duration-300">
-                                        <span class="text-white font-black text-4xl">
-                                            {{ substr($game->name, 0, 1) }}
+                                    @php
+                                        $gameIcons = [
+                                            'lol' => ['emoji' => '⚔️', 'gradient' => 'from-purple-500 to-indigo-500'],
+                                        ];
+                                        $icon = $gameIcons[$game->slug] ?? ['emoji' => '🎮', 'gradient' => 'from-purple-500 to-pink-500'];
+                                    @endphp
+                                    <div class="w-24 h-24 bg-gradient-to-br {{ $icon['gradient'] }} rounded-xl flex items-center justify-center ring-4 ring-gray-700 group-hover:ring-purple-500 transition-all duration-300 shadow-lg group-hover:shadow-2xl">
+                                        <span class="text-6xl transform group-hover:scale-110 transition-transform duration-300">
+                                            {{ $icon['emoji'] }}
                                         </span>
                                     </div>
                                 @endif
