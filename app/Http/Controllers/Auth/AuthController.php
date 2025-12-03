@@ -113,7 +113,7 @@ class AuthController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'status' => 'active',
-            'onboarding_step' => 1, // Onboarding sürecini başlat
+            'onboarding_step' => 0, // Oyun seçimi ile başla
             'onboarding_completed' => false,
         ]);
 
