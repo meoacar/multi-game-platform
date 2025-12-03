@@ -95,15 +95,22 @@ class OnboardingController extends Controller
             'game_id.exists' => 'Geçersiz oyun seçimi.',
         ]);
 
+        // Seçilen oyunu bul
+        $game = Game::findOrFail($validated['game_id']);
+
         // Oyunu kaydet
-        $user->game_id = $validated['game_id'];
+        $user->game_id = $game->id;
         $user->save();
 
         // Adım 1'e geç
         $user->updateOnboardingStep(1);
 
-        return redirect()->route('onboarding.index')
-            ->with('success', 'Oyun seçiminiz kaydedildi!');
+        // Seçilen oyunun subdomain'ine yönlendir
+        $domain = config('app.domain', 'squadbul.com');
+        $gameUrl = "https://{$game->slug}.{$domain}/onboarding";
+
+        return redirect()->away($gameUrl)
+            ->with('success', "{$game->name} oyunu seçildi! Profil bilgilerini tamamla.");
     }
 
     /**
