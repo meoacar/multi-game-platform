@@ -6,6 +6,7 @@ use App\Http\Requests\Onboarding\Step1Request;
 use App\Http\Requests\Onboarding\Step2Request;
 use App\Http\Requests\Onboarding\Step3Request;
 use App\Http\Requests\Onboarding\Step4Request;
+use App\Models\Game;
 use App\Services\OnboardingService;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
@@ -52,18 +53,57 @@ class OnboardingController extends Controller
         // Mevcut adımı al
         $currentStep = $this->service->getCurrentStep($user);
 
-        // Eğer adım 0 ise (yeni kullanıcı), adım 1'e başlat
+        // Eğer oyun seçilmemişse, adım 0'a yönlendir (oyun seçimi)
+        if (!$user->game_id && $currentStep > 0) {
+            $currentStep = 0;
+            $user->updateOnboardingStep(0);
+        }
+
+        // Eğer adım 0 ise, oyun seçim sayfasını göster
         if ($currentStep === 0) {
-            $user->updateOnboardingStep(1);
-            $currentStep = 1;
+            $games = Game::active()->ordered()->get();
+            return view('onboarding.step0', [
+                'user' => $user,
+                'games' => $games,
+                'currentStep' => 0,
+                'totalSteps' => OnboardingService::TOTAL_STEPS + 1, // +1 oyun seçimi için
+            ]);
         }
 
         // İlgili adım view'ine yönlendir
         return view("onboarding.step{$currentStep}", [
             'user' => $user,
             'currentStep' => $currentStep,
-            'totalSteps' => OnboardingService::TOTAL_STEPS,
+            'totalSteps' => OnboardingService::TOTAL_STEPS + 1,
         ]);
+    }
+
+    /**
+     * Adım 0: Oyun Seçimi
+     * 
+     * POST /onboarding/step0
+     */
+    public function step0(Request $request): RedirectResponse
+    {
+        $user = $request->user();
+        
+        // Validasyon
+        $validated = $request->validate([
+            'game_id' => 'required|exists:games,id',
+        ], [
+            'game_id.required' => 'Lütfen bir oyun seçin.',
+            'game_id.exists' => 'Geçersiz oyun seçimi.',
+        ]);
+
+        // Oyunu kaydet
+        $user->game_id = $validated['game_id'];
+        $user->save();
+
+        // Adım 1'e geç
+        $user->updateOnboardingStep(1);
+
+        return redirect()->route('onboarding.index')
+            ->with('success', 'Oyun seçiminiz kaydedildi!');
     }
 
     /**

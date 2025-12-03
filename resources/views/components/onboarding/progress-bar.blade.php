@@ -7,7 +7,7 @@
 <div class="mb-8">
     <!-- Step Indicators -->
     <div class="flex justify-between items-center mb-4">
-        @for ($i = 1; $i <= $total; $i++)
+        @for ($i = 0; $i <= $total; $i++)
             <div class="flex flex-col items-center flex-1">
                 <!-- Circle -->
                 <div class="relative">
@@ -35,7 +35,8 @@
                 <div class="hidden sm:block mt-2 text-xs font-medium text-center
                     @if($i <= $current) text-white @else text-gray-500 @endif
                 ">
-                    @if($i == 1) PUBG Bilgileri
+                    @if($i == 0) Oyun Seçimi
+                    @elseif($i == 1) Profil Bilgileri
                     @elseif($i == 2) Tercihler
                     @elseif($i == 3) İlgi Alanları
                     @elseif($i == 4) Bildirimler

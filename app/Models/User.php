@@ -38,6 +38,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'fcm_token',
         'device_type',
         'fcm_token_updated_at',
+        // Multi-game
+        'game_id',
         // Onboarding kolonları
         'onboarding_completed',
         'onboarding_step',
@@ -87,6 +89,14 @@ class User extends Authenticatable implements MustVerifyEmail
             'interests' => 'array',
             'push_enabled' => 'boolean',
         ];
+    }
+
+    /**
+     * Kullanıcının ana oyunu
+     */
+    public function game()
+    {
+        return $this->belongsTo(Game::class);
     }
 
     /**
