@@ -24,7 +24,7 @@
 
             <!-- Desktop Menu -->
             <div class="hidden lg:flex items-center space-x-1">
-                @if(session('current_game'))
+                @if(isset($currentGame) && $currentGame)
                     <!-- Oyun seçiliyse: Oyuna özel menü -->
                     <!-- Game Switcher Component -->
                     <x-game-switcher />
@@ -121,7 +121,7 @@
             <!-- User Menu -->
             <div class="hidden lg:flex items-center space-x-2">
                 @auth
-                    @if(session('current_game'))
+                    @if(isset($currentGame) && $currentGame)
                         <!-- Subdomain'de: Mesajlar ve Bildirimler -->
                         <!-- Mesajlar -->
                         <a href="{{ route('messages.index') }}" class="relative p-2 text-gray-300 hover:text-white hover:bg-white/5 rounded-xl transition-all {{ request()->routeIs('messages.*') ? 'bg-white/5 text-white' : '' }}">
@@ -156,7 +156,7 @@
                                 <p class="text-xs text-gray-500">{{ Auth::user()->email }}</p>
                             </div>
                             
-                            @if(session('current_game'))
+                            @if(isset($currentGame) && $currentGame)
                                 <!-- Subdomain'de: Oyuna özel menü -->
                                 <a href="{{ route('profile.index') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
                                     👤 Profilim
@@ -239,7 +239,7 @@
 
         <!-- Mobile Menu -->
         <div x-show="mobileMenu" x-transition class="lg:hidden py-4 space-y-2 border-t border-white/10">
-            @if(session('current_game'))
+            @if(isset($currentGame) && $currentGame)
                 <!-- Oyun seçiliyse: Oyuna özel menü -->
                 <div class="px-4 pb-2 border-b border-white/10 mb-2">
                     <x-game-switcher />
@@ -269,7 +269,7 @@
                     <div class="px-4 py-2 text-sm text-gray-400">
                         {{ Auth::user()->name }}
                     </div>
-                    @if(session('current_game'))
+                    @if(isset($currentGame) && $currentGame)
                         <!-- Subdomain'de: Oyuna özel menü -->
                         <a href="{{ route('profile.index') }}" class="block px-4 py-2 rounded-lg hover:bg-white/5 transition-colors">👤 Profilim</a>
                         <a href="{{ route('profile.edit') }}" class="block px-4 py-2 rounded-lg hover:bg-white/5 transition-colors">✏️ Profili Düzenle</a>
@@ -303,4 +303,5 @@
         </div>
     </div>
 </nav>
+
 
