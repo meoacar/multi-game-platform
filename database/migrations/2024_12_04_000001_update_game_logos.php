@@ -15,7 +15,7 @@ return new class extends Migration
         // Logo path'lerini güncelle
         $games = [
             ['slug' => 'pubg', 'logo' => 'images/analogolar/pubgmoile.jpg'],
-            ['slug' => 'cod-mobile', 'logo' => 'images/analogolar/callofduty.jpg'],
+            ['slug' => 'cod', 'logo' => 'images/analogolar/callofduty.jpg'],
             ['slug' => 'valorant', 'logo' => 'images/analogolar/valo.webp'],
             ['slug' => 'csgo', 'logo' => 'images/analogolar/csgo.png'],
             ['slug' => 'lol', 'logo' => 'images/analogolar/lol.jpg'],
