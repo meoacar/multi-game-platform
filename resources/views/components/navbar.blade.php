@@ -1,37 +1,66 @@
 <!-- Navigation -->
-<nav class="relative z-50 border-b border-white/5 backdrop-blur-xl bg-black/20" x-data="{ mobileMenu: false }">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<nav class="relative z-50 border-b border-purple-500/20 backdrop-blur-2xl bg-gradient-to-r from-black/90 via-purple-900/10 to-black/90" x-data="{ mobileMenu: false }">
+    <!-- Animated Background -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+        <div class="absolute -top-40 -right-40 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl animate-pulse-slow"></div>
+        <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl animate-pulse-slow" style="animation-delay: 1s;"></div>
+    </div>
+    
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         <div class="flex justify-between items-center h-20">
             <!-- Logo -->
-            <a href="{{ route('home') }}" class="flex items-center space-x-3 group">
-                <div class="w-12 h-12 bg-gradient-to-br from-orange-500 to-red-600 rounded-xl flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-orange-500/50">
-                    <span class="text-2xl">🎮</span>
+            <a href="{{ route('home') }}" class="flex items-center space-x-3 group relative">
+                <div class="relative">
+                    <div class="absolute inset-0 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl blur-xl opacity-50 group-hover:opacity-100 transition-opacity"></div>
+                    <div class="relative w-14 h-14 bg-gradient-to-br from-purple-600 via-pink-500 to-red-600 rounded-2xl flex items-center justify-center transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-2xl">
+                        <span class="text-3xl animate-bounce-slow">🎮</span>
+                    </div>
                 </div>
                 <div>
-                    <h1 class="text-xl font-bold bg-gradient-to-r from-orange-400 to-red-500 bg-clip-text text-transparent">PUBG Mobile</h1>
-                    <p class="text-xs text-gray-400">Topluluk Platformu</p>
+                    <h1 class="text-2xl font-black bg-gradient-to-r from-purple-400 via-pink-400 to-red-400 bg-clip-text text-transparent group-hover:scale-105 transition-transform">SquadBul</h1>
+                    <p class="text-xs text-gray-400 font-semibold">Multi-Game Platform</p>
                 </div>
             </a>
 
             <!-- Desktop Menu -->
-            <div class="hidden lg:flex items-center space-x-1">
+            <div class="hidden lg:flex items-center space-x-2">
                 <!-- Game Switcher Component -->
                 <x-game-switcher />
                 
-                <a href="{{ route('home') }}" class="px-3 py-2 text-gray-300 hover:text-white hover:bg-white/5 rounded-xl font-semibold transition-all {{ request()->routeIs('home') ? 'bg-white/5 text-white' : '' }}">
-                    🏠 Ana Sayfa
+                <a href="{{ route('home') }}" class="relative px-4 py-2.5 text-gray-300 hover:text-white rounded-xl font-bold transition-all group {{ request()->routeIs('home') ? 'text-white' : '' }}">
+                    <span class="relative z-10 flex items-center gap-2">
+                        <span class="text-lg">🏠</span>
+                        Ana Sayfa
+                    </span>
+                    <div class="absolute inset-0 bg-gradient-to-r from-purple-500/0 to-pink-500/0 group-hover:from-purple-500/20 group-hover:to-pink-500/20 rounded-xl transition-all {{ request()->routeIs('home') ? 'from-purple-500/20 to-pink-500/20' : '' }}"></div>
                 </a>
-                <a href="{{ route('lfg.index') }}" class="px-3 py-2 text-gray-300 hover:text-white hover:bg-white/5 rounded-xl font-semibold transition-all {{ request()->routeIs('lfg.*') ? 'bg-white/5 text-white' : '' }}">
-                    🎯 İlanlar
+                <a href="{{ route('lfg.index') }}" class="relative px-4 py-2.5 text-gray-300 hover:text-white rounded-xl font-bold transition-all group {{ request()->routeIs('lfg.*') ? 'text-white' : '' }}">
+                    <span class="relative z-10 flex items-center gap-2">
+                        <span class="text-lg">🎯</span>
+                        İlanlar
+                    </span>
+                    <div class="absolute inset-0 bg-gradient-to-r from-purple-500/0 to-pink-500/0 group-hover:from-purple-500/20 group-hover:to-pink-500/20 rounded-xl transition-all {{ request()->routeIs('lfg.*') ? 'from-purple-500/20 to-pink-500/20' : '' }}"></div>
                 </a>
-                <a href="{{ route('matchmaking.index') }}" class="px-3 py-2 text-gray-300 hover:text-white hover:bg-white/5 rounded-xl font-semibold transition-all {{ request()->routeIs('matchmaking.*') ? 'bg-white/5 text-white' : '' }}">
-                    🎮 Eşleşme
+                <a href="{{ route('matchmaking.index') }}" class="relative px-4 py-2.5 text-gray-300 hover:text-white rounded-xl font-bold transition-all group {{ request()->routeIs('matchmaking.*') ? 'text-white' : '' }}">
+                    <span class="relative z-10 flex items-center gap-2">
+                        <span class="text-lg">🎮</span>
+                        Eşleşme
+                    </span>
+                    <div class="absolute inset-0 bg-gradient-to-r from-purple-500/0 to-pink-500/0 group-hover:from-purple-500/20 group-hover:to-pink-500/20 rounded-xl transition-all {{ request()->routeIs('matchmaking.*') ? 'from-purple-500/20 to-pink-500/20' : '' }}"></div>
                 </a>
-                <a href="{{ route('clans.index') }}" class="px-3 py-2 text-gray-300 hover:text-white hover:bg-white/5 rounded-xl font-semibold transition-all {{ request()->routeIs('clans.*') ? 'bg-white/5 text-white' : '' }}">
-                    👥 Klanlar
+                <a href="{{ route('clans.index') }}" class="relative px-4 py-2.5 text-gray-300 hover:text-white rounded-xl font-bold transition-all group {{ request()->routeIs('clans.*') ? 'text-white' : '' }}">
+                    <span class="relative z-10 flex items-center gap-2">
+                        <span class="text-lg">👥</span>
+                        Klanlar
+                    </span>
+                    <div class="absolute inset-0 bg-gradient-to-r from-purple-500/0 to-pink-500/0 group-hover:from-purple-500/20 group-hover:to-pink-500/20 rounded-xl transition-all {{ request()->routeIs('clans.*') ? 'from-purple-500/20 to-pink-500/20' : '' }}"></div>
                 </a>
-                <a href="{{ route('guide.index') }}" class="px-3 py-2 text-gray-300 hover:text-white hover:bg-white/5 rounded-xl font-semibold transition-all {{ request()->routeIs('guide.*') ? 'bg-white/5 text-white' : '' }}">
-                    📚 Rehber
+                <a href="{{ route('guide.index') }}" class="relative px-4 py-2.5 text-gray-300 hover:text-white rounded-xl font-bold transition-all group {{ request()->routeIs('guide.*') ? 'text-white' : '' }}">
+                    <span class="relative z-10 flex items-center gap-2">
+                        <span class="text-lg">📚</span>
+                        Rehber
+                    </span>
+                    <div class="absolute inset-0 bg-gradient-to-r from-purple-500/0 to-pink-500/0 group-hover:from-purple-500/20 group-hover:to-pink-500/20 rounded-xl transition-all {{ request()->routeIs('guide.*') ? 'from-purple-500/20 to-pink-500/20' : '' }}"></div>
                 </a>
                 
                 <!-- Dropdown Menu -->
@@ -152,12 +181,19 @@
                         </div>
                     </div>
                 @else
-                    <a href="{{ route('login') }}" class="px-4 py-2 text-gray-300 hover:text-white font-semibold transition-all">
+                    <a href="{{ route('login') }}" class="px-5 py-2.5 text-gray-300 hover:text-white font-bold transition-all hover:bg-white/5 rounded-xl">
                         Giriş Yap
                     </a>
                     @if(setting('registration_open', true))
-                        <a href="{{ route('register') }}" class="px-6 py-2.5 bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white font-bold rounded-xl shadow-lg shadow-orange-500/30 hover:shadow-orange-500/50 transition-all transform hover:scale-105">
-                            Kayıt Ol
+                        <a href="{{ route('register') }}" class="group relative px-6 py-3 bg-gradient-to-r from-purple-600 via-pink-600 to-red-600 hover:from-purple-700 hover:via-pink-700 hover:to-red-700 text-white font-black rounded-xl shadow-lg shadow-purple-500/30 hover:shadow-purple-500/60 transition-all transform hover:scale-105 overflow-hidden">
+                            <!-- Shine Effect -->
+                            <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                            <span class="relative z-10 flex items-center gap-2">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                                </svg>
+                                Kayıt Ol
+                            </span>
                         </a>
                     @endif
                 @endauth
