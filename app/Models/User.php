@@ -40,18 +40,6 @@ class User extends Authenticatable implements MustVerifyEmail
         'fcm_token_updated_at',
         // Multi-game
         'game_id',
-        // Onboarding kolonları
-        'onboarding_completed',
-        'onboarding_step',
-        'profile_completion',
-        'pubg_id',
-        'player_level',
-        'player_tier',
-        'main_server',
-        'favorite_mode',
-        'favorite_type',
-        'active_hours',
-        'interests',
         'push_enabled',
     ];
 
@@ -80,13 +68,6 @@ class User extends Authenticatable implements MustVerifyEmail
             'last_login_at' => 'datetime',
             'fcm_token_updated_at' => 'datetime',
             'settings' => 'array',
-            // Onboarding casts
-            'onboarding_completed' => 'boolean',
-            'onboarding_step' => 'integer',
-            'profile_completion' => 'integer',
-            'player_level' => 'integer',
-            'active_hours' => 'array',
-            'interests' => 'array',
             'push_enabled' => 'boolean',
         ];
     }
@@ -100,11 +81,30 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Kullanıcının profili
+     * Kullanıcının profili (mevcut oyun için)
+     * Otomatik olarak session'daki game_id'ye göre filtrelenir
      */
     public function profile()
     {
-        return $this->hasOne(Profile::class);
+        return $this->hasOne(Profile::class)
+            ->where('game_id', session('game_id'));
+    }
+
+    /**
+     * Kullanıcının tüm profilleri (tüm oyunlar için)
+     */
+    public function profiles()
+    {
+        return $this->hasMany(Profile::class);
+    }
+
+    /**
+     * Belirli bir oyun için profil
+     */
+    public function profileForGame(int $gameId)
+    {
+        return $this->hasOne(Profile::class)
+            ->where('game_id', $gameId);
     }
 
     /**
@@ -156,76 +156,9 @@ class User extends Authenticatable implements MustVerifyEmail
      * 
      * @return bool
      */
-    public function hasCompletedOnboarding(): bool
-    {
-        return (bool) $this->onboarding_completed;
-    }
 
-    /**
-     * Profil tamamlanma yüzdesini hesapla
-     * 
-     * Doldurulmuş alan sayısına göre yüzde hesaplar.
-     * Toplam 12 onboarding alanı var.
-     * 
-     * @return int
-     */
-    public function getProfileCompletionAttribute(): int
-    {
-        // Eğer manuel olarak ayarlanmışsa onu kullan
-        if (isset($this->attributes['profile_completion'])) {
-            return (int) $this->attributes['profile_completion'];
-        }
 
-        // Kontrol edilecek alanlar
-        $fields = [
-            'pubg_id',
-            'player_level',
-            'player_tier',
-            'main_server',
-            'favorite_mode',
-            'favorite_type',
-            'active_hours',
-            'interests',
-            'push_enabled',
-        ];
 
-        $filledCount = 0;
-        $totalFields = count($fields);
-
-        foreach ($fields as $field) {
-            $value = $this->attributes[$field] ?? null;
-            
-            // Array alanlar için özel kontrol
-            if (in_array($field, ['active_hours', 'interests'])) {
-                $decoded = is_string($value) ? json_decode($value, true) : $value;
-                if (!empty($decoded)) {
-                    $filledCount++;
-                }
-            } 
-            // Boolean alanlar için özel kontrol (push_enabled)
-            elseif ($field === 'push_enabled') {
-                // push_enabled her zaman sayılır (true veya false)
-                $filledCount++;
-            }
-            // Diğer alanlar
-            elseif (!empty($value)) {
-                $filledCount++;
-            }
-        }
-
-        return (int) round(($filledCount / $totalFields) * 100);
-    }
-
-    /**
-     * Onboarding adımını güncelle
-     * 
-     * @param int $step Yeni adım numarası (1-4 arası)
-     * @return void
-     */
-    public function updateOnboardingStep(int $step): void
-    {
-        $this->update(['onboarding_step' => $step]);
-    }
 
     /**
      * Kullanıcının LFG ilanları

@@ -45,19 +45,39 @@ class CheckOnboarding
             return $next($request);
         }
 
-        // Onboarding tamamlanmamışsa yönlendir
-        if (!$user->hasCompletedOnboarding()) {
-            // API isteği ise JSON döndür
+        // Ana domain'de (oyun seçilmemiş) onboarding kontrolü yapma
+        if (!session('game_id')) {
+            return $next($request);
+        }
+
+        // Mevcut oyun için profil var mı kontrol et
+        $profile = $user->profileForGame(session('game_id'))->first();
+
+        if (!$profile) {
+            // Bu oyun için profil yok → Onboarding'e yönlendir
             if ($request->expectsJson()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Lütfen önce profil tamamlama sürecini tamamlayın.',
-                    'redirect' => route('onboarding.index'),
+                    'message' => 'Bu oyun için profilinizi oluşturmanız gerekiyor.',
+                    'redirect' => route('onboarding.start'),
                 ], 403);
             }
 
-            // Web isteği ise onboarding'e yönlendir
-            return redirect()->route('onboarding.index')
+            return redirect()->route('onboarding.start')
+                ->with('info', session('game')->name . ' için profilinizi oluşturalım!');
+        }
+
+        // Profil var ama onboarding tamamlanmamış
+        if (!$profile->onboarding_completed) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Lütfen profil tamamlama sürecini tamamlayın.',
+                    'redirect' => route('onboarding.step', $profile->onboarding_step),
+                ], 403);
+            }
+
+            return redirect()->route('onboarding.step', $profile->onboarding_step)
                 ->with('info', 'Devam etmek için lütfen profil bilgilerinizi tamamlayın.');
         }
 

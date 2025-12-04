@@ -2,20 +2,24 @@
 
 namespace App\Models;
 
+use App\Models\Traits\HasGameScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
  * Profile Model
  * 
- * Kullanıcı profil bilgileri - PUBG ve kişisel bilgiler
+ * Kullanıcı profil bilgileri - Her oyun için ayrı profil
  * 
  * İlişkiler:
  * - belongsTo: User
+ * - belongsTo: Game
+ * 
+ * Global Scope: HasGameScope (otomatik game_id filtreleme)
  */
 class Profile extends Model
 {
-    use HasFactory;
+    use HasFactory, HasGameScope;
 
     /**
      * The attributes that are mass assignable.
@@ -24,6 +28,7 @@ class Profile extends Model
      */
     protected $fillable = [
         'user_id',
+        'game_id',
         'nickname',
         'pubg_id',
         'rank',
@@ -40,6 +45,9 @@ class Profile extends Model
         'discord_username',
         'profile_views',
         'is_profile_completed',
+        // Onboarding
+        'onboarding_completed',
+        'onboarding_step',
         // Oyun İstatistikleri
         'matches_played',
         'wins',
@@ -64,6 +72,9 @@ class Profile extends Model
         'profile_views' => 'integer',
         'is_profile_completed' => 'boolean',
         'favorite_maps' => 'array',
+        // Onboarding
+        'onboarding_completed' => 'boolean',
+        'onboarding_step' => 'integer',
         // Oyun İstatistikleri
         'matches_played' => 'integer',
         'wins' => 'integer',
@@ -85,6 +96,29 @@ class Profile extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Profilin ait olduğu oyun
+     */
+    public function game()
+    {
+        return $this->belongsTo(Game::class);
+    }
+
+    /**
+     * Model boot - Otomatik game_id atama
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($profile) {
+            // Otomatik game_id ata
+            if (!$profile->game_id && session('game_id')) {
+                $profile->game_id = session('game_id');
+            }
+        });
     }
 
     /**
@@ -196,5 +230,32 @@ class Profile extends Model
 
         // Oranları yeniden hesapla
         $this->recalculateStatistics();
+    }
+
+    /**
+     * Onboarding adımını güncelle
+     */
+    public function updateOnboardingStep(int $step): void
+    {
+        $this->update(['onboarding_step' => $step]);
+    }
+
+    /**
+     * Onboarding'i tamamla
+     */
+    public function completeOnboarding(): void
+    {
+        $this->update([
+            'onboarding_completed' => true,
+            'onboarding_step' => 0,
+        ]);
+    }
+
+    /**
+     * Onboarding tamamlanmış mı?
+     */
+    public function hasCompletedOnboarding(): bool
+    {
+        return (bool) $this->onboarding_completed;
     }
 }

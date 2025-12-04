@@ -34,47 +34,95 @@ class OnboardingController extends Controller
     }
 
     /**
-     * Onboarding ana sayfası
+     * Onboarding başlangıç sayfası
      * 
-     * Kullanıcının mevcut adımını belirler ve ilgili view'e yönlendirir.
+     * Kullanıcının bu oyun için profili var mı kontrol eder.
+     * Yoksa yeni profil oluşturur ve onboarding başlatır.
      * 
-     * GET /onboarding
+     * GET /onboarding/start
      */
-    public function index(Request $request): View|RedirectResponse
+    public function start(Request $request): View|RedirectResponse
     {
         $user = $request->user();
+        $gameId = session('game_id');
+        $game = session('game');
 
-        // Onboarding zaten tamamlanmışsa dashboard'a yönlendir
-        if ($user->hasCompletedOnboarding()) {
+        // Oyun seçilmemişse ana sayfaya yönlendir
+        if (!$gameId) {
+            return redirect()->route('main.home')
+                ->with('error', 'Lütfen önce bir oyun seçin.');
+        }
+
+        // Bu oyun için profil var mı kontrol et
+        $profile = $user->profileForGame($gameId)->first();
+
+        if ($profile && $profile->onboarding_completed) {
+            // Profil var ve onboarding tamamlanmış
+            return redirect()->route('home')
+                ->with('info', $game->name . ' için profiliniz zaten tamamlanmış.');
+        }
+
+        if (!$profile) {
+            // Profil yok, yeni oluştur
+            $profile = $user->profiles()->create([
+                'game_id' => $gameId,
+                'onboarding_step' => 1,
+                'onboarding_completed' => false,
+            ]);
+        }
+
+        // İlk adıma yönlendir
+        return redirect()->route('onboarding.step', 1);
+    }
+
+    /**
+     * Onboarding adım sayfası
+     * 
+     * GET /onboarding/step/{step}
+     */
+    public function step(Request $request, int $step): View|RedirectResponse
+    {
+        $user = $request->user();
+        $gameId = session('game_id');
+        $game = session('game');
+
+        // Oyun seçilmemişse ana sayfaya yönlendir
+        if (!$gameId) {
+            return redirect()->route('main.home')
+                ->with('error', 'Lütfen önce bir oyun seçin.');
+        }
+
+        // Profil kontrol et
+        $profile = $user->profileForGame($gameId)->first();
+
+        if (!$profile) {
+            return redirect()->route('onboarding.start');
+        }
+
+        if ($profile->onboarding_completed) {
             return redirect()->route('home')
                 ->with('info', 'Onboarding sürecini zaten tamamladınız.');
         }
 
-        // Mevcut adımı al
-        $currentStep = $this->service->getCurrentStep($user);
-
-        // Eğer oyun seçilmemişse, adım 0'a yönlendir (oyun seçimi)
-        if (!$user->game_id && $currentStep > 0) {
-            $currentStep = 0;
-            $user->updateOnboardingStep(0);
+        // Adım kontrolü (1-4 arası)
+        if ($step < 1 || $step > 4) {
+            return redirect()->route('onboarding.step', 1);
         }
 
-        // Eğer adım 0 ise, oyun seçim sayfasını göster
-        if ($currentStep === 0) {
-            $games = Game::active()->ordered()->get();
-            return view('onboarding.step0', [
-                'user' => $user,
-                'games' => $games,
-                'currentStep' => 0,
-                'totalSteps' => OnboardingService::TOTAL_STEPS + 1, // +1 oyun seçimi için
-            ]);
+        // Oyuna göre view seç
+        $viewName = "onboarding.games.{$game->slug}.step{$step}";
+        
+        // Eğer oyuna özel view yoksa genel view kullan
+        if (!view()->exists($viewName)) {
+            $viewName = "onboarding.step{$step}";
         }
 
-        // İlgili adım view'ine yönlendir
-        return view("onboarding.step{$currentStep}", [
+        return view($viewName, [
             'user' => $user,
-            'currentStep' => $currentStep,
-            'totalSteps' => OnboardingService::TOTAL_STEPS + 1,
+            'profile' => $profile,
+            'game' => $game,
+            'currentStep' => $step,
+            'totalSteps' => 4,
         ]);
     }
 

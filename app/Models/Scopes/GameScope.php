@@ -7,40 +7,51 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;
 
 /**
- * GameScope - Global Scope for Multi-Game Platform
+ * GameScope - Otomatik oyun filtresi
  * 
- * Bu scope, oyuna özel modellere otomatik olarak game_id filtrelemesi uygular.
- * Session'daki game_id değerine göre sorguları filtreler.
+ * Bu scope, tüm query'lere otomatik olarak mevcut oyunun game_id'sini ekler.
+ * Subdomain'e göre otomatik filtreleme yapar.
  * 
  * Kullanım:
- * - Model'e otomatik olarak eklenir (booted metodunda)
- * - Session'da game_id varsa, tüm sorgular otomatik filtrelenir
- * - withoutGameScope() ile devre dışı bırakılabilir
- * 
- * Requirements: 4.1, 4.2
- * - 4.1: Oyuna özel entity'ler sorgulanırken otomatik game_id filtreleme
- * - 4.2: Model seviyesinde global scope ile filtreleme
+ * - Model'e trait ekle: use HasGameScope;
+ * - Otomatik olarak mevcut oyuna göre filtrelenir
+ * - Tüm oyunları görmek için: Model::withoutGlobalScope('game')->get()
  */
 class GameScope implements Scope
 {
     /**
      * Scope'u query'ye uygula
-     * 
-     * Session'daki game_id değerine göre otomatik filtreleme yapar.
-     * Eğer session'da game_id yoksa, filtreleme yapılmaz.
-     * 
-     * @param Builder $builder Query builder instance
-     * @param Model $model Model instance
-     * @return void
      */
     public function apply(Builder $builder, Model $model): void
     {
-        // Session'dan game_id'yi al
-        $gameId = session('game_id');
+        // Eğer game_id session'da veya config'de varsa uygula
+        $gameId = $this->getCurrentGameId();
         
-        // Eğer game_id varsa, filtreleme uygula
         if ($gameId) {
             $builder->where($model->getTable() . '.game_id', $gameId);
         }
+    }
+
+    /**
+     * Mevcut oyun ID'sini al
+     */
+    protected function getCurrentGameId(): ?int
+    {
+        // 1. Session'dan kontrol et
+        if (session()->has('current_game_id')) {
+            return session('current_game_id');
+        }
+
+        // 2. Config'den kontrol et (middleware tarafından set edilir)
+        if (config('app.current_game_id')) {
+            return config('app.current_game_id');
+        }
+
+        // 3. Request'ten kontrol et
+        if (request()->has('game_id')) {
+            return request()->get('game_id');
+        }
+
+        return null;
     }
 }

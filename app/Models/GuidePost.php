@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\Scopes\GameScope;
+use App\Models\Traits\HasGameScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -18,11 +18,11 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
  * - belongsTo: Game
  * - morphMany: Comment
  * 
- * Global Scope: GameScope (otomatik game_id filtreleme)
+ * Global Scope: HasGameScope (otomatik game_id filtreleme)
  */
 class GuidePost extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, HasGameScope;
 
     protected $fillable = [
         'user_id',
@@ -59,15 +59,12 @@ class GuidePost extends Model
     }
 
     /**
-     * Model booted
-     * GameScope ekle ve otomatik game_id atama
+     * Model boot - Otomatik game_id atama
      */
-    protected static function booted(): void
+    protected static function boot()
     {
-        // Global scope ekle
-        static::addGlobalScope(new GameScope());
+        parent::boot();
 
-        // Yeni kayıt oluşturulurken otomatik game_id ata
         static::creating(function ($guide) {
             if (!$guide->game_id && session('game_id')) {
                 $guide->game_id = session('game_id');

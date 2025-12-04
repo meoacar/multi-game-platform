@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\Scopes\GameScope;
+use App\Models\Traits\HasGameScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -18,11 +18,11 @@ use Illuminate\Support\Str;
  * - belongsToMany: User (üyeler - pivot: clan_members)
  * - hasMany: ClanApplication (başvurular)
  * 
- * Global Scope: GameScope (otomatik game_id filtreleme)
+ * Global Scope: HasGameScope (otomatik game_id filtreleme)
  */
 class Clan extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, HasGameScope;
 
     protected $fillable = [
         'user_id',
@@ -70,14 +70,7 @@ class Clan extends Model
         });
     }
 
-    /**
-     * Model booted
-     * Global scope ekle
-     */
-    protected static function booted(): void
-    {
-        static::addGlobalScope(new GameScope());
-    }
+
 
     /**
      * Klan lideri

@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\Scopes\GameScope;
+use App\Models\Traits\HasGameScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -18,11 +18,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * - belongsTo: Game
  * - hasMany: TournamentTeam
  * 
- * Global Scope: GameScope (otomatik game_id filtreleme)
+ * Global Scope: HasGameScope (otomatik game_id filtreleme)
  */
 class Tournament extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, HasGameScope;
 
     protected $fillable = [
         'organizer_id',
@@ -68,15 +68,12 @@ class Tournament extends Model
     }
 
     /**
-     * Model boot
-     * GameScope ekle ve otomatik game_id atama
+     * Model boot - Otomatik game_id atama
      */
-    protected static function booted(): void
+    protected static function boot()
     {
-        // Global scope ekle
-        static::addGlobalScope(new GameScope());
+        parent::boot();
 
-        // Yeni kayıt oluşturulurken otomatik game_id ata
         static::creating(function ($tournament) {
             if (!$tournament->game_id && session('game_id')) {
                 $tournament->game_id = session('game_id');

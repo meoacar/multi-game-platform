@@ -2,19 +2,23 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MainController;
+use App\Http\Controllers\GameSelectionController;
 
 /*
 |--------------------------------------------------------------------------
 | Main Domain Routes
 |--------------------------------------------------------------------------
 |
-| Bu route'lar ana domain (takimsistemi.com) için kullanılır.
-| Landing page ve platform geneli özellikler burada tanımlanır.
+| Bu route'lar ana domain (squadbul.com) için kullanılır.
+| Landing page ve oyun seçimi burada tanımlanır.
 |
 */
 
-// Ana sayfa (Landing Page) - Tüm oyunları listeler
-Route::get('/', [MainController::class, 'index'])->name('main.home');
+// Ana sayfa (Oyun Seçimi)
+Route::get('/', [GameSelectionController::class, 'index'])->name('main.home');
+
+// Oyun seçimi ve subdomain'e yönlendirme
+Route::get('/play/{slug}', [GameSelectionController::class, 'select'])->name('game.select');
 
 // Platform istatistikleri (AJAX)
 Route::get('/api/stats', [MainController::class, 'getStats'])->name('main.stats');
@@ -22,9 +26,6 @@ Route::get('/api/stats', [MainController::class, 'getStats'])->name('main.stats'
 // Öne çıkan turnuvalar (tüm oyunlardan)
 Route::get('/api/featured-tournaments', [MainController::class, 'getFeaturedTournaments'])
     ->name('main.featured-tournaments');
-
-// Oyun seçimi ve yönlendirme
-Route::post('/switch-game/{slug}', [MainController::class, 'switchGame'])->name('main.switch-game');
 
 /*
 |--------------------------------------------------------------------------

@@ -169,6 +169,9 @@ class DetectGame
             'game' => $game,
             'game_slug' => $game->slug,
         ]);
+        
+        // Config'e de kaydet (Global Scope için)
+        config(['app.current_game_id' => $game->id]);
     }
 
     /**
