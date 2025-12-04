@@ -98,13 +98,22 @@
                         </div>
                     </div>
                 @else
-                    <!-- Ana sayfada: Sadece oyun seçimi -->
-                    <a href="/" class="relative px-3 py-2 text-gray-300 hover:text-white rounded-lg text-sm font-semibold transition-all group">
+                    <!-- Ana sayfada: Kurumsal linkler -->
+                    <a href="/" class="relative px-3 py-2 text-white rounded-lg text-sm font-semibold transition-all group">
                         <span class="relative z-10 flex items-center gap-1.5">
                             <span class="text-base">🎮</span>
                             Oyunlar
                         </span>
                         <div class="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-lg"></div>
+                    </a>
+                    <a href="{{ route('pages.show', 'hakkimizda') }}" class="relative px-3 py-2 text-gray-300 hover:text-white rounded-lg text-sm font-semibold transition-all group">
+                        <span class="relative z-10">Hakkımızda</span>
+                    </a>
+                    <a href="{{ route('pages.show', 'iletisim') }}" class="relative px-3 py-2 text-gray-300 hover:text-white rounded-lg text-sm font-semibold transition-all group">
+                        <span class="relative z-10">İletişim</span>
+                    </a>
+                    <a href="{{ route('pages.show', 'sss') }}" class="relative px-3 py-2 text-gray-300 hover:text-white rounded-lg text-sm font-semibold transition-all group">
+                        <span class="relative z-10">SSS</span>
                     </a>
                 @endif
             </div>
@@ -112,28 +121,27 @@
             <!-- User Menu -->
             <div class="hidden lg:flex items-center space-x-2">
                 @auth
-                    <!-- Mesajlar -->
-                    <a href="{{ route('messages.index') }}" class="relative p-2 text-gray-300 hover:text-white hover:bg-white/5 rounded-xl transition-all {{ request()->routeIs('messages.*') ? 'bg-white/5 text-white' : '' }}">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
-                        </svg>
-                        <!-- Okunmamış mesaj badge'i (opsiyonel) -->
-                        @if(false) {{-- Buraya okunmamış mesaj sayısı eklenebilir --}}
-                        <span class="absolute top-0 right-0 w-2 h-2 bg-orange-500 rounded-full"></span>
-                        @endif
-                    </a>
+                    @if(session('game'))
+                        <!-- Subdomain'de: Mesajlar ve Bildirimler -->
+                        <!-- Mesajlar -->
+                        <a href="{{ route('messages.index') }}" class="relative p-2 text-gray-300 hover:text-white hover:bg-white/5 rounded-xl transition-all {{ request()->routeIs('messages.*') ? 'bg-white/5 text-white' : '' }}">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
+                            </svg>
+                        </a>
 
-                    <!-- Bildirimler -->
-                    <a href="{{ route('notifications.index') }}" class="relative p-2 text-gray-300 hover:text-white hover:bg-white/5 rounded-xl transition-all {{ request()->routeIs('notifications.*') ? 'bg-white/5 text-white' : '' }}">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
-                        </svg>
-                    </a>
+                        <!-- Bildirimler -->
+                        <a href="{{ route('notifications.index') }}" class="relative p-2 text-gray-300 hover:text-white hover:bg-white/5 rounded-xl transition-all {{ request()->routeIs('notifications.*') ? 'bg-white/5 text-white' : '' }}">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                            </svg>
+                        </a>
+                    @endif
 
                     <!-- User Dropdown -->
                     <div class="relative" x-data="{ open: false }">
                         <button @click="open = !open" class="flex items-center space-x-2 px-4 py-2 text-gray-300 hover:text-white hover:bg-white/5 rounded-xl transition-all font-semibold">
-                            <div class="w-8 h-8 bg-gradient-to-br from-orange-500 to-red-600 rounded-lg flex items-center justify-center text-sm font-bold">
+                            <div class="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-600 rounded-lg flex items-center justify-center text-sm font-bold">
                                 {{ strtoupper(substr(Auth::user()->name, 0, 2)) }}
                             </div>
                             <span>{{ Auth::user()->name }}</span>
@@ -147,42 +155,55 @@
                                 <p class="text-white font-bold">{{ Auth::user()->name }}</p>
                                 <p class="text-xs text-gray-500">{{ Auth::user()->email }}</p>
                             </div>
-                            <a href="{{ route('profile.index') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
-                                👤 Profilim
-                            </a>
-                            <a href="{{ route('xp.history') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
-                                ⭐ XP Geçmişim
-                            </a>
-                            <hr class="my-2 border-white/10">
-                            <a href="{{ route('lfg.create') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
-                                ➕ İlan Oluştur
-                            </a>
-                            <a href="{{ route('clans.create') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
-                                🛡️ Klan Kur
-                            </a>
-                            <a href="{{ route('squads.create') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
-                                👥 Takım Oluştur
-                            </a>
-                            <a href="{{ route('tournaments.create') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
-                                🎮 Turnuva Oluştur
-                            </a>
-                            <hr class="my-2 border-white/10">
-                            <a href="{{ route('friends.index') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
-                                👫 Arkadaşlarım
-                            </a>
-                            <a href="{{ route('friends.requests') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
-                                📬 Arkadaş İstekleri
-                            </a>
-                            <a href="{{ route('messages.index') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
-                                💬 Mesajlarım
-                            </a>
-                            <hr class="my-2 border-white/10">
-                            <a href="{{ route('settings.index') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
-                                ⚙️ Ayarlar
-                            </a>
-                            <a href="{{ route('notifications.index') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
-                                🔔 Bildirimler
-                            </a>
+                            
+                            @if(session('game'))
+                                <!-- Subdomain'de: Oyuna özel menü -->
+                                <a href="{{ route('profile.index') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
+                                    👤 Profilim
+                                </a>
+                                <a href="{{ route('xp.history') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
+                                    ⭐ XP Geçmişim
+                                </a>
+                                <hr class="my-2 border-white/10">
+                                <a href="{{ route('lfg.create') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
+                                    ➕ İlan Oluştur
+                                </a>
+                                <a href="{{ route('clans.create') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
+                                    🛡️ Klan Kur
+                                </a>
+                                <a href="{{ route('squads.create') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
+                                    👥 Takım Oluştur
+                                </a>
+                                <a href="{{ route('tournaments.create') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
+                                    🎮 Turnuva Oluştur
+                                </a>
+                                <hr class="my-2 border-white/10">
+                                <a href="{{ route('friends.index') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
+                                    👫 Arkadaşlarım
+                                </a>
+                                <a href="{{ route('friends.requests') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
+                                    📬 Arkadaş İstekleri
+                                </a>
+                                <a href="{{ route('messages.index') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
+                                    💬 Mesajlarım
+                                </a>
+                                <hr class="my-2 border-white/10">
+                                <a href="{{ route('settings.index') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
+                                    ⚙️ Ayarlar
+                                </a>
+                                <a href="{{ route('notifications.index') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
+                                    🔔 Bildirimler
+                                </a>
+                            @else
+                                <!-- Ana sayfada: Basit menü -->
+                                <a href="/" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
+                                    🎮 Oyunlar
+                                </a>
+                                <a href="{{ route('settings.index') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
+                                    ⚙️ Ayarlar
+                                </a>
+                            @endif
+                            
                             <hr class="my-2 border-white/10">
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
@@ -240,8 +261,11 @@
                 <a href="{{ route('xp.badges') }}" class="block px-4 py-2 rounded-lg hover:bg-white/5 transition-colors {{ request()->routeIs('xp.badges') ? 'bg-white/5 text-white' : '' }}">🎖️ Rozetler</a>
                 <a href="{{ route('devices.index') }}" class="block px-4 py-2 rounded-lg hover:bg-white/5 transition-colors {{ request()->routeIs('devices.*') ? 'bg-white/5 text-white' : '' }}">📱 Cihaz Ayarları</a>
             @else
-                <!-- Ana sayfada: Sadece oyun seçimi -->
+                <!-- Ana sayfada: Kurumsal linkler -->
                 <a href="/" class="block px-4 py-2 rounded-lg bg-white/5 text-white">🎮 Oyunlar</a>
+                <a href="{{ route('pages.show', 'hakkimizda') }}" class="block px-4 py-2 rounded-lg hover:bg-white/5 transition-colors">ℹ️ Hakkımızda</a>
+                <a href="{{ route('pages.show', 'iletisim') }}" class="block px-4 py-2 rounded-lg hover:bg-white/5 transition-colors">📧 İletişim</a>
+                <a href="{{ route('pages.show', 'sss') }}" class="block px-4 py-2 rounded-lg hover:bg-white/5 transition-colors">❓ SSS</a>
             @endif
             
             @auth
