@@ -161,6 +161,9 @@
                                 <a href="{{ route('profile.index') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
                                     👤 Profilim
                                 </a>
+                                <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
+                                    ✏️ Profili Düzenle
+                                </a>
                                 <a href="{{ route('xp.history') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
                                     ⭐ XP Geçmişim
                                 </a>
@@ -187,10 +190,6 @@
                                 <a href="{{ route('messages.index') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
                                     💬 Mesajlarım
                                 </a>
-                                <hr class="my-2 border-white/10">
-                                <a href="{{ route('settings.index') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
-                                    ⚙️ Ayarlar
-                                </a>
                                 <a href="{{ route('notifications.index') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
                                     🔔 Bildirimler
                                 </a>
@@ -198,9 +197,6 @@
                                 <!-- Ana sayfada: Basit menü -->
                                 <a href="/" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
                                     🎮 Oyunlar
-                                </a>
-                                <a href="{{ route('settings.index') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
-                                    ⚙️ Ayarlar
                                 </a>
                             @endif
                             
@@ -273,18 +269,24 @@
                     <div class="px-4 py-2 text-sm text-gray-400">
                         {{ Auth::user()->name }}
                     </div>
-                    <a href="{{ route('profile.index') }}" class="block px-4 py-2 rounded-lg hover:bg-white/5 transition-colors">👤 Profilim</a>
-                    <a href="{{ route('messages.index') }}" class="block px-4 py-2 rounded-lg hover:bg-white/5 transition-colors">💬 Mesajlarım</a>
-                    <a href="{{ route('friends.index') }}" class="block px-4 py-2 rounded-lg hover:bg-white/5 transition-colors">👫 Arkadaşlarım</a>
-                    <a href="{{ route('xp.history') }}" class="block px-4 py-2 rounded-lg hover:bg-white/5 transition-colors">⭐ XP Geçmişim</a>
-                    <hr class="my-2 border-white/10">
-                    <a href="{{ route('lfg.create') }}" class="block px-4 py-2 rounded-lg hover:bg-white/5 transition-colors">➕ İlan Oluştur</a>
-                    <a href="{{ route('clans.create') }}" class="block px-4 py-2 rounded-lg hover:bg-white/5 transition-colors">🛡️ Klan Kur</a>
-                    <a href="{{ route('squads.create') }}" class="block px-4 py-2 rounded-lg hover:bg-white/5 transition-colors">👥 Takım Oluştur</a>
-                    <a href="{{ route('tournaments.create') }}" class="block px-4 py-2 rounded-lg hover:bg-white/5 transition-colors">🎮 Turnuva Oluştur</a>
-                    <hr class="my-2 border-white/10">
-                    <a href="{{ route('settings.index') }}" class="block px-4 py-2 rounded-lg hover:bg-white/5 transition-colors">⚙️ Ayarlar</a>
-                    <a href="{{ route('notifications.index') }}" class="block px-4 py-2 rounded-lg hover:bg-white/5 transition-colors">🔔 Bildirimler</a>
+                    @if(session('game'))
+                        <!-- Subdomain'de: Oyuna özel menü -->
+                        <a href="{{ route('profile.index') }}" class="block px-4 py-2 rounded-lg hover:bg-white/5 transition-colors">👤 Profilim</a>
+                        <a href="{{ route('profile.edit') }}" class="block px-4 py-2 rounded-lg hover:bg-white/5 transition-colors">✏️ Profili Düzenle</a>
+                        <a href="{{ route('messages.index') }}" class="block px-4 py-2 rounded-lg hover:bg-white/5 transition-colors">💬 Mesajlarım</a>
+                        <a href="{{ route('friends.index') }}" class="block px-4 py-2 rounded-lg hover:bg-white/5 transition-colors">👫 Arkadaşlarım</a>
+                        <a href="{{ route('xp.history') }}" class="block px-4 py-2 rounded-lg hover:bg-white/5 transition-colors">⭐ XP Geçmişim</a>
+                        <hr class="my-2 border-white/10">
+                        <a href="{{ route('lfg.create') }}" class="block px-4 py-2 rounded-lg hover:bg-white/5 transition-colors">➕ İlan Oluştur</a>
+                        <a href="{{ route('clans.create') }}" class="block px-4 py-2 rounded-lg hover:bg-white/5 transition-colors">🛡️ Klan Kur</a>
+                        <a href="{{ route('squads.create') }}" class="block px-4 py-2 rounded-lg hover:bg-white/5 transition-colors">👥 Takım Oluştur</a>
+                        <a href="{{ route('tournaments.create') }}" class="block px-4 py-2 rounded-lg hover:bg-white/5 transition-colors">🎮 Turnuva Oluştur</a>
+                        <hr class="my-2 border-white/10">
+                        <a href="{{ route('notifications.index') }}" class="block px-4 py-2 rounded-lg hover:bg-white/5 transition-colors">🔔 Bildirimler</a>
+                    @else
+                        <!-- Ana sayfada: Basit menü -->
+                        <a href="/" class="block px-4 py-2 rounded-lg hover:bg-white/5 transition-colors">🎮 Oyunlar</a>
+                    @endif
                     <form action="{{ route('logout') }}" method="POST" class="mt-2">
                         @csrf
                         <button type="submit" class="block w-full text-left px-4 py-2 rounded-lg hover:bg-white/5 transition-colors text-red-400">🚪 Çıkış Yap</button>
