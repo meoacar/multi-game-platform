@@ -16,24 +16,32 @@
         <!-- Games Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             @forelse($games as $game)
-                <div class="group relative bg-gradient-to-br from-purple-900/50 to-pink-900/50 rounded-3xl overflow-hidden border border-purple-500/20 hover:border-purple-500/50 transition-all hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/30">
+                <div class="group relative bg-gradient-to-br from-purple-900/30 to-pink-900/30 backdrop-blur-xl rounded-3xl overflow-hidden border border-white/10 hover:border-purple-500/60 transition-all duration-500 hover:scale-105 hover:-translate-y-3 hover:shadow-2xl hover:shadow-purple-500/40">
                     <!-- Game Logo/Image -->
-                    <div class="relative h-48 bg-gradient-to-br from-purple-600/20 to-pink-600/20 flex items-center justify-center overflow-hidden">
+                    <div class="relative h-56 bg-gradient-to-br from-purple-600/30 to-pink-600/30 flex items-center justify-center overflow-hidden">
                         @if($game->logo)
                             <img src="{{ asset('storage/' . $game->logo) }}" 
                                  alt="{{ $game->name }}" 
-                                 class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                                 class="w-full h-full object-cover group-hover:scale-125 group-hover:rotate-2 transition-all duration-700">
                         @else
-                            <div class="text-6xl">🎮</div>
+                            <div class="text-7xl group-hover:scale-125 transition-transform duration-500">🎮</div>
                         @endif
                         
                         <!-- Overlay Gradient -->
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
+                        
+                        <!-- Animated Border -->
+                        <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                            <div class="absolute inset-0 bg-gradient-to-r from-purple-500/50 via-pink-500/50 to-purple-500/50 blur-xl"></div>
+                        </div>
                         
                         <!-- Status Badge -->
-                        <div class="absolute top-4 right-4 px-3 py-1 bg-green-500/90 backdrop-blur-sm rounded-full flex items-center gap-2">
-                            <span class="w-2 h-2 bg-white rounded-full animate-pulse"></span>
-                            <span class="text-xs font-bold text-white">Aktif</span>
+                        <div class="absolute top-4 right-4 px-4 py-2 bg-green-500/95 backdrop-blur-md rounded-full flex items-center gap-2 shadow-lg transform group-hover:scale-110 transition-transform">
+                            <span class="relative flex h-2 w-2">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+                            </span>
+                            <span class="text-xs font-black text-white">AKTİF</span>
                         </div>
                     </div>
 
@@ -92,13 +100,15 @@
 
                         <!-- Action Button -->
                         <a href="http://{{ $game->slug }}.{{ config('app.domain', 'takimsistemi.test') }}" 
-                           class="block w-full py-3 bg-gradient-to-r from-purple-500 to-pink-600 text-white text-center font-bold rounded-xl hover:shadow-lg hover:shadow-purple-500/50 transition-all group-hover:scale-105">
-                            <span class="flex items-center justify-center gap-2">
+                           class="relative block w-full py-4 bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 text-white text-center font-black rounded-xl hover:shadow-2xl hover:shadow-purple-500/60 transition-all overflow-hidden group/btn">
+                            <span class="relative z-10 flex items-center justify-center gap-2 text-lg">
+                                <span>🚀</span>
                                 <span>Oyuna Git</span>
-                                <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                                <svg class="w-5 h-5 group-hover/btn:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
                                 </svg>
                             </span>
+                            <div class="absolute inset-0 bg-gradient-to-r from-pink-600 via-purple-600 to-pink-600 opacity-0 group-hover/btn:opacity-100 transition-opacity bg-[length:200%_auto] animate-gradient"></div>
                         </a>
                     </div>
 
