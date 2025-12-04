@@ -5,21 +5,27 @@
 @section('content')
 <!-- Hero Section -->
 <div class="relative min-h-screen overflow-hidden bg-black">
+    <!-- Background Image -->
+    <div class="absolute inset-0">
+        <img src="{{ asset('images/analogolar/anasayfaarka.jpg') }}" 
+             alt="Background" 
+             class="w-full h-full object-cover opacity-30">
+        <!-- Dark Overlay -->
+        <div class="absolute inset-0 bg-gradient-to-br from-black/80 via-purple-900/50 to-black/80"></div>
+    </div>
+    
     <!-- Video Background Effect -->
     <div class="absolute inset-0">
-        <!-- Animated Gradient Mesh -->
-        <div class="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-black to-blue-900/20"></div>
-        
         <!-- Floating Orbs -->
-        <div class="absolute top-20 left-10 w-72 h-72 bg-purple-600/30 rounded-full mix-blend-screen filter blur-3xl animate-float"></div>
-        <div class="absolute top-40 right-20 w-96 h-96 bg-pink-600/30 rounded-full mix-blend-screen filter blur-3xl animate-float-delayed"></div>
-        <div class="absolute bottom-20 left-1/3 w-80 h-80 bg-blue-600/30 rounded-full mix-blend-screen filter blur-3xl animate-float-slow"></div>
+        <div class="absolute top-20 left-10 w-72 h-72 bg-purple-600/20 rounded-full mix-blend-screen filter blur-3xl animate-float"></div>
+        <div class="absolute top-40 right-20 w-96 h-96 bg-pink-600/20 rounded-full mix-blend-screen filter blur-3xl animate-float-delayed"></div>
+        <div class="absolute bottom-20 left-1/3 w-80 h-80 bg-blue-600/20 rounded-full mix-blend-screen filter blur-3xl animate-float-slow"></div>
         
         <!-- Grid Pattern -->
         <div class="absolute inset-0 bg-grid-white opacity-5"></div>
         
         <!-- Scanline Effect -->
-        <div class="absolute inset-0 bg-scanline opacity-10 animate-scan"></div>
+        <div class="absolute inset-0 bg-scanline opacity-5 animate-scan"></div>
     </div>
 
     <div class="relative z-10 container mx-auto px-4 py-16">
