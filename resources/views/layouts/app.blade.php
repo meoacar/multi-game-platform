@@ -37,8 +37,8 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     
     <!-- Oyuna Özel Tema CSS -->
-    @if(session('current_game'))
-        <link rel="stylesheet" href="{{ asset('css/themes/' . session('current_game')->slug . '.css') }}">
+    @if(isset($currentGame) && $currentGame)
+        <link rel="stylesheet" href="{{ asset('css/themes/' . $currentGame->slug . '.css') }}">
         
         @php
             $themeColors = [
@@ -48,7 +48,7 @@
                 'lol' => ['primary' => '#C89B3C', 'secondary' => '#0AC8B9'],
                 'csgo' => ['primary' => '#F7931E', 'secondary' => '#00A8E8'],
             ];
-            $colors = $themeColors[session('current_game')->slug] ?? $themeColors['pubg'];
+            $colors = $themeColors[$currentGame->slug] ?? $themeColors['pubg'];
         @endphp
         
         <style>
