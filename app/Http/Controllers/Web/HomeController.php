@@ -15,54 +15,66 @@ class HomeController extends Controller
      * Ana sayfa
      * GET /
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
+            // Mevcut oyunu al
+            $currentGame = $request->attributes->get('current_game');
+            $gameSlug = $currentGame ? $currentGame->slug : 'pubg';
+            
             // Cache ile istatistikleri 5 dakika boyunca sakla
-            $stats = cache()->remember('home_stats', 300, function () {
+            $stats = cache()->remember("home_stats_{$gameSlug}", 300, function () use ($currentGame) {
+                $gameId = $currentGame ? $currentGame->id : null;
+                
                 return [
                     'total_users' => User::count(),
                     'active_users' => User::where('status', 'active')->count(),
-                    'active_lfg' => \App\Models\LfgPost::where('status', 'open')->count(),
-                    'total_clans' => \App\Models\Clan::count(),
+                    'active_lfg' => \App\Models\LfgPost::where('status', 'open')
+                        ->when($gameId, fn($q) => $q->where('game_id', $gameId))
+                        ->count(),
+                    'total_clans' => \App\Models\Clan::when($gameId, fn($q) => $q->where('game_id', $gameId))->count(),
                 ];
             });
 
-            // Son ilanları cache'le (1 dakika)
-            $latest_lfg = cache()->remember('home_latest_lfg', 60, function () {
-                return \App\Models\LfgPost::with('user:id,name')
+            // Son ilanları cache'le (1 dakika) - Oyuna özel
+            $recentLfg = cache()->remember("home_recent_lfg_{$gameSlug}", 60, function () use ($currentGame) {
+                $gameId = $currentGame ? $currentGame->id : null;
+                
+                return \App\Models\LfgPost::with(['user:id,name', 'game:id,name,slug'])
                     ->where('status', 'open')
+                    ->when($gameId, fn($q) => $q->where('game_id', $gameId))
                     ->latest()
-                    ->take(5)
+                    ->take(6)
                     ->get();
             });
 
-            // Yeni klanları cache'le (1 dakika)
-            $latest_clans = cache()->remember('home_latest_clans', 60, function () {
+            // Popüler klanları cache'le (1 dakika) - Oyuna özel
+            $popularClans = cache()->remember("home_popular_clans_{$gameSlug}", 60, function () use ($currentGame) {
+                $gameId = $currentGame ? $currentGame->id : null;
+                
                 return \App\Models\Clan::withCount('members')
-                    ->latest()
-                    ->take(5)
+                    ->when($gameId, fn($q) => $q->where('game_id', $gameId))
+                    ->orderBy('members_count', 'desc')
+                    ->take(6)
                     ->get();
             });
 
-            // Top kullanıcıları cache'le (5 dakika)
-            $top_users = cache()->remember('home_top_users', 300, function () {
-                return User::select('id', 'name', 'xp_total')
-                    ->withCount(['lfgPosts', 'badges'])
-                    ->orderBy('xp_total', 'desc')
-                    ->take(3)
-                    ->get()
-                    ->map(function ($user) {
-                        $user->xp = $user->xp_total;
-                        $user->level = $user->getLevel();
-                        $user->badges_count = $user->badges_count;
-                        $user->posts_count = $user->lfg_posts_count;
-                        return $user;
-                    });
-            });
+            // Oyuna özel view'ı seç
+            $viewPath = "games.{$gameSlug}.home";
+            
+            // Eğer oyuna özel view yoksa, default home'u kullan
+            if (!view()->exists($viewPath)) {
+                $viewPath = 'home';
+            }
 
-            return view('welcome', compact('stats', 'latest_lfg', 'latest_clans', 'top_users'));
+            return view($viewPath, compact('stats', 'recentLfg', 'popularClans'));
         } catch (\Exception $e) {
+            \Log::error('HomeController error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
             return response($e->getMessage() . ' - ' . $e->getFile() . ':' . $e->getLine(), 500);
         }
     }
