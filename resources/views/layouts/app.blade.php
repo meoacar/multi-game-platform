@@ -37,18 +37,18 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     
     <!-- Oyuna Özel Tema CSS -->
-    @if(session('game'))
-        <link rel="stylesheet" href="{{ asset('css/themes/' . session('game')->slug . '.css') }}">
+    @if(session('current_game'))
+        <link rel="stylesheet" href="{{ asset('css/themes/' . session('current_game')->slug . '.css') }}">
         
         @php
             $themeColors = [
-                'pubg' => ['primary' => '#FF6B00', 'secondary' => '#FFB800', 'from' => 'from-orange-600', 'to' => 'to-yellow-600'],
-                'valorant' => ['primary' => '#FF4655', 'secondary' => '#FD4556', 'from' => 'from-red-600', 'to' => 'to-pink-600'],
-                'cod' => ['primary' => '#5C8727', 'secondary' => '#8BC34A', 'from' => 'from-green-700', 'to' => 'to-green-500'],
-                'lol' => ['primary' => '#C89B3C', 'secondary' => '#0AC8B9', 'from' => 'from-yellow-600', 'to' => 'to-cyan-500'],
-                'csgo' => ['primary' => '#F7931E', 'secondary' => '#00A8E8', 'from' => 'from-orange-500', 'to' => 'to-blue-500'],
+                'pubg' => ['primary' => '#FF6B00', 'secondary' => '#FFB800'],
+                'valorant' => ['primary' => '#FF4655', 'secondary' => '#FD4556'],
+                'cod' => ['primary' => '#5C8727', 'secondary' => '#8BC34A'],
+                'lol' => ['primary' => '#C89B3C', 'secondary' => '#0AC8B9'],
+                'csgo' => ['primary' => '#F7931E', 'secondary' => '#00A8E8'],
             ];
-            $colors = $themeColors[session('game')->slug] ?? $themeColors['pubg'];
+            $colors = $themeColors[session('current_game')->slug] ?? $themeColors['pubg'];
         @endphp
         
         <style>
