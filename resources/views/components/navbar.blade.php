@@ -7,94 +7,106 @@
     </div>
     
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-        <div class="flex justify-between items-center h-20">
+        <div class="flex justify-between items-center h-16">
             <!-- Logo -->
-            <a href="{{ route('home') }}" class="flex items-center space-x-3 group relative">
+            <a href="{{ route('home') }}" class="flex items-center space-x-2 group relative">
                 <div class="relative">
-                    <div class="absolute inset-0 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl blur-xl opacity-50 group-hover:opacity-100 transition-opacity"></div>
-                    <div class="relative w-14 h-14 bg-gradient-to-br from-purple-600 via-pink-500 to-red-600 rounded-2xl flex items-center justify-center transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-2xl">
-                        <span class="text-3xl animate-bounce-slow">🎮</span>
+                    <div class="absolute inset-0 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl blur-lg opacity-50 group-hover:opacity-100 transition-opacity"></div>
+                    <div class="relative w-10 h-10 bg-gradient-to-br from-purple-600 via-pink-500 to-red-600 rounded-xl flex items-center justify-center transform group-hover:scale-110 transition-all duration-300 shadow-xl">
+                        <span class="text-xl">🎮</span>
                     </div>
                 </div>
                 <div>
-                    <h1 class="text-2xl font-black bg-gradient-to-r from-purple-400 via-pink-400 to-red-400 bg-clip-text text-transparent group-hover:scale-105 transition-transform">SquadBul</h1>
-                    <p class="text-xs text-gray-400 font-semibold">Multi-Game Platform</p>
+                    <h1 class="text-lg font-black bg-gradient-to-r from-purple-400 via-pink-400 to-red-400 bg-clip-text text-transparent">SquadBul</h1>
+                    <p class="text-[10px] text-gray-500 font-semibold -mt-0.5">Multi-Game</p>
                 </div>
             </a>
 
             <!-- Desktop Menu -->
-            <div class="hidden lg:flex items-center space-x-2">
-                <!-- Game Switcher Component -->
-                <x-game-switcher />
-                
-                <a href="{{ route('home') }}" class="relative px-4 py-2.5 text-gray-300 hover:text-white rounded-xl font-bold transition-all group {{ request()->routeIs('home') ? 'text-white' : '' }}">
-                    <span class="relative z-10 flex items-center gap-2">
-                        <span class="text-lg">🏠</span>
-                        Ana Sayfa
-                    </span>
-                    <div class="absolute inset-0 bg-gradient-to-r from-purple-500/0 to-pink-500/0 group-hover:from-purple-500/20 group-hover:to-pink-500/20 rounded-xl transition-all {{ request()->routeIs('home') ? 'from-purple-500/20 to-pink-500/20' : '' }}"></div>
-                </a>
-                <a href="{{ route('lfg.index') }}" class="relative px-4 py-2.5 text-gray-300 hover:text-white rounded-xl font-bold transition-all group {{ request()->routeIs('lfg.*') ? 'text-white' : '' }}">
-                    <span class="relative z-10 flex items-center gap-2">
-                        <span class="text-lg">🎯</span>
-                        İlanlar
-                    </span>
-                    <div class="absolute inset-0 bg-gradient-to-r from-purple-500/0 to-pink-500/0 group-hover:from-purple-500/20 group-hover:to-pink-500/20 rounded-xl transition-all {{ request()->routeIs('lfg.*') ? 'from-purple-500/20 to-pink-500/20' : '' }}"></div>
-                </a>
-                <a href="{{ route('matchmaking.index') }}" class="relative px-4 py-2.5 text-gray-300 hover:text-white rounded-xl font-bold transition-all group {{ request()->routeIs('matchmaking.*') ? 'text-white' : '' }}">
-                    <span class="relative z-10 flex items-center gap-2">
-                        <span class="text-lg">🎮</span>
-                        Eşleşme
-                    </span>
-                    <div class="absolute inset-0 bg-gradient-to-r from-purple-500/0 to-pink-500/0 group-hover:from-purple-500/20 group-hover:to-pink-500/20 rounded-xl transition-all {{ request()->routeIs('matchmaking.*') ? 'from-purple-500/20 to-pink-500/20' : '' }}"></div>
-                </a>
-                <a href="{{ route('clans.index') }}" class="relative px-4 py-2.5 text-gray-300 hover:text-white rounded-xl font-bold transition-all group {{ request()->routeIs('clans.*') ? 'text-white' : '' }}">
-                    <span class="relative z-10 flex items-center gap-2">
-                        <span class="text-lg">👥</span>
-                        Klanlar
-                    </span>
-                    <div class="absolute inset-0 bg-gradient-to-r from-purple-500/0 to-pink-500/0 group-hover:from-purple-500/20 group-hover:to-pink-500/20 rounded-xl transition-all {{ request()->routeIs('clans.*') ? 'from-purple-500/20 to-pink-500/20' : '' }}"></div>
-                </a>
-                <a href="{{ route('guide.index') }}" class="relative px-4 py-2.5 text-gray-300 hover:text-white rounded-xl font-bold transition-all group {{ request()->routeIs('guide.*') ? 'text-white' : '' }}">
-                    <span class="relative z-10 flex items-center gap-2">
-                        <span class="text-lg">📚</span>
-                        Rehber
-                    </span>
-                    <div class="absolute inset-0 bg-gradient-to-r from-purple-500/0 to-pink-500/0 group-hover:from-purple-500/20 group-hover:to-pink-500/20 rounded-xl transition-all {{ request()->routeIs('guide.*') ? 'from-purple-500/20 to-pink-500/20' : '' }}"></div>
-                </a>
-                
-                <!-- Dropdown Menu -->
-                <div class="relative" x-data="{ open: false }">
-                    <button @click="open = !open" class="px-3 py-2 text-gray-300 hover:text-white hover:bg-white/5 rounded-xl font-semibold transition-all flex items-center space-x-1">
-                        <span>⚡ Diğer</span>
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                        </svg>
-                    </button>
-                    <div x-show="open" @click.away="open = false" x-transition class="absolute left-0 mt-2 w-56 bg-gray-800/95 backdrop-blur-xl rounded-xl shadow-2xl border border-white/10 py-2 z-50">
-                        <a href="{{ route('community.index') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
-                            💬 Topluluk
-                        </a>
-                        <a href="{{ route('tournaments.index') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
-                            🎮 Turnuvalar
-                        </a>
-                        <a href="{{ route('squads.index') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
-                            👥 Takımlar
-                        </a>
-                        <a href="{{ route('xp.leaderboard') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
-                            🏆 Liderlik Tablosu
-                        </a>
-                        <a href="{{ route('xp.badges') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
-                            🎖️ Rozetler
-                        </a>
-                        <a href="{{ route('devices.index') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
-                            📱 Cihaz Ayarları
-                        </a>
-                        <a href="{{ route('friends.index') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
-                            👫 Arkadaşlar
-                        </a>
+            <div class="hidden lg:flex items-center space-x-1">
+                @if(session('game'))
+                    <!-- Oyun seçiliyse: Oyuna özel menü -->
+                    <!-- Game Switcher Component -->
+                    <x-game-switcher />
+                    
+                    <a href="{{ route('home') }}" class="relative px-3 py-2 text-gray-300 hover:text-white rounded-lg text-sm font-semibold transition-all group {{ request()->routeIs('home') ? 'text-white' : '' }}">
+                        <span class="relative z-10 flex items-center gap-1.5">
+                            <span class="text-base">🏠</span>
+                            Ana Sayfa
+                        </span>
+                        <div class="absolute inset-0 bg-gradient-to-r from-purple-500/0 to-pink-500/0 group-hover:from-purple-500/20 group-hover:to-pink-500/20 rounded-lg transition-all {{ request()->routeIs('home') ? 'from-purple-500/20 to-pink-500/20' : '' }}"></div>
+                    </a>
+                    <a href="{{ route('lfg.index') }}" class="relative px-3 py-2 text-gray-300 hover:text-white rounded-lg text-sm font-semibold transition-all group {{ request()->routeIs('lfg.*') ? 'text-white' : '' }}">
+                        <span class="relative z-10 flex items-center gap-1.5">
+                            <span class="text-base">🎯</span>
+                            İlanlar
+                        </span>
+                        <div class="absolute inset-0 bg-gradient-to-r from-purple-500/0 to-pink-500/0 group-hover:from-purple-500/20 group-hover:to-pink-500/20 rounded-lg transition-all {{ request()->routeIs('lfg.*') ? 'from-purple-500/20 to-pink-500/20' : '' }}"></div>
+                    </a>
+                    <a href="{{ route('matchmaking.index') }}" class="relative px-3 py-2 text-gray-300 hover:text-white rounded-lg text-sm font-semibold transition-all group {{ request()->routeIs('matchmaking.*') ? 'text-white' : '' }}">
+                        <span class="relative z-10 flex items-center gap-1.5">
+                            <span class="text-base">🎮</span>
+                            Eşleşme
+                        </span>
+                        <div class="absolute inset-0 bg-gradient-to-r from-purple-500/0 to-pink-500/0 group-hover:from-purple-500/20 group-hover:to-pink-500/20 rounded-lg transition-all {{ request()->routeIs('matchmaking.*') ? 'from-purple-500/20 to-pink-500/20' : '' }}"></div>
+                    </a>
+                    <a href="{{ route('clans.index') }}" class="relative px-3 py-2 text-gray-300 hover:text-white rounded-lg text-sm font-semibold transition-all group {{ request()->routeIs('clans.*') ? 'text-white' : '' }}">
+                        <span class="relative z-10 flex items-center gap-1.5">
+                            <span class="text-base">👥</span>
+                            Klanlar
+                        </span>
+                        <div class="absolute inset-0 bg-gradient-to-r from-purple-500/0 to-pink-500/0 group-hover:from-purple-500/20 group-hover:to-pink-500/20 rounded-lg transition-all {{ request()->routeIs('clans.*') ? 'from-purple-500/20 to-pink-500/20' : '' }}"></div>
+                    </a>
+                    <a href="{{ route('guide.index') }}" class="relative px-3 py-2 text-gray-300 hover:text-white rounded-lg text-sm font-semibold transition-all group {{ request()->routeIs('guide.*') ? 'text-white' : '' }}">
+                        <span class="relative z-10 flex items-center gap-1.5">
+                            <span class="text-base">📚</span>
+                            Rehber
+                        </span>
+                        <div class="absolute inset-0 bg-gradient-to-r from-purple-500/0 to-pink-500/0 group-hover:from-purple-500/20 group-hover:to-pink-500/20 rounded-lg transition-all {{ request()->routeIs('guide.*') ? 'from-purple-500/20 to-pink-500/20' : '' }}"></div>
+                    </a>
+                    
+                    <!-- Dropdown Menu -->
+                    <div class="relative" x-data="{ open: false }">
+                        <button @click="open = !open" class="px-3 py-2 text-gray-300 hover:text-white hover:bg-white/5 rounded-lg text-sm font-semibold transition-all flex items-center space-x-1">
+                            <span>⚡ Diğer</span>
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div x-show="open" @click.away="open = false" x-transition class="absolute left-0 mt-2 w-56 bg-gray-800/95 backdrop-blur-xl rounded-xl shadow-2xl border border-white/10 py-2 z-50">
+                            <a href="{{ route('community.index') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
+                                💬 Topluluk
+                            </a>
+                            <a href="{{ route('tournaments.index') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
+                                🎮 Turnuvalar
+                            </a>
+                            <a href="{{ route('squads.index') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
+                                👥 Takımlar
+                            </a>
+                            <a href="{{ route('xp.leaderboard') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
+                                🏆 Liderlik Tablosu
+                            </a>
+                            <a href="{{ route('xp.badges') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
+                                🎖️ Rozetler
+                            </a>
+                            <a href="{{ route('devices.index') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
+                                📱 Cihaz Ayarları
+                            </a>
+                            <a href="{{ route('friends.index') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
+                                👫 Arkadaşlar
+                            </a>
+                        </div>
                     </div>
-                </div>
+                @else
+                    <!-- Ana sayfada: Sadece oyun seçimi -->
+                    <a href="/" class="relative px-3 py-2 text-gray-300 hover:text-white rounded-lg text-sm font-semibold transition-all group">
+                        <span class="relative z-10 flex items-center gap-1.5">
+                            <span class="text-base">🎮</span>
+                            Oyunlar
+                        </span>
+                        <div class="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-lg"></div>
+                    </a>
+                @endif
             </div>
 
             <!-- User Menu -->
@@ -181,15 +193,15 @@
                         </div>
                     </div>
                 @else
-                    <a href="{{ route('login') }}" class="px-5 py-2.5 text-gray-300 hover:text-white font-bold transition-all hover:bg-white/5 rounded-xl">
+                    <a href="{{ route('login') }}" class="px-4 py-2 text-gray-300 hover:text-white text-sm font-semibold transition-all hover:bg-white/5 rounded-lg">
                         Giriş Yap
                     </a>
                     @if(setting('registration_open', true))
-                        <a href="{{ route('register') }}" class="group relative px-6 py-3 bg-gradient-to-r from-purple-600 via-pink-600 to-red-600 hover:from-purple-700 hover:via-pink-700 hover:to-red-700 text-white font-black rounded-xl shadow-lg shadow-purple-500/30 hover:shadow-purple-500/60 transition-all transform hover:scale-105 overflow-hidden">
+                        <a href="{{ route('register') }}" class="group relative px-5 py-2 bg-gradient-to-r from-purple-600 via-pink-600 to-red-600 hover:from-purple-700 hover:via-pink-700 hover:to-red-700 text-white font-bold text-sm rounded-lg shadow-lg shadow-purple-500/30 hover:shadow-purple-500/60 transition-all transform hover:scale-105 overflow-hidden">
                             <!-- Shine Effect -->
                             <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
                             <span class="relative z-10 flex items-center gap-2">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
                                 </svg>
                                 Kayıt Ol
@@ -210,22 +222,27 @@
 
         <!-- Mobile Menu -->
         <div x-show="mobileMenu" x-transition class="lg:hidden py-4 space-y-2 border-t border-white/10">
-            <!-- Game Switcher Component (Mobile) -->
-            <div class="px-4 pb-2 border-b border-white/10 mb-2">
-                <x-game-switcher />
-            </div>
-            
-            <a href="{{ route('home') }}" class="block px-4 py-2 rounded-lg hover:bg-white/5 transition-colors {{ request()->routeIs('home') ? 'bg-white/5 text-white' : '' }}">🏠 Ana Sayfa</a>
-            <a href="{{ route('lfg.index') }}" class="block px-4 py-2 rounded-lg hover:bg-white/5 transition-colors {{ request()->routeIs('lfg.*') ? 'bg-white/5 text-white' : '' }}">🎯 İlanlar</a>
-            <a href="{{ route('matchmaking.index') }}" class="block px-4 py-2 rounded-lg hover:bg-white/5 transition-colors {{ request()->routeIs('matchmaking.*') ? 'bg-white/5 text-white' : '' }}">🎮 Eşleşme Bul</a>
-            <a href="{{ route('clans.index') }}" class="block px-4 py-2 rounded-lg hover:bg-white/5 transition-colors {{ request()->routeIs('clans.*') ? 'bg-white/5 text-white' : '' }}">👥 Klanlar</a>
-            <a href="{{ route('guide.index') }}" class="block px-4 py-2 rounded-lg hover:bg-white/5 transition-colors {{ request()->routeIs('guide.*') ? 'bg-white/5 text-white' : '' }}">📚 Rehber</a>
-            <a href="{{ route('community.index') }}" class="block px-4 py-2 rounded-lg hover:bg-white/5 transition-colors {{ request()->routeIs('community.*') ? 'bg-white/5 text-white' : '' }}">💬 Topluluk</a>
-            <a href="{{ route('tournaments.index') }}" class="block px-4 py-2 rounded-lg hover:bg-white/5 transition-colors {{ request()->routeIs('tournaments.*') ? 'bg-white/5 text-white' : '' }}">🎮 Turnuvalar</a>
-            <a href="{{ route('squads.index') }}" class="block px-4 py-2 rounded-lg hover:bg-white/5 transition-colors {{ request()->routeIs('squads.*') ? 'bg-white/5 text-white' : '' }}">👥 Takımlar</a>
-            <a href="{{ route('xp.leaderboard') }}" class="block px-4 py-2 rounded-lg hover:bg-white/5 transition-colors {{ request()->routeIs('xp.leaderboard') ? 'bg-white/5 text-white' : '' }}">🏆 Liderlik Tablosu</a>
-            <a href="{{ route('xp.badges') }}" class="block px-4 py-2 rounded-lg hover:bg-white/5 transition-colors {{ request()->routeIs('xp.badges') ? 'bg-white/5 text-white' : '' }}">🎖️ Rozetler</a>
-            <a href="{{ route('devices.index') }}" class="block px-4 py-2 rounded-lg hover:bg-white/5 transition-colors {{ request()->routeIs('devices.*') ? 'bg-white/5 text-white' : '' }}">📱 Cihaz Ayarları</a>
+            @if(session('game'))
+                <!-- Oyun seçiliyse: Oyuna özel menü -->
+                <div class="px-4 pb-2 border-b border-white/10 mb-2">
+                    <x-game-switcher />
+                </div>
+                
+                <a href="{{ route('home') }}" class="block px-4 py-2 rounded-lg hover:bg-white/5 transition-colors {{ request()->routeIs('home') ? 'bg-white/5 text-white' : '' }}">🏠 Ana Sayfa</a>
+                <a href="{{ route('lfg.index') }}" class="block px-4 py-2 rounded-lg hover:bg-white/5 transition-colors {{ request()->routeIs('lfg.*') ? 'bg-white/5 text-white' : '' }}">🎯 İlanlar</a>
+                <a href="{{ route('matchmaking.index') }}" class="block px-4 py-2 rounded-lg hover:bg-white/5 transition-colors {{ request()->routeIs('matchmaking.*') ? 'bg-white/5 text-white' : '' }}">🎮 Eşleşme Bul</a>
+                <a href="{{ route('clans.index') }}" class="block px-4 py-2 rounded-lg hover:bg-white/5 transition-colors {{ request()->routeIs('clans.*') ? 'bg-white/5 text-white' : '' }}">👥 Klanlar</a>
+                <a href="{{ route('guide.index') }}" class="block px-4 py-2 rounded-lg hover:bg-white/5 transition-colors {{ request()->routeIs('guide.*') ? 'bg-white/5 text-white' : '' }}">📚 Rehber</a>
+                <a href="{{ route('community.index') }}" class="block px-4 py-2 rounded-lg hover:bg-white/5 transition-colors {{ request()->routeIs('community.*') ? 'bg-white/5 text-white' : '' }}">💬 Topluluk</a>
+                <a href="{{ route('tournaments.index') }}" class="block px-4 py-2 rounded-lg hover:bg-white/5 transition-colors {{ request()->routeIs('tournaments.*') ? 'bg-white/5 text-white' : '' }}">🎮 Turnuvalar</a>
+                <a href="{{ route('squads.index') }}" class="block px-4 py-2 rounded-lg hover:bg-white/5 transition-colors {{ request()->routeIs('squads.*') ? 'bg-white/5 text-white' : '' }}">👥 Takımlar</a>
+                <a href="{{ route('xp.leaderboard') }}" class="block px-4 py-2 rounded-lg hover:bg-white/5 transition-colors {{ request()->routeIs('xp.leaderboard') ? 'bg-white/5 text-white' : '' }}">🏆 Liderlik Tablosu</a>
+                <a href="{{ route('xp.badges') }}" class="block px-4 py-2 rounded-lg hover:bg-white/5 transition-colors {{ request()->routeIs('xp.badges') ? 'bg-white/5 text-white' : '' }}">🎖️ Rozetler</a>
+                <a href="{{ route('devices.index') }}" class="block px-4 py-2 rounded-lg hover:bg-white/5 transition-colors {{ request()->routeIs('devices.*') ? 'bg-white/5 text-white' : '' }}">📱 Cihaz Ayarları</a>
+            @else
+                <!-- Ana sayfada: Sadece oyun seçimi -->
+                <a href="/" class="block px-4 py-2 rounded-lg bg-white/5 text-white">🎮 Oyunlar</a>
+            @endif
             
             @auth
                 <div class="border-t border-white/10 pt-2 mt-2">

@@ -73,11 +73,11 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 @php
                     $gameLogos = [
-                        'pubg-mobile' => 'pubgmoile.jpg',
+                        'pubg' => 'pubgmoile.jpg',
                         'valorant' => 'valo.webp',
-                        'call-of-duty' => 'callofduty.jpg',
-                        'cs-go' => 'csgo.png',
-                        'league-of-legends' => 'lol.jpg',
+                        'cod' => 'callofduty.jpg',
+                        'csgo' => 'csgo.png',
+                        'lol' => 'lol.jpg',
                     ];
                 @endphp
 
