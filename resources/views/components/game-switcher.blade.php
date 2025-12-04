@@ -84,6 +84,37 @@
             <p class="text-xs text-gray-400 uppercase tracking-wider font-semibold">Oyun Seç</p>
         </div>
         
+        <!-- Ana Sayfa Linki -->
+        <a 
+            href="{{ config('app.url') }}"
+            class="flex items-center space-x-3 px-4 py-3 hover:bg-white/5 transition-colors group border-b border-white/10"
+        >
+            <!-- Ana Sayfa İkonu -->
+            <div class="w-10 h-10 bg-gradient-to-br from-purple-500 to-blue-600 rounded-lg flex items-center justify-center text-xl ring-2 ring-white/10 group-hover:ring-purple-500/50 transition-all">
+                🏠
+            </div>
+            
+            <!-- Ana Sayfa Bilgisi -->
+            <div class="flex-1 min-w-0">
+                <p class="text-sm font-semibold text-white group-hover:text-purple-400 transition-colors">
+                    Ana Sayfa
+                </p>
+                <p class="text-xs text-gray-400">
+                    Tüm oyunlar
+                </p>
+            </div>
+            
+            <!-- Sağ Ok İkonu -->
+            <svg 
+                class="w-5 h-5 text-gray-600 group-hover:text-purple-400 transition-colors flex-shrink-0" 
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24"
+            >
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+        </a>
+        
         <!-- Oyun Listesi -->
         <div class="py-2 max-h-96 overflow-y-auto">
             @foreach($activeGames as $game)
