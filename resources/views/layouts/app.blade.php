@@ -39,6 +39,62 @@
     <!-- Oyuna Özel Tema CSS -->
     @if(session('game'))
         <link rel="stylesheet" href="{{ asset('css/themes/' . session('game')->slug . '.css') }}">
+        
+        @php
+            $themeColors = [
+                'pubg' => ['primary' => '#FF6B00', 'secondary' => '#FFB800', 'from' => 'from-orange-600', 'to' => 'to-yellow-600'],
+                'valorant' => ['primary' => '#FF4655', 'secondary' => '#FD4556', 'from' => 'from-red-600', 'to' => 'to-pink-600'],
+                'cod' => ['primary' => '#5C8727', 'secondary' => '#8BC34A', 'from' => 'from-green-700', 'to' => 'to-green-500'],
+                'lol' => ['primary' => '#C89B3C', 'secondary' => '#0AC8B9', 'from' => 'from-yellow-600', 'to' => 'to-cyan-500'],
+                'csgo' => ['primary' => '#F7931E', 'secondary' => '#00A8E8', 'from' => 'from-orange-500', 'to' => 'to-blue-500'],
+            ];
+            $colors = $themeColors[session('game')->slug] ?? $themeColors['pubg'];
+        @endphp
+        
+        <style>
+            :root {
+                --game-primary: {{ $colors['primary'] }};
+                --game-secondary: {{ $colors['secondary'] }};
+            }
+            
+            /* Navbar Theme Override */
+            nav {
+                background: linear-gradient(90deg, rgba(0, 0, 0, 0.95) 0%, {{ $colors['primary'] }}15 50%, rgba(0, 0, 0, 0.95) 100%) !important;
+                border-bottom: 1px solid {{ $colors['primary'] }}40 !important;
+            }
+            
+            /* Gradient Text Override */
+            .bg-gradient-to-r.from-purple-400.via-pink-400.to-red-400 {
+                background: linear-gradient(to right, {{ $colors['primary'] }}, {{ $colors['secondary'] }}) !important;
+            }
+            
+            /* Button Override */
+            .bg-gradient-to-r.from-purple-600.via-pink-600.to-red-600 {
+                background: linear-gradient(to right, {{ $colors['primary'] }}, {{ $colors['secondary'] }}) !important;
+            }
+            
+            .bg-gradient-to-r.from-purple-600.via-pink-600.to-red-600:hover {
+                filter: brightness(1.2);
+            }
+            
+            /* Border Colors */
+            .border-purple-500\/20,
+            .border-purple-500\/30 {
+                border-color: {{ $colors['primary'] }}40 !important;
+            }
+            
+            /* Glow Effects */
+            .shadow-purple-500\/30,
+            .shadow-purple-500\/50 {
+                box-shadow: 0 10px 30px {{ $colors['primary'] }}50 !important;
+            }
+            
+            /* Background Overlays */
+            .bg-purple-500\/10,
+            .bg-purple-500\/20 {
+                background-color: {{ $colors['primary'] }}20 !important;
+            }
+        </style>
     @endif
     
     <!-- Oyuna Özel Tema -->
