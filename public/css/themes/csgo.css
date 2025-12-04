@@ -1,36 +1,60 @@
-/* 🔫 CS:GO Teması */
-
+/* CS:GO Theme - Blue & Orange */
 :root {
-    --game-primary: #F7B73C;
-    --game-secondary: #1B2838;
-    --game-accent: #66C0F4;
-    --game-dark: #1B2838;
+    --game-primary: #F7931E;
+    --game-secondary: #00A8E8;
+    --game-accent: #FF6B35;
+    --game-dark: #1A1A2E;
+    --game-darker: #0F0F1E;
 }
 
-body {
-    background: linear-gradient(135deg, #1B2838 0%, #2A475E 100%);
+/* Gradient Backgrounds */
+.bg-game-gradient {
+    background: linear-gradient(135deg, #F7931E 0%, #00A8E8 50%, #FF6B35 100%);
 }
 
+.bg-game-gradient-dark {
+    background: linear-gradient(135deg, rgba(247, 147, 30, 0.1) 0%, rgba(0, 168, 232, 0.05) 100%);
+}
+
+/* Buttons */
 .btn-game-primary {
-    background: linear-gradient(135deg, #F7B73C, #FFA000);
-    color: #1B2838;
-    box-shadow: 0 4px 15px rgba(247, 183, 60, 0.4);
+    background: linear-gradient(135deg, #F7931E, #00A8E8);
+    box-shadow: 0 10px 30px rgba(247, 147, 30, 0.3);
 }
 
 .btn-game-primary:hover {
-    box-shadow: 0 6px 20px rgba(247, 183, 60, 0.6);
+    background: linear-gradient(135deg, #00A8E8, #FF6B35);
+    box-shadow: 0 15px 40px rgba(247, 147, 30, 0.5);
+    transform: translateY(-2px);
 }
 
+/* Cards */
 .card-game {
-    border: 2px solid var(--game-primary);
-    background: rgba(247, 183, 60, 0.05);
+    background: linear-gradient(135deg, rgba(247, 147, 30, 0.1), rgba(0, 168, 232, 0.05));
+    border: 1px solid rgba(247, 147, 30, 0.2);
 }
 
-.badge-game {
-    background: var(--game-primary);
-    color: #1B2838;
+.card-game:hover {
+    border-color: rgba(247, 147, 30, 0.5);
+    box-shadow: 0 10px 40px rgba(247, 147, 30, 0.2);
 }
 
-.hero-game {
-    background: linear-gradient(135deg, rgba(247, 183, 60, 0.9), rgba(27, 40, 56, 0.9));
+/* Text Colors */
+.text-game-primary {
+    color: #F7931E;
+}
+
+.text-game-secondary {
+    color: #00A8E8;
+}
+
+/* Glow Effects */
+.glow-game {
+    box-shadow: 0 0 20px rgba(247, 147, 30, 0.5);
+}
+
+/* Navbar Override */
+nav {
+    background: linear-gradient(90deg, rgba(26, 26, 46, 0.95) 0%, rgba(247, 147, 30, 0.1) 50%, rgba(26, 26, 46, 0.95) 100%) !important;
+    border-bottom-color: rgba(247, 147, 30, 0.3) !important;
 }

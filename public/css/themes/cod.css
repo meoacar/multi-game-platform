@@ -1,36 +1,60 @@
-/* 🎯 Call of Duty Mobile Teması */
-
+/* Call of Duty Theme - Military Green & Black */
 :root {
-    --game-primary: #FF6B00;
-    --game-secondary: #FFB800;
-    --game-accent: #00FF00;
-    --game-dark: #0a0a0a;
-    --game-darker: #000000;
+    --game-primary: #5C8727;
+    --game-secondary: #8BC34A;
+    --game-accent: #4CAF50;
+    --game-dark: #1B1B1B;
+    --game-darker: #0A0A0A;
 }
 
-body {
-    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+/* Gradient Backgrounds */
+.bg-game-gradient {
+    background: linear-gradient(135deg, #5C8727 0%, #8BC34A 50%, #4CAF50 100%);
 }
 
+.bg-game-gradient-dark {
+    background: linear-gradient(135deg, rgba(92, 135, 39, 0.1) 0%, rgba(139, 195, 74, 0.05) 100%);
+}
+
+/* Buttons */
 .btn-game-primary {
-    background: linear-gradient(135deg, #FF6B00, #FF0000);
-    box-shadow: 0 4px 15px rgba(255, 107, 0, 0.4);
+    background: linear-gradient(135deg, #5C8727, #8BC34A);
+    box-shadow: 0 10px 30px rgba(92, 135, 39, 0.3);
 }
 
 .btn-game-primary:hover {
-    box-shadow: 0 6px 20px rgba(255, 0, 0, 0.6);
+    background: linear-gradient(135deg, #8BC34A, #4CAF50);
+    box-shadow: 0 15px 40px rgba(92, 135, 39, 0.5);
     transform: translateY(-2px);
 }
 
+/* Cards */
 .card-game {
-    border: 2px solid var(--game-primary);
-    background: rgba(255, 107, 0, 0.08);
+    background: linear-gradient(135deg, rgba(92, 135, 39, 0.1), rgba(139, 195, 74, 0.05));
+    border: 1px solid rgba(92, 135, 39, 0.2);
 }
 
-.badge-game {
-    background: linear-gradient(135deg, var(--game-primary), #FF0000);
+.card-game:hover {
+    border-color: rgba(92, 135, 39, 0.5);
+    box-shadow: 0 10px 40px rgba(92, 135, 39, 0.2);
 }
 
-.hero-game {
-    background: linear-gradient(135deg, rgba(255, 107, 0, 0.95), rgba(255, 0, 0, 0.95));
+/* Text Colors */
+.text-game-primary {
+    color: #5C8727;
+}
+
+.text-game-secondary {
+    color: #8BC34A;
+}
+
+/* Glow Effects */
+.glow-game {
+    box-shadow: 0 0 20px rgba(92, 135, 39, 0.5);
+}
+
+/* Navbar Override */
+nav {
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.95) 0%, rgba(92, 135, 39, 0.1) 50%, rgba(0, 0, 0, 0.95) 100%) !important;
+    border-bottom-color: rgba(92, 135, 39, 0.3) !important;
 }

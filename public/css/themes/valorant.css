@@ -1,34 +1,70 @@
-/* ⚡ Valorant Teması */
-
+/* Valorant Theme - Red & Black */
 :root {
     --game-primary: #FF4655;
-    --game-secondary: #0F1923;
-    --game-accent: #00FFF5;
+    --game-secondary: #FD4556;
+    --game-accent: #FF1744;
     --game-dark: #0F1923;
+    --game-darker: #0A0E14;
 }
 
-body {
-    background: linear-gradient(135deg, #0F1923 0%, #1F2933 100%);
+/* Gradient Backgrounds */
+.bg-game-gradient {
+    background: linear-gradient(135deg, #FF4655 0%, #FD4556 50%, #FF1744 100%);
 }
 
+.bg-game-gradient-dark {
+    background: linear-gradient(135deg, rgba(255, 70, 85, 0.1) 0%, rgba(253, 69, 86, 0.05) 100%);
+}
+
+/* Buttons */
 .btn-game-primary {
-    background: linear-gradient(135deg, #FF4655, #FF1744);
-    box-shadow: 0 4px 15px rgba(255, 70, 85, 0.4);
+    background: linear-gradient(135deg, #FF4655, #FD4556);
+    box-shadow: 0 10px 30px rgba(255, 70, 85, 0.3);
 }
 
 .btn-game-primary:hover {
-    box-shadow: 0 6px 20px rgba(255, 70, 85, 0.6);
+    background: linear-gradient(135deg, #FD4556, #FF1744);
+    box-shadow: 0 15px 40px rgba(255, 70, 85, 0.5);
+    transform: translateY(-2px);
 }
 
+/* Cards */
 .card-game {
-    border: 2px solid var(--game-primary);
-    background: rgba(255, 70, 85, 0.05);
+    background: linear-gradient(135deg, rgba(255, 70, 85, 0.1), rgba(253, 69, 86, 0.05));
+    border: 1px solid rgba(255, 70, 85, 0.2);
 }
 
-.badge-game {
-    background: var(--game-primary);
+.card-game:hover {
+    border-color: rgba(255, 70, 85, 0.5);
+    box-shadow: 0 10px 40px rgba(255, 70, 85, 0.2);
 }
 
-.hero-game {
-    background: linear-gradient(135deg, rgba(255, 70, 85, 0.9), rgba(15, 25, 35, 0.9));
+/* Text Colors */
+.text-game-primary {
+    color: #FF4655;
+}
+
+.text-game-secondary {
+    color: #FD4556;
+}
+
+/* Glow Effects */
+.glow-game {
+    box-shadow: 0 0 20px rgba(255, 70, 85, 0.5);
+}
+
+/* Navbar Override */
+nav {
+    background: linear-gradient(90deg, rgba(15, 25, 35, 0.95) 0%, rgba(255, 70, 85, 0.1) 50%, rgba(15, 25, 35, 0.95) 100%) !important;
+    border-bottom-color: rgba(255, 70, 85, 0.3) !important;
+}
+
+/* Valorant Specific Animations */
+@keyframes valorant-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+.animate-valorant-pulse {
+    animation: valorant-pulse 2s ease-in-out infinite;
 }

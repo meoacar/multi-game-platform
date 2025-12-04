@@ -1,85 +1,60 @@
-/* 🎮 PUBG Mobile Teması */
-
+/* PUBG Mobile Theme - Orange & Dark */
 :root {
     --game-primary: #FF6B00;
     --game-secondary: #FFB800;
-    --game-accent: #00D9FF;
+    --game-accent: #FF8C00;
     --game-dark: #1a1a1a;
     --game-darker: #0d0d0d;
-    --game-light: #f5f5f5;
 }
 
-/* Arka Plan */
-body {
-    background: linear-gradient(135deg, #1a1a1a 0%, #2d1810 100%);
+/* Gradient Backgrounds */
+.bg-game-gradient {
+    background: linear-gradient(135deg, #FF6B00 0%, #FF8C00 50%, #FFB800 100%);
 }
 
-/* Butonlar */
+.bg-game-gradient-dark {
+    background: linear-gradient(135deg, rgba(255, 107, 0, 0.1) 0%, rgba(255, 140, 0, 0.05) 100%);
+}
+
+/* Buttons */
 .btn-game-primary {
-    background: linear-gradient(135deg, var(--game-primary), var(--game-secondary));
-    box-shadow: 0 4px 15px rgba(255, 107, 0, 0.3);
+    background: linear-gradient(135deg, #FF6B00, #FF8C00);
+    box-shadow: 0 10px 30px rgba(255, 107, 0, 0.3);
 }
 
 .btn-game-primary:hover {
-    box-shadow: 0 6px 20px rgba(255, 107, 0, 0.5);
+    background: linear-gradient(135deg, #FF8C00, #FFB800);
+    box-shadow: 0 15px 40px rgba(255, 107, 0, 0.5);
     transform: translateY(-2px);
 }
 
-/* Kartlar */
+/* Cards */
 .card-game {
-    border: 2px solid var(--game-primary);
-    background: rgba(255, 107, 0, 0.05);
+    background: linear-gradient(135deg, rgba(255, 107, 0, 0.1), rgba(255, 140, 0, 0.05));
+    border: 1px solid rgba(255, 107, 0, 0.2);
 }
 
 .card-game:hover {
-    border-color: var(--game-secondary);
-    box-shadow: 0 8px 25px rgba(255, 107, 0, 0.2);
-}
-
-/* Badge'ler */
-.badge-game {
-    background: var(--game-primary);
-    color: white;
-}
-
-/* Linkler */
-a.text-game {
-    color: var(--game-primary);
-}
-
-a.text-game:hover {
-    color: var(--game-secondary);
-}
-
-/* Hero Section */
-.hero-game {
-    background: linear-gradient(135deg, rgba(255, 107, 0, 0.9), rgba(255, 184, 0, 0.9));
-}
-
-/* Progress Bar */
-.progress-game {
-    background: var(--game-primary);
-}
-
-/* Borders */
-.border-game {
-    border-color: var(--game-primary) !important;
+    border-color: rgba(255, 107, 0, 0.5);
+    box-shadow: 0 10px 40px rgba(255, 107, 0, 0.2);
 }
 
 /* Text Colors */
 .text-game-primary {
-    color: var(--game-primary) !important;
+    color: #FF6B00;
 }
 
 .text-game-secondary {
-    color: var(--game-secondary) !important;
+    color: #FFB800;
 }
 
-/* Background Colors */
-.bg-game-primary {
-    background-color: var(--game-primary) !important;
+/* Glow Effects */
+.glow-game {
+    box-shadow: 0 0 20px rgba(255, 107, 0, 0.5);
 }
 
-.bg-game-secondary {
-    background-color: var(--game-secondary) !important;
+/* Navbar Override */
+nav {
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.95) 0%, rgba(255, 107, 0, 0.1) 50%, rgba(0, 0, 0, 0.95) 100%) !important;
+    border-bottom-color: rgba(255, 107, 0, 0.3) !important;
 }
