@@ -219,98 +219,143 @@ class ProfileController extends Controller
      */
     public function update(Request $request)
     {
-        // Debug: Gelen veriyi logla
-        \Log::info('=== PROFILE UPDATE BAŞLADI ===');
-        \Log::info('Request Data:', $request->all());
-        
-        $validated = $request->validate([
-            'nickname' => 'nullable|string|max:255',
-            'pubg_id' => 'nullable|string|max:255',
-            'rank' => 'nullable|string|in:Bronz,Gümüş,Altın,Platin,Elmas,Taç,As,Fatih',
-            'server_region' => 'nullable|string|in:EU,MENA,ASIA,NA,SA',
-            'city' => 'nullable|string|max:255',
-            'age_range' => 'nullable|string|max:50',
-            'gender' => 'nullable|string|in:male,female,other',
-            'play_style' => 'nullable|string|in:agresif,savunmaci,sniper,rusher,takimci',
-            'favorite_maps' => 'nullable|array',
-            'favorite_maps.*' => 'string|in:Erangel,Miramar,Sanhok,Vikendi,Livik,Karakin,Nusa',
-            'bio' => 'nullable|string|max:1000',
-            'twitch_username' => 'nullable|string|max:255',
-            'youtube_channel' => 'nullable|string|max:255',
-            'discord_username' => 'nullable|string|max:255',
-            'settings' => 'nullable|array',
-            'settings.profile_visibility' => 'nullable|string|in:public,friends,private',
-            'settings.show_email' => 'nullable|boolean',
-            'settings.show_city' => 'nullable|boolean',
-            'settings.show_age' => 'nullable|boolean',
-            'settings.show_online_status' => 'nullable|boolean',
-            'settings.allow_messages' => 'nullable|string|in:everyone,friends,none',
-            'settings.allow_friend_requests' => 'nullable|boolean',
-        ]);
-
-        \Log::info('Validated Data:', $validated);
-
-        $user = $request->user();
-        $profile = $user->profile;
-        
-        \Log::info('User ID:', ['id' => $user->id]);
-        \Log::info('Profile var mı?', ['exists' => $profile ? 'Evet' : 'Hayır']);
-        
-        // Profil yoksa oluştur
-        if (!$profile) {
-            $profile = $user->profile()->create([]);
-            \Log::info('✅ Yeni profile oluşturuldu', ['profile_id' => $profile->id]);
-        }
-        
-        $wasComplete = $profile->is_complete;
-        
-        // Profil bilgilerini güncelle
-        $profileData = collect($validated)->except('settings')->toArray();
-        \Log::info('Profile Data (settings hariç):', $profileData);
-        
-        $profile->update($profileData);
-        \Log::info('✅ Profile güncellendi');
-        
-        // Güncellenmiş veriyi kontrol et
-        $profile->refresh();
-        \Log::info('Güncellenmiş Profile:', [
-            'nickname' => $profile->nickname,
-            'pubg_id' => $profile->pubg_id,
-            'rank' => $profile->rank,
-        ]);
-        
-        $profile->checkCompletion();
-
-        // Gizlilik ayarlarını güncelle
-        if (isset($validated['settings'])) {
-            $settings = $validated['settings'];
+        try {
+            // Debug: Gelen veriyi logla
+            \Log::info('=== PROFILE UPDATE BAŞLADI ===');
+            \Log::info('Request Data:', $request->all());
+            \Log::info('User ID:', ['id' => $request->user()->id]);
             
-            // Checkbox'lar için false değerlerini ayarla
-            $settings['show_email'] = isset($settings['show_email']) && $settings['show_email'] == '1';
-            $settings['show_city'] = isset($settings['show_city']) && $settings['show_city'] == '1';
-            $settings['show_age'] = isset($settings['show_age']) && $settings['show_age'] == '1';
-            $settings['show_online_status'] = isset($settings['show_online_status']) && $settings['show_online_status'] == '1';
-            $settings['allow_friend_requests'] = isset($settings['allow_friend_requests']) && $settings['allow_friend_requests'] == '1';
-            
-            // Mevcut ayarları al ve yeni ayarlarla birleştir
-            $currentSettings = $user->settings ?? [];
-            $user->update(['settings' => array_merge($currentSettings, $settings)]);
-        }
+            $validated = $request->validate([
+                'nickname' => 'nullable|string|max:255',
+                'pubg_id' => 'nullable|string|max:255',
+                'rank' => 'nullable|string|max:255',
+                'server_region' => 'nullable|string|in:EU,MENA,ASIA,NA,SA',
+                'city' => 'nullable|string|max:255',
+                'age_range' => 'nullable|string|max:50',
+                'gender' => 'nullable|string|in:male,female,other',
+                'play_style' => 'nullable|string|in:agresif,savunmaci,sniper,rusher,takimci',
+                'favorite_maps' => 'nullable|array',
+                'favorite_maps.*' => 'string|in:Erangel,Miramar,Sanhok,Vikendi,Livik,Karakin,Nusa',
+                'bio' => 'nullable|string|max:1000',
+                'twitch_username' => 'nullable|string|max:255',
+                'youtube_channel' => 'nullable|string|max:255',
+                'discord_username' => 'nullable|string|max:255',
+                'settings' => 'nullable|array',
+                'settings.profile_visibility' => 'nullable|string|in:public,friends,private',
+                'settings.show_email' => 'nullable|boolean',
+                'settings.show_city' => 'nullable|boolean',
+                'settings.show_age' => 'nullable|boolean',
+                'settings.show_online_status' => 'nullable|boolean',
+                'settings.allow_messages' => 'nullable|string|in:everyone,friends,none',
+                'settings.allow_friend_requests' => 'nullable|boolean',
+            ]);
 
-        // Profil ilk kez tamamlandıysa ve daha önce bu XP verilmemişse kazandır
-        if (!$wasComplete && $profile->is_complete) {
-            // Daha önce profile_complete XP'si verilmiş mi kontrol et
-            $hasProfileXp = $user->xpEvents()
-                ->where('type', 'profile_complete')
-                ->exists();
+            \Log::info('Validated Data:', $validated);
+
+            $user = $request->user();
             
-            if (!$hasProfileXp) {
-                $user->addXp('profile_complete');
+            // Transaction içinde güncelleme yap
+            \DB::beginTransaction();
+            
+            try {
+                $profile = $user->profile;
+                
+                \Log::info('Profile var mı?', ['exists' => $profile ? 'Evet' : 'Hayır']);
+                
+                // Profil yoksa oluştur
+                if (!$profile) {
+                    $profile = $user->profile()->create([]);
+                    \Log::info('✅ Yeni profile oluşturuldu', ['profile_id' => $profile->id]);
+                }
+                
+                $wasComplete = $profile->is_profile_completed ?? false;
+                
+                // Profil bilgilerini güncelle
+                $profileData = collect($validated)->except('settings')->toArray();
+                \Log::info('Profile Data (settings hariç):', $profileData);
+                
+                // Direkt SQL ile güncelle (daha güvenilir)
+                \DB::table('profiles')
+                    ->where('id', $profile->id)
+                    ->update(array_merge($profileData, ['updated_at' => now()]));
+                
+                \Log::info('✅ Profile SQL ile güncellendi');
+                
+                // Profili yeniden yükle
+                $profile = $profile->fresh();
+                
+                \Log::info('Güncellenmiş Profile:', [
+                    'nickname' => $profile->nickname,
+                    'pubg_id' => $profile->pubg_id,
+                    'rank' => $profile->rank,
+                    'city' => $profile->city,
+                ]);
+                
+                // Profil tamamlanma kontrolü
+                $profile->checkCompletion();
+
+                // Gizlilik ayarlarını güncelle
+                if (isset($validated['settings'])) {
+                    $settings = $validated['settings'];
+                    
+                    // Checkbox'lar için false değerlerini ayarla
+                    $settings['show_email'] = isset($settings['show_email']) && $settings['show_email'] == '1';
+                    $settings['show_city'] = isset($settings['show_city']) && $settings['show_city'] == '1';
+                    $settings['show_age'] = isset($settings['show_age']) && $settings['show_age'] == '1';
+                    $settings['show_online_status'] = isset($settings['show_online_status']) && $settings['show_online_status'] == '1';
+                    $settings['allow_friend_requests'] = isset($settings['allow_friend_requests']) && $settings['allow_friend_requests'] == '1';
+                    
+                    // Mevcut ayarları al ve yeni ayarlarla birleştir
+                    $currentSettings = $user->settings ?? [];
+                    $user->update(['settings' => array_merge($currentSettings, $settings)]);
+                    
+                    \Log::info('✅ Settings güncellendi');
+                }
+
+                // Profil ilk kez tamamlandıysa ve daha önce bu XP verilmemişse kazandır
+                if (!$wasComplete && $profile->is_profile_completed) {
+                    // Daha önce profile_complete XP'si verilmiş mi kontrol et
+                    $hasProfileXp = $user->xpEvents()
+                        ->where('type', 'profile_complete')
+                        ->exists();
+                    
+                    if (!$hasProfileXp) {
+                        $user->addXp('profile_complete');
+                        \Log::info('✅ XP kazandırıldı');
+                    }
+                }
+                
+                // Transaction'ı commit et
+                \DB::commit();
+                \Log::info('✅ Transaction commit edildi');
+                
+                // Cache'i temizle
+                \Cache::forget('user_profile_' . $user->id);
+                
+                return redirect()->route('profile.edit')
+                    ->with('success', '✅ Profil başarıyla güncellendi!' . (!$wasComplete && $profile->is_profile_completed ? ' +50 XP kazandınız!' : ''));
+                    
+            } catch (\Exception $e) {
+                \DB::rollBack();
+                \Log::error('❌ Transaction rollback', [
+                    'error' => $e->getMessage(),
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine()
+                ]);
+                throw $e;
             }
+            
+        } catch (\Exception $e) {
+            \Log::error('❌ PROFILE UPDATE HATASI', [
+                'error' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            return redirect()->route('profile.edit')
+                ->with('error', '❌ Profil güncellenirken bir hata oluştu: ' . $e->getMessage());
         }
-
-        return redirect()->route('profile.index')
-            ->with('success', 'Profil ve gizlilik ayarları başarıyla güncellendi!' . (!$wasComplete && $profile->is_complete ? ' +50 XP kazandınız!' : ''));
     }
 
     /**

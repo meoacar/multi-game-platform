@@ -23,6 +23,39 @@
 <div class="relative z-10 min-h-screen py-12" x-data="{ activeTab: 'profile' }">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         
+        <!-- Success/Error Messages -->
+        @if(session('success'))
+            <div class="mb-6 bg-green-500/20 border border-green-500/50 rounded-2xl p-4 backdrop-blur-xl animate-fade-in">
+                <div class="flex items-center space-x-3">
+                    <span class="text-2xl">✅</span>
+                    <p class="text-green-400 font-bold">{{ session('success') }}</p>
+                </div>
+            </div>
+        @endif
+
+        @if(session('error'))
+            <div class="mb-6 bg-red-500/20 border border-red-500/50 rounded-2xl p-4 backdrop-blur-xl animate-fade-in">
+                <div class="flex items-center space-x-3">
+                    <span class="text-2xl">❌</span>
+                    <p class="text-red-400 font-bold">{{ session('error') }}</p>
+                </div>
+            </div>
+        @endif
+
+        @if($errors->any())
+            <div class="mb-6 bg-red-500/20 border border-red-500/50 rounded-2xl p-4 backdrop-blur-xl animate-fade-in">
+                <div class="flex items-center space-x-3 mb-2">
+                    <span class="text-2xl">⚠️</span>
+                    <p class="text-red-400 font-bold">Lütfen aşağıdaki hataları düzeltin:</p>
+                </div>
+                <ul class="list-disc list-inside text-red-300 text-sm space-y-1 ml-8">
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+        
         <!-- Hero Header -->
         <div class="text-center mb-12 animate-fade-in">
             <div class="inline-block mb-4">
