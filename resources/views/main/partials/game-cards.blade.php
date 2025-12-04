@@ -20,7 +20,7 @@
                     <!-- Game Logo/Image -->
                     <div class="relative h-56 bg-gradient-to-br from-purple-600/30 to-pink-600/30 flex items-center justify-center overflow-hidden">
                         @if($game->logo)
-                            <img src="{{ asset('storage/' . $game->logo) }}" 
+                            <img src="{{ asset($game->logo) }}" 
                                  alt="{{ $game->name }}" 
                                  class="w-full h-full object-cover group-hover:scale-125 group-hover:rotate-2 transition-all duration-700">
                         @else
