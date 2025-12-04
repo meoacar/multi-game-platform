@@ -21,7 +21,6 @@ class PageSeeder extends Seeder
 <p>Türkiye\'nin en büyük oyuncu topluluğu olmak ve tüm popüler oyunlar için merkezi bir platform sunmak.</p>',
                 'meta_description' => 'SquadBul hakkında bilgi edinin. Türkiye\'nin en büyük multi-game platformu.',
                 'is_published' => true,
-                'order' => 1,
             ],
             [
                 'title' => 'İletişim',
@@ -36,7 +35,6 @@ class PageSeeder extends Seeder
 <p>💬 Discord: <a href="https://discord.gg/squadbul" target="_blank">discord.gg/squadbul</a></p>',
                 'meta_description' => 'SquadBul ile iletişime geçin. E-posta ve sosyal medya kanallarımız.',
                 'is_published' => true,
-                'order' => 2,
             ],
             [
                 'title' => 'Sıkça Sorulan Sorular',
@@ -62,7 +60,6 @@ class PageSeeder extends Seeder
 <p>Profil ayarlarından hesabınızı silebilirsiniz. Bu işlem geri alınamaz!</p>',
                 'meta_description' => 'SquadBul hakkında sıkça sorulan sorular ve cevapları.',
                 'is_published' => true,
-                'order' => 3,
             ],
             [
                 'title' => 'Gizlilik Politikası',
@@ -86,7 +83,6 @@ class PageSeeder extends Seeder
 <p>Verileriniz güvenli sunucularda saklanır ve üçüncü şahıslarla paylaşılmaz.</p>',
                 'meta_description' => 'SquadBul gizlilik politikası ve kullanıcı verilerinin korunması.',
                 'is_published' => true,
-                'order' => 4,
             ],
             [
                 'title' => 'Kullanım Şartları',
@@ -109,7 +105,6 @@ class PageSeeder extends Seeder
 <p>Kurallara uymayan kullanıcıların hesapları askıya alınabilir veya silinebilir.</p>',
                 'meta_description' => 'SquadBul kullanım şartları ve platform kuralları.',
                 'is_published' => true,
-                'order' => 5,
             ],
         ];
 
