@@ -1,70 +1,293 @@
-/* Valorant Theme - Red & Black */
+/* 🎯 Valorant - Taktiksel Tema */
+/* Kırmızı/Pembe/Siyah - Neon Cyberpunk Atmosferi */
+
 :root {
-    --game-primary: #FF4655;
-    --game-secondary: #FD4556;
-    --game-accent: #FF1744;
-    --game-dark: #0F1923;
-    --game-darker: #0A0E14;
+    --valorant-primary: #FF4655;
+    --valorant-secondary: #FD4556;
+    --valorant-accent: #FF1744;
+    --valorant-dark: #0f1923;
+    --valorant-glow: rgba(255, 70, 85, 0.6);
 }
 
-/* Gradient Backgrounds */
-.bg-game-gradient {
-    background: linear-gradient(135deg, #FF4655 0%, #FD4556 50%, #FF1744 100%);
+/* Arka Plan - Cyberpunk Grid */
+body {
+    background: #0f1923;
+    background-image: 
+        linear-gradient(rgba(255, 70, 85, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 70, 85, 0.05) 1px, transparent 1px);
+    background-size: 50px 50px;
+    background-attachment: fixed;
+    position: relative;
 }
 
-.bg-game-gradient-dark {
-    background: linear-gradient(135deg, rgba(255, 70, 85, 0.1) 0%, rgba(253, 69, 86, 0.05) 100%);
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 10% 20%, rgba(255, 70, 85, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(253, 69, 86, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 50% 50%, rgba(255, 23, 68, 0.1) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+    animation: neon-pulse 6s ease-in-out infinite;
 }
 
-/* Buttons */
-.btn-game-primary {
-    background: linear-gradient(135deg, #FF4655, #FD4556);
-    box-shadow: 0 10px 30px rgba(255, 70, 85, 0.3);
-}
-
-.btn-game-primary:hover {
-    background: linear-gradient(135deg, #FD4556, #FF1744);
-    box-shadow: 0 15px 40px rgba(255, 70, 85, 0.5);
-    transform: translateY(-2px);
-}
-
-/* Cards */
-.card-game {
-    background: linear-gradient(135deg, rgba(255, 70, 85, 0.1), rgba(253, 69, 86, 0.05));
-    border: 1px solid rgba(255, 70, 85, 0.2);
-}
-
-.card-game:hover {
-    border-color: rgba(255, 70, 85, 0.5);
-    box-shadow: 0 10px 40px rgba(255, 70, 85, 0.2);
-}
-
-/* Text Colors */
-.text-game-primary {
-    color: #FF4655;
-}
-
-.text-game-secondary {
-    color: #FD4556;
-}
-
-/* Glow Effects */
-.glow-game {
-    box-shadow: 0 0 20px rgba(255, 70, 85, 0.5);
-}
-
-/* Navbar Override */
-nav {
-    background: linear-gradient(90deg, rgba(15, 25, 35, 0.95) 0%, rgba(255, 70, 85, 0.1) 50%, rgba(15, 25, 35, 0.95) 100%) !important;
-    border-bottom-color: rgba(255, 70, 85, 0.3) !important;
-}
-
-/* Valorant Specific Animations */
-@keyframes valorant-pulse {
+@keyframes neon-pulse {
     0%, 100% { opacity: 1; }
-    50% { opacity: 0.7; }
+    50% { opacity: 0.6; }
 }
 
-.animate-valorant-pulse {
-    animation: valorant-pulse 2s ease-in-out infinite;
+/* Navbar - Taktik HUD */
+nav {
+    background: linear-gradient(90deg, 
+        rgba(15, 25, 35, 0.98) 0%, 
+        rgba(255, 70, 85, 0.15) 50%, 
+        rgba(15, 25, 35, 0.98) 100%) !important;
+    border-bottom: 3px solid var(--valorant-primary) !important;
+    box-shadow: 
+        0 4px 20px rgba(255, 70, 85, 0.4),
+        inset 0 -1px 0 rgba(255, 70, 85, 0.5);
+    backdrop-filter: blur(20px);
+    position: relative;
+}
+
+nav::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        var(--valorant-primary) 20%,
+        var(--valorant-secondary) 50%,
+        var(--valorant-primary) 80%,
+        transparent 100%);
+    animation: neon-scan 4s linear infinite;
+}
+
+@keyframes neon-scan {
+    0% { transform: translateX(-100%); opacity: 0; }
+    50% { opacity: 1; }
+    100% { transform: translateX(100%); opacity: 0; }
+}
+
+/* Butonlar - Neon Glow */
+.btn-primary,
+.bg-gradient-to-r.from-purple-600 {
+    background: linear-gradient(135deg, 
+        var(--valorant-primary) 0%, 
+        var(--valorant-accent) 100%) !important;
+    box-shadow: 
+        0 0 30px var(--valorant-glow),
+        0 0 60px rgba(255, 70, 85, 0.4),
+        inset 0 0 20px rgba(255, 255, 255, 0.1);
+    border: 2px solid var(--valorant-primary);
+    position: relative;
+    overflow: hidden;
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%);
+}
+
+.btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(255, 255, 255, 0.4) 50%, 
+        transparent 100%);
+    animation: neon-sweep 2s infinite;
+}
+
+@keyframes neon-sweep {
+    0% { left: -100%; }
+    100% { left: 200%; }
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 
+        0 0 40px var(--valorant-glow),
+        0 0 80px rgba(255, 70, 85, 0.6),
+        inset 0 0 30px rgba(255, 255, 255, 0.2);
+}
+
+/* Kartlar - Hologram Panel */
+.glass-card,
+.bg-black\/50 {
+    background: linear-gradient(135deg, 
+        rgba(15, 25, 35, 0.9) 0%, 
+        rgba(25, 35, 45, 0.7) 100%) !important;
+    border: 2px solid rgba(255, 70, 85, 0.4) !important;
+    box-shadow: 
+        0 8px 32px rgba(255, 70, 85, 0.3),
+        inset 0 1px 0 rgba(255, 70, 85, 0.2);
+    backdrop-filter: blur(15px);
+    position: relative;
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%);
+}
+
+.glass-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        var(--valorant-primary) 50%, 
+        transparent 100%);
+    animation: card-scan 3s ease-in-out infinite;
+}
+
+@keyframes card-scan {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+}
+
+.glass-card:hover {
+    border-color: var(--valorant-primary) !important;
+    box-shadow: 
+        0 12px 48px rgba(255, 70, 85, 0.5),
+        inset 0 1px 0 rgba(255, 70, 85, 0.4);
+    transform: translateY(-5px);
+}
+
+/* Başlıklar - Neon Text */
+h1, h2, h3 {
+    background: linear-gradient(135deg, 
+        #ffffff 0%, 
+        var(--valorant-primary) 50%, 
+        var(--valorant-secondary) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 
+        0 0 20px rgba(255, 70, 85, 0.6),
+        0 0 40px rgba(255, 70, 85, 0.4);
+    font-weight: 900;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+/* Badge'ler - Tactical Tag */
+.badge,
+.bg-purple-500\/20 {
+    background: linear-gradient(135deg, 
+        rgba(255, 70, 85, 0.3) 0%, 
+        rgba(253, 69, 86, 0.2) 100%) !important;
+    border: 1px solid var(--valorant-primary);
+    color: var(--valorant-primary) !important;
+    box-shadow: 
+        0 0 15px rgba(255, 70, 85, 0.4),
+        inset 0 0 10px rgba(255, 70, 85, 0.1);
+    clip-path: polygon(5px 0, 100% 0, 100% calc(100% - 5px), calc(100% - 5px) 100%, 0 100%, 0 5px);
+}
+
+/* Input'lar - Cyber Interface */
+input, textarea, select {
+    background: rgba(15, 25, 35, 0.8) !important;
+    border: 2px solid rgba(255, 70, 85, 0.3) !important;
+    color: white !important;
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%);
+}
+
+input:focus, textarea:focus, select:focus {
+    border-color: var(--valorant-primary) !important;
+    box-shadow: 
+        0 0 25px rgba(255, 70, 85, 0.5),
+        inset 0 0 15px rgba(255, 70, 85, 0.1) !important;
+    outline: none;
+}
+
+/* Hover Efektleri - Target Lock */
+a:hover, button:hover {
+    color: var(--valorant-primary) !important;
+    text-shadow: 0 0 15px rgba(255, 70, 85, 0.6);
+}
+
+/* Scrollbar - Neon Track */
+::-webkit-scrollbar {
+    width: 10px;
+    background: rgba(15, 25, 35, 0.9);
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, 
+        var(--valorant-primary) 0%, 
+        var(--valorant-accent) 100%);
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(255, 70, 85, 0.5);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, 
+        var(--valorant-secondary) 0%, 
+        var(--valorant-primary) 100%);
+    box-shadow: 0 0 20px rgba(255, 70, 85, 0.8);
+}
+
+/* Animasyonlar - Cyber Glitch */
+@keyframes glitch {
+    0%, 100% { 
+        transform: translate(0);
+        filter: hue-rotate(0deg);
+    }
+    20% { 
+        transform: translate(-2px, 2px);
+        filter: hue-rotate(5deg);
+    }
+    40% { 
+        transform: translate(2px, -2px);
+        filter: hue-rotate(-5deg);
+    }
+    60% { 
+        transform: translate(-2px, -2px);
+        filter: hue-rotate(5deg);
+    }
+    80% { 
+        transform: translate(2px, 2px);
+        filter: hue-rotate(-5deg);
+    }
+}
+
+.animate-pulse {
+    animation: glitch 0.3s infinite;
+}
+
+/* Parçacık Efekti - Digital Particles */
+@keyframes digital-rise {
+    0% {
+        transform: translateY(0) scale(1);
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-100vh) scale(0.5);
+        opacity: 0;
+    }
+}
+
+body::after {
+    content: '◆';
+    position: fixed;
+    bottom: -50px;
+    left: 20%;
+    font-size: 30px;
+    color: var(--valorant-primary);
+    animation: digital-rise 12s linear infinite;
+    pointer-events: none;
+    z-index: 1;
+    text-shadow: 0 0 20px var(--valorant-glow);
 }

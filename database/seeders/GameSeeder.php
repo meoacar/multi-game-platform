@@ -27,10 +27,13 @@ class GameSeeder extends Seeder
         // 1. PUBG Mobile oyununu oluştur
         $this->createPubgGame();
         
-        // 2. Mevcut verileri game_id=1 ile güncelle
+        // 2. Diğer oyunları oluştur
+        $this->createOtherGames();
+        
+        // 3. Mevcut verileri game_id=1 ile güncelle
         $this->updateExistingData();
         
-        // 3. Data integrity kontrolü
+        // 4. Data integrity kontrolü
         $this->verifyDataIntegrity();
         
         $this->command->info('✅ GameSeeder tamamlandı!');
@@ -148,6 +151,126 @@ class GameSeeder extends Seeder
             ]);
             
             $this->command->info("✅ PUBG Mobile oyunu oluşturuldu (ID: {$pubg->id})");
+        }
+    }
+    
+    /**
+     * Diğer oyunları oluştur (Valorant, COD, LOL, CS:GO)
+     */
+    private function createOtherGames(): void
+    {
+        $this->command->info('📝 Diğer oyunlar oluşturuluyor...');
+        
+        $games = [
+            [
+                'name' => 'Valorant',
+                'slug' => 'valorant',
+                'description' => 'Valorant - 5v5 taktiksel FPS oyunu. Karakterler, yetenekler ve strateji!',
+                'order' => 2,
+                'settings' => [
+                    'theme_color' => '#FF4655',
+                    'secondary_color' => '#FD4556',
+                    'max_team_size' => 5,
+                    'platforms' => ['PC'],
+                    'features' => [
+                        'tournaments' => true,
+                        'clans' => true,
+                        'lfg' => true,
+                        'matchmaking' => true,
+                        'guides' => true,
+                        'community_posts' => true,
+                    ],
+                    'game_modes' => ['Unrated', 'Competitive', 'Spike Rush', 'Deathmatch', 'Escalation'],
+                    'maps' => ['Bind', 'Haven', 'Split', 'Ascent', 'Icebox', 'Breeze', 'Fracture', 'Pearl', 'Lotus'],
+                    'ranks' => ['Iron', 'Bronze', 'Silver', 'Gold', 'Platinum', 'Diamond', 'Immortal', 'Radiant'],
+                ],
+            ],
+            [
+                'name' => 'Call of Duty Mobile',
+                'slug' => 'cod',
+                'description' => 'Call of Duty Mobile - Efsanevi FPS serisi mobilde. Multiplayer ve Battle Royale!',
+                'order' => 3,
+                'settings' => [
+                    'theme_color' => '#5C8727',
+                    'secondary_color' => '#8BC34A',
+                    'max_team_size' => 5,
+                    'platforms' => ['Android', 'iOS'],
+                    'features' => [
+                        'tournaments' => true,
+                        'clans' => true,
+                        'lfg' => true,
+                        'matchmaking' => true,
+                        'guides' => true,
+                        'community_posts' => true,
+                    ],
+                    'game_modes' => ['Team Deathmatch', 'Domination', 'Search & Destroy', 'Battle Royale', 'Hardpoint'],
+                    'maps' => ['Nuketown', 'Crash', 'Standoff', 'Crossfire', 'Firing Range', 'Summit'],
+                    'ranks' => ['Rookie', 'Veteran', 'Elite', 'Pro', 'Master', 'Grandmaster', 'Legendary'],
+                ],
+            ],
+            [
+                'name' => 'League of Legends',
+                'slug' => 'lol',
+                'description' => 'League of Legends - Dünyanın en popüler MOBA oyunu. 5v5 stratejik savaşlar!',
+                'order' => 4,
+                'settings' => [
+                    'theme_color' => '#C89B3C',
+                    'secondary_color' => '#0AC8B9',
+                    'max_team_size' => 5,
+                    'platforms' => ['PC'],
+                    'features' => [
+                        'tournaments' => true,
+                        'clans' => true,
+                        'lfg' => true,
+                        'matchmaking' => true,
+                        'guides' => true,
+                        'community_posts' => true,
+                    ],
+                    'game_modes' => ['Summoner\'s Rift', 'ARAM', 'URF', 'Nexus Blitz', 'Arena'],
+                    'maps' => ['Summoner\'s Rift', 'Howling Abyss', 'Twisted Treeline'],
+                    'ranks' => ['Iron', 'Bronze', 'Silver', 'Gold', 'Platinum', 'Diamond', 'Master', 'Grandmaster', 'Challenger'],
+                ],
+            ],
+            [
+                'name' => 'Counter-Strike: Global Offensive',
+                'slug' => 'csgo',
+                'description' => 'CS:GO - Klasik FPS oyunu. 5v5 taktiksel bomba defüzü ve rekabetçi maçlar!',
+                'order' => 5,
+                'settings' => [
+                    'theme_color' => '#F7931E',
+                    'secondary_color' => '#00A8E8',
+                    'max_team_size' => 5,
+                    'platforms' => ['PC'],
+                    'features' => [
+                        'tournaments' => true,
+                        'clans' => true,
+                        'lfg' => true,
+                        'matchmaking' => true,
+                        'guides' => true,
+                        'community_posts' => true,
+                    ],
+                    'game_modes' => ['Competitive', 'Casual', 'Deathmatch', 'Arms Race', 'Wingman'],
+                    'maps' => ['Dust 2', 'Mirage', 'Inferno', 'Nuke', 'Overpass', 'Vertigo', 'Ancient'],
+                    'ranks' => ['Silver', 'Gold Nova', 'Master Guardian', 'Distinguished Master Guardian', 'Legendary Eagle', 'Supreme', 'Global Elite'],
+                ],
+            ],
+        ];
+        
+        foreach ($games as $gameData) {
+            $existing = Game::where('slug', $gameData['slug'])->first();
+            
+            if ($existing) {
+                $existing->update($gameData);
+                $this->command->info("✅ {$gameData['name']} güncellendi (ID: {$existing->id})");
+            } else {
+                $game = Game::create($gameData + [
+                    'logo' => null,
+                    'icon' => null,
+                    'status' => 'active',
+                    'is_active' => true,
+                ]);
+                $this->command->info("✅ {$gameData['name']} oluşturuldu (ID: {$game->id})");
+            }
         }
     }
     

@@ -1,60 +1,341 @@
-/* Call of Duty Theme - Military Green & Black */
+/* 🎖️ Call of Duty - Askeri Tema */
+/* Yeşil/Haki/Siyah - Tactical Military Atmosferi */
+
 :root {
-    --game-primary: #5C8727;
-    --game-secondary: #8BC34A;
-    --game-accent: #4CAF50;
-    --game-dark: #1B1B1B;
-    --game-darker: #0A0A0A;
+    --cod-primary: #5C8727;
+    --cod-secondary: #8BC34A;
+    --cod-accent: #4CAF50;
+    --cod-dark: #0a1208;
+    --cod-glow: rgba(92, 135, 39, 0.6);
 }
 
-/* Gradient Backgrounds */
-.bg-game-gradient {
-    background: linear-gradient(135deg, #5C8727 0%, #8BC34A 50%, #4CAF50 100%);
+/* Arka Plan - Kamuflaj Pattern */
+body {
+    background: #0a1208;
+    background-image: 
+        repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(92, 135, 39, 0.03) 10px, rgba(92, 135, 39, 0.03) 20px),
+        repeating-linear-gradient(-45deg, transparent, transparent 10px, rgba(76, 175, 80, 0.03) 10px, rgba(76, 175, 80, 0.03) 20px);
+    background-attachment: fixed;
+    position: relative;
 }
 
-.bg-game-gradient-dark {
-    background: linear-gradient(135deg, rgba(92, 135, 39, 0.1) 0%, rgba(139, 195, 74, 0.05) 100%);
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(ellipse at 30% 20%, rgba(92, 135, 39, 0.12) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 80%, rgba(139, 195, 74, 0.12) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, rgba(76, 175, 80, 0.08) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+    animation: tactical-pulse 10s ease-in-out infinite;
 }
 
-/* Buttons */
-.btn-game-primary {
-    background: linear-gradient(135deg, #5C8727, #8BC34A);
-    box-shadow: 0 10px 30px rgba(92, 135, 39, 0.3);
+@keyframes tactical-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
 }
 
-.btn-game-primary:hover {
-    background: linear-gradient(135deg, #8BC34A, #4CAF50);
-    box-shadow: 0 15px 40px rgba(92, 135, 39, 0.5);
-    transform: translateY(-2px);
-}
-
-/* Cards */
-.card-game {
-    background: linear-gradient(135deg, rgba(92, 135, 39, 0.1), rgba(139, 195, 74, 0.05));
-    border: 1px solid rgba(92, 135, 39, 0.2);
-}
-
-.card-game:hover {
-    border-color: rgba(92, 135, 39, 0.5);
-    box-shadow: 0 10px 40px rgba(92, 135, 39, 0.2);
-}
-
-/* Text Colors */
-.text-game-primary {
-    color: #5C8727;
-}
-
-.text-game-secondary {
-    color: #8BC34A;
-}
-
-/* Glow Effects */
-.glow-game {
-    box-shadow: 0 0 20px rgba(92, 135, 39, 0.5);
-}
-
-/* Navbar Override */
+/* Navbar - Military HUD */
 nav {
-    background: linear-gradient(90deg, rgba(0, 0, 0, 0.95) 0%, rgba(92, 135, 39, 0.1) 50%, rgba(0, 0, 0, 0.95) 100%) !important;
-    border-bottom-color: rgba(92, 135, 39, 0.3) !important;
+    background: linear-gradient(90deg, 
+        rgba(10, 18, 8, 0.98) 0%, 
+        rgba(92, 135, 39, 0.15) 50%, 
+        rgba(10, 18, 8, 0.98) 100%) !important;
+    border-bottom: 3px solid var(--cod-primary) !important;
+    border-top: 1px solid rgba(92, 135, 39, 0.3);
+    box-shadow: 
+        0 4px 20px rgba(92, 135, 39, 0.3),
+        inset 0 1px 0 rgba(139, 195, 74, 0.2);
+    backdrop-filter: blur(20px);
+    position: relative;
+}
+
+nav::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(92, 135, 39, 0.05) 2px,
+        rgba(92, 135, 39, 0.05) 4px
+    );
+    pointer-events: none;
+}
+
+nav::after {
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        var(--cod-secondary) 50%, 
+        transparent 100%);
+    animation: radar-sweep 5s linear infinite;
+}
+
+@keyframes radar-sweep {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+/* Butonlar - Tactical Button */
+.btn-primary,
+.bg-gradient-to-r.from-purple-600 {
+    background: linear-gradient(135deg, 
+        var(--cod-primary) 0%, 
+        var(--cod-accent) 100%) !important;
+    box-shadow: 
+        0 0 25px var(--cod-glow),
+        0 4px 15px rgba(92, 135, 39, 0.4),
+        inset 0 1px 0 rgba(139, 195, 74, 0.3);
+    border: 2px solid var(--cod-secondary);
+    position: relative;
+    overflow: hidden;
+    clip-path: polygon(
+        8px 0, 100% 0, 100% calc(100% - 8px), 
+        calc(100% - 8px) 100%, 0 100%, 0 8px
+    );
+}
+
+.btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 10px,
+        rgba(255, 255, 255, 0.05) 10px,
+        rgba(255, 255, 255, 0.05) 20px
+    );
+}
+
+.btn-primary::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: -100%;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(255, 255, 255, 0.6) 50%, 
+        transparent 100%);
+    animation: scan-line 3s infinite;
+}
+
+@keyframes scan-line {
+    0% { left: -100%; }
+    100% { left: 200%; }
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: 
+        0 0 35px var(--cod-glow),
+        0 6px 20px rgba(92, 135, 39, 0.6),
+        inset 0 1px 0 rgba(139, 195, 74, 0.5);
+}
+
+/* Kartlar - Military Panel */
+.glass-card,
+.bg-black\/50 {
+    background: linear-gradient(135deg, 
+        rgba(10, 18, 8, 0.9) 0%, 
+        rgba(20, 28, 18, 0.7) 100%) !important;
+    border: 2px solid rgba(92, 135, 39, 0.4) !important;
+    border-left: 4px solid var(--cod-primary) !important;
+    box-shadow: 
+        0 8px 32px rgba(92, 135, 39, 0.2),
+        inset 0 1px 0 rgba(139, 195, 74, 0.1);
+    backdrop-filter: blur(15px);
+    position: relative;
+    clip-path: polygon(
+        10px 0, 100% 0, 100% calc(100% - 10px), 
+        calc(100% - 10px) 100%, 0 100%, 0 10px
+    );
+}
+
+.glass-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 4px,
+        rgba(92, 135, 39, 0.03) 4px,
+        rgba(92, 135, 39, 0.03) 8px
+    );
+    pointer-events: none;
+}
+
+.glass-card::after {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    height: 1px;
+    background: linear-gradient(90deg, 
+        var(--cod-secondary) 0%, 
+        transparent 100%);
+    opacity: 0.5;
+}
+
+.glass-card:hover {
+    border-color: var(--cod-primary) !important;
+    box-shadow: 
+        0 12px 48px rgba(92, 135, 39, 0.4),
+        inset 0 1px 0 rgba(139, 195, 74, 0.2);
+    transform: translateY(-4px);
+}
+
+/* Başlıklar - Military Text */
+h1, h2, h3 {
+    background: linear-gradient(135deg, 
+        var(--cod-secondary) 0%, 
+        var(--cod-primary) 50%, 
+        var(--cod-accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 0 20px rgba(92, 135, 39, 0.5);
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-family: 'Courier New', monospace;
+}
+
+/* Badge'ler - Rank Badge */
+.badge,
+.bg-purple-500\/20 {
+    background: linear-gradient(135deg, 
+        rgba(92, 135, 39, 0.3) 0%, 
+        rgba(139, 195, 74, 0.2) 100%) !important;
+    border: 1px solid var(--cod-primary);
+    border-left: 3px solid var(--cod-secondary);
+    color: var(--cod-secondary) !important;
+    box-shadow: 
+        0 0 15px rgba(92, 135, 39, 0.3),
+        inset 0 0 10px rgba(92, 135, 39, 0.1);
+    clip-path: polygon(
+        5px 0, 100% 0, 100% calc(100% - 5px), 
+        calc(100% - 5px) 100%, 0 100%, 0 5px
+    );
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+}
+
+/* Input'lar - Tactical Input */
+input, textarea, select {
+    background: rgba(10, 18, 8, 0.8) !important;
+    border: 2px solid rgba(92, 135, 39, 0.3) !important;
+    border-left: 4px solid var(--cod-primary) !important;
+    color: var(--cod-secondary) !important;
+    font-family: 'Courier New', monospace;
+    clip-path: polygon(
+        8px 0, 100% 0, 100% calc(100% - 8px), 
+        calc(100% - 8px) 100%, 0 100%, 0 8px
+    );
+}
+
+input:focus, textarea:focus, select:focus {
+    border-color: var(--cod-primary) !important;
+    box-shadow: 
+        0 0 20px rgba(92, 135, 39, 0.5),
+        inset 0 0 15px rgba(92, 135, 39, 0.1) !important;
+    outline: none;
+}
+
+/* Hover Efektleri - Target Acquired */
+a:hover, button:hover {
+    color: var(--cod-secondary) !important;
+    text-shadow: 0 0 10px rgba(139, 195, 74, 0.6);
+}
+
+/* Scrollbar - Ammo Belt */
+::-webkit-scrollbar {
+    width: 12px;
+    background: rgba(10, 18, 8, 0.9);
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, 
+        var(--cod-primary) 0%, 
+        var(--cod-accent) 100%);
+    border-radius: 6px;
+    border: 2px solid rgba(10, 18, 8, 0.9);
+    box-shadow: 0 0 10px rgba(92, 135, 39, 0.5);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, 
+        var(--cod-secondary) 0%, 
+        var(--cod-primary) 100%);
+    box-shadow: 0 0 20px rgba(92, 135, 39, 0.8);
+}
+
+/* Animasyonlar - Radar Ping */
+@keyframes radar-ping {
+    0% { 
+        box-shadow: 0 0 0 0 rgba(92, 135, 39, 0.7);
+        transform: scale(1);
+    }
+    50% {
+        box-shadow: 0 0 0 10px rgba(92, 135, 39, 0);
+        transform: scale(1.05);
+    }
+    100% { 
+        box-shadow: 0 0 0 0 rgba(92, 135, 39, 0);
+        transform: scale(1);
+    }
+}
+
+.animate-pulse {
+    animation: radar-ping 2s ease-out infinite;
+}
+
+/* Parçacık Efekti - Shell Casings */
+@keyframes shell-drop {
+    0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(100vh) rotate(720deg);
+        opacity: 0;
+    }
+}
+
+body::after {
+    content: '▮';
+    position: fixed;
+    top: -50px;
+    left: 30%;
+    font-size: 20px;
+    color: var(--cod-secondary);
+    animation: shell-drop 8s linear infinite;
+    pointer-events: none;
+    z-index: 1;
+    text-shadow: 0 0 10px var(--cod-glow);
 }

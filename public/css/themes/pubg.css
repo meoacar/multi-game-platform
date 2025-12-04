@@ -1,60 +1,234 @@
-/* PUBG Mobile Theme - Orange & Dark */
+/* 🎮 PUBG Mobile - Savaş Teması */
+/* Turuncu/Kırmızı/Sarı - Battle Royale Atmosferi */
+
 :root {
-    --game-primary: #FF6B00;
-    --game-secondary: #FFB800;
-    --game-accent: #FF8C00;
-    --game-dark: #1a1a1a;
-    --game-darker: #0d0d0d;
+    --pubg-primary: #FF6B00;
+    --pubg-secondary: #FFB800;
+    --pubg-accent: #FF4500;
+    --pubg-dark: #1a0f00;
+    --pubg-glow: rgba(255, 107, 0, 0.5);
 }
 
-/* Gradient Backgrounds */
-.bg-game-gradient {
-    background: linear-gradient(135deg, #FF6B00 0%, #FF8C00 50%, #FFB800 100%);
+/* Arka Plan - Savaş Alanı Efekti */
+body {
+    background: linear-gradient(135deg, #1a0f00 0%, #2d1a00 50%, #1a0f00 100%);
+    background-attachment: fixed;
+    position: relative;
+    overflow-x: hidden;
 }
 
-.bg-game-gradient-dark {
-    background: linear-gradient(135deg, rgba(255, 107, 0, 0.1) 0%, rgba(255, 140, 0, 0.05) 100%);
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 20% 30%, rgba(255, 107, 0, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(255, 184, 0, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(255, 69, 0, 0.05) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+    animation: pulse-bg 8s ease-in-out infinite;
 }
 
-/* Buttons */
-.btn-game-primary {
-    background: linear-gradient(135deg, #FF6B00, #FF8C00);
-    box-shadow: 0 10px 30px rgba(255, 107, 0, 0.3);
+@keyframes pulse-bg {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
 }
 
-.btn-game-primary:hover {
-    background: linear-gradient(135deg, #FF8C00, #FFB800);
-    box-shadow: 0 15px 40px rgba(255, 107, 0, 0.5);
-    transform: translateY(-2px);
-}
-
-/* Cards */
-.card-game {
-    background: linear-gradient(135deg, rgba(255, 107, 0, 0.1), rgba(255, 140, 0, 0.05));
-    border: 1px solid rgba(255, 107, 0, 0.2);
-}
-
-.card-game:hover {
-    border-color: rgba(255, 107, 0, 0.5);
-    box-shadow: 0 10px 40px rgba(255, 107, 0, 0.2);
-}
-
-/* Text Colors */
-.text-game-primary {
-    color: #FF6B00;
-}
-
-.text-game-secondary {
-    color: #FFB800;
-}
-
-/* Glow Effects */
-.glow-game {
-    box-shadow: 0 0 20px rgba(255, 107, 0, 0.5);
-}
-
-/* Navbar Override */
+/* Navbar - Savaş Çizgisi */
 nav {
-    background: linear-gradient(90deg, rgba(0, 0, 0, 0.95) 0%, rgba(255, 107, 0, 0.1) 50%, rgba(0, 0, 0, 0.95) 100%) !important;
-    border-bottom-color: rgba(255, 107, 0, 0.3) !important;
+    background: linear-gradient(90deg, 
+        rgba(26, 15, 0, 0.95) 0%, 
+        rgba(255, 107, 0, 0.2) 50%, 
+        rgba(26, 15, 0, 0.95) 100%) !important;
+    border-bottom: 2px solid var(--pubg-primary) !important;
+    box-shadow: 0 4px 20px rgba(255, 107, 0, 0.3);
+    backdrop-filter: blur(20px);
+}
+
+nav::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        var(--pubg-primary) 50%, 
+        transparent 100%);
+    animation: scan-line 3s linear infinite;
+}
+
+@keyframes scan-line {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+/* Butonlar - Ateş Efekti */
+.btn-primary,
+.bg-gradient-to-r.from-purple-600 {
+    background: linear-gradient(135deg, var(--pubg-primary) 0%, var(--pubg-accent) 100%) !important;
+    box-shadow: 0 0 20px var(--pubg-glow), 0 0 40px rgba(255, 107, 0, 0.3);
+    border: 1px solid var(--pubg-secondary);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-primary::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, 
+        transparent 30%, 
+        rgba(255, 255, 255, 0.3) 50%, 
+        transparent 70%);
+    animation: shine 3s infinite;
+}
+
+@keyframes shine {
+    0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+    100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 0 30px var(--pubg-glow), 0 0 60px rgba(255, 107, 0, 0.5);
+}
+
+/* Kartlar - Savaş Ekipmanı */
+.glass-card,
+.bg-black\/50 {
+    background: linear-gradient(135deg, 
+        rgba(26, 15, 0, 0.8) 0%, 
+        rgba(45, 26, 0, 0.6) 100%) !important;
+    border: 1px solid rgba(255, 107, 0, 0.3) !important;
+    box-shadow: 0 8px 32px rgba(255, 107, 0, 0.2);
+    backdrop-filter: blur(10px);
+    position: relative;
+}
+
+.glass-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        var(--pubg-secondary) 50%, 
+        transparent 100%);
+}
+
+.glass-card:hover {
+    border-color: var(--pubg-primary) !important;
+    box-shadow: 0 12px 48px rgba(255, 107, 0, 0.4);
+    transform: translateY(-4px);
+}
+
+/* Başlıklar - Ateş Yazı */
+h1, h2, h3 {
+    background: linear-gradient(135deg, 
+        var(--pubg-secondary) 0%, 
+        var(--pubg-primary) 50%, 
+        var(--pubg-accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 0 30px rgba(255, 107, 0, 0.5);
+    font-weight: 900;
+    letter-spacing: -0.02em;
+}
+
+/* Badge'ler - Mermi Kapsülü */
+.badge,
+.bg-purple-500\/20 {
+    background: linear-gradient(135deg, 
+        rgba(255, 107, 0, 0.3) 0%, 
+        rgba(255, 184, 0, 0.2) 100%) !important;
+    border: 1px solid var(--pubg-primary);
+    color: var(--pubg-secondary) !important;
+    box-shadow: 0 0 10px rgba(255, 107, 0, 0.3);
+}
+
+/* Input'lar - Taktik Ekran */
+input, textarea, select {
+    background: rgba(26, 15, 0, 0.6) !important;
+    border: 1px solid rgba(255, 107, 0, 0.3) !important;
+    color: white !important;
+}
+
+input:focus, textarea:focus, select:focus {
+    border-color: var(--pubg-primary) !important;
+    box-shadow: 0 0 20px rgba(255, 107, 0, 0.4) !important;
+    outline: none;
+}
+
+/* Hover Efektleri - Hedef Kilidi */
+a:hover, button:hover {
+    color: var(--pubg-secondary) !important;
+    text-shadow: 0 0 10px rgba(255, 184, 0, 0.5);
+}
+
+/* Scrollbar - Mermi Şeridi */
+::-webkit-scrollbar {
+    width: 12px;
+    background: rgba(26, 15, 0, 0.8);
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--pubg-primary) 0%, var(--pubg-accent) 100%);
+    border-radius: 6px;
+    border: 2px solid rgba(26, 15, 0, 0.8);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, var(--pubg-secondary) 0%, var(--pubg-primary) 100%);
+}
+
+/* Animasyonlar - Savaş Efektleri */
+@keyframes battle-pulse {
+    0%, 100% { 
+        box-shadow: 0 0 20px rgba(255, 107, 0, 0.3);
+    }
+    50% { 
+        box-shadow: 0 0 40px rgba(255, 107, 0, 0.6);
+    }
+}
+
+.animate-pulse {
+    animation: battle-pulse 2s ease-in-out infinite;
+}
+
+/* Parçacık Efekti - Mermi İzleri */
+@keyframes particle-float {
+    0% {
+        transform: translateY(0) translateX(0) rotate(0deg);
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-100vh) translateX(50px) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+body::after {
+    content: '🔥';
+    position: fixed;
+    bottom: -50px;
+    left: 10%;
+    font-size: 20px;
+    animation: particle-float 15s linear infinite;
+    pointer-events: none;
+    z-index: 1;
 }
