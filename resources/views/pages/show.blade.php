@@ -7,11 +7,21 @@
 <div class="relative min-h-screen overflow-hidden bg-black py-16">
     <!-- Background Image -->
     <div class="absolute inset-0">
-        @if($page->slug === 'hakkimizda')
-            <img src="{{ asset('images/analogolar/hakkımızda.jpeg') }}" 
+        @php
+            $backgroundImages = [
+                'hakkimizda' => 'hakkımızda.jpeg',
+                'iletisim' => 'anasayfaarka.jpg', // İletişim için anasayfa arka planı
+                'sss' => 'anasayfaarka.jpg', // SSS için anasayfa arka planı
+            ];
+            $bgImage = $backgroundImages[$page->slug] ?? null;
+        @endphp
+        
+        @if($bgImage && file_exists(public_path('images/analogolar/' . $bgImage)))
+            <img src="{{ asset('images/analogolar/' . $bgImage) }}" 
                  alt="Background" 
                  class="w-full h-full object-cover opacity-20">
         @endif
+        
         <!-- Dark Overlay -->
         <div class="absolute inset-0 bg-gradient-to-br from-black/90 via-purple-900/70 to-black/90"></div>
     </div>
