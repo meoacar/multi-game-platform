@@ -45,14 +45,17 @@ class GameSelectionController extends Controller
             ->firstOrFail();
 
         // Subdomain URL'ini oluştur
-        $protocol = config('app.url_protocol', 'https');
+        $protocol = request()->isSecure() ? 'https' : 'http';
         $domain = config('app.domain', 'squadbul.com');
         
+        // Subdomain değerini al (yoksa slug kullan)
+        $subdomain = $game->subdomain ?: $game->slug;
+        
         // Localhost kontrolü
-        if (app()->environment('local')) {
+        if (app()->environment('local') || request()->getHost() === 'localhost') {
             $url = config('app.url', 'http://localhost');
         } else {
-            $url = "{$protocol}://{$game->subdomain}.{$domain}";
+            $url = "{$protocol}://{$subdomain}.{$domain}";
         }
 
         return redirect()->to($url);
