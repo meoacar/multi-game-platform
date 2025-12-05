@@ -1,24 +1,32 @@
-/* 🎖️ Call of Duty - Askeri Tema */
-/* Yeşil/Haki/Siyah - Tactical Military Atmosferi */
+/* 🎖️ CALL OF DUTY MOBILE - Askeri Operasyon Teması */
+/* Yeşil/Siyah/Altın - Taktik Savaş Atmosferi */
 
 :root {
     --cod-primary: #5C8727;
     --cod-secondary: #8BC34A;
-    --cod-accent: #4CAF50;
-    --cod-dark: #0a1208;
+    --cod-accent: #FFD700;
+    --cod-dark: #0a0f0a;
+    --cod-military: #2d3a1f;
     --cod-glow: rgba(92, 135, 39, 0.6);
+    --cod-gold: #FFD700;
 }
 
-/* Arka Plan - Kamuflaj Pattern */
+/* Arka Plan - Askeri Üs Efekti */
 body {
-    background: #0a1208;
-    background-image: 
-        repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(92, 135, 39, 0.03) 10px, rgba(92, 135, 39, 0.03) 20px),
-        repeating-linear-gradient(-45deg, transparent, transparent 10px, rgba(76, 175, 80, 0.03) 10px, rgba(76, 175, 80, 0.03) 20px);
+    background: linear-gradient(135deg, #0a0f0a 0%, #1a2412 25%, #0f1a0a 50%, #1a2412 75%, #0a0f0a 100%);
     background-attachment: fixed;
+    background-size: 400% 400%;
+    animation: military-gradient 20s ease infinite;
     position: relative;
+    overflow-x: hidden;
 }
 
+@keyframes military-gradient {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+/* Askeri Grid Overlay */
 body::before {
     content: '';
     position: fixed;
@@ -26,52 +34,85 @@ body::before {
     left: 0;
     right: 0;
     bottom: 0;
-    background: 
-        radial-gradient(ellipse at 30% 20%, rgba(92, 135, 39, 0.12) 0%, transparent 50%),
-        radial-gradient(ellipse at 70% 80%, rgba(139, 195, 74, 0.12) 0%, transparent 50%),
-        radial-gradient(ellipse at 50% 50%, rgba(76, 175, 80, 0.08) 0%, transparent 70%);
+    background-image: 
+        linear-gradient(rgba(92, 135, 39, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(92, 135, 39, 0.03) 1px, transparent 1px);
+    background-size: 50px 50px;
     pointer-events: none;
     z-index: 0;
-    animation: tactical-pulse 10s ease-in-out infinite;
+    animation: grid-move 30s linear infinite;
 }
 
-@keyframes tactical-pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.7; }
+@keyframes grid-move {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(50px, 50px); }
 }
 
-/* Navbar - Military HUD */
+/* Radar Sweep Efekti */
+body::after {
+    content: '';
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 800px;
+    height: 800px;
+    margin: -400px 0 0 -400px;
+    background: conic-gradient(
+        from 0deg,
+        transparent 0deg,
+        rgba(92, 135, 39, 0.1) 30deg,
+        transparent 60deg
+    );
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+    animation: radar-sweep 8s linear infinite;
+    opacity: 0.3;
+}
+
+@keyframes radar-sweep {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Navbar - Taktik Komuta Merkezi */
 nav {
     background: linear-gradient(90deg, 
-        rgba(10, 18, 8, 0.98) 0%, 
+        rgba(10, 15, 10, 0.98) 0%, 
         rgba(92, 135, 39, 0.15) 50%, 
-        rgba(10, 18, 8, 0.98) 100%) !important;
+        rgba(10, 15, 10, 0.98) 100%) !important;
     border-bottom: 3px solid var(--cod-primary) !important;
-    border-top: 1px solid rgba(92, 135, 39, 0.3);
     box-shadow: 
-        0 4px 20px rgba(92, 135, 39, 0.3),
+        0 4px 20px rgba(92, 135, 39, 0.4),
         inset 0 1px 0 rgba(139, 195, 74, 0.2);
     backdrop-filter: blur(20px);
     position: relative;
 }
 
+/* Askeri Şerit Efekti */
 nav::before {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    right: 0;
+    height: 3px;
     background: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 2px,
-        rgba(92, 135, 39, 0.05) 2px,
-        rgba(92, 135, 39, 0.05) 4px
+        90deg,
+        var(--cod-primary) 0px,
+        var(--cod-primary) 10px,
+        var(--cod-secondary) 10px,
+        var(--cod-secondary) 20px
     );
-    pointer-events: none;
+    animation: march 1s linear infinite;
 }
 
+@keyframes march {
+    0% { background-position: 0 0; }
+    100% { background-position: 20px 0; }
+}
+
+/* Tarama Çizgisi */
 nav::after {
     content: '';
     position: absolute;
@@ -81,261 +122,422 @@ nav::after {
     height: 3px;
     background: linear-gradient(90deg, 
         transparent 0%, 
-        var(--cod-secondary) 50%, 
+        var(--cod-gold) 50%, 
         transparent 100%);
-    animation: radar-sweep 5s linear infinite;
+    animation: tactical-scan 4s ease-in-out infinite;
 }
 
-@keyframes radar-sweep {
-    0% { transform: translateX(-100%); }
-    100% { transform: translateX(100%); }
+@keyframes tactical-scan {
+    0%, 100% { transform: translateX(-100%); opacity: 0; }
+    50% { opacity: 1; }
+    100% { transform: translateX(200%); }
 }
 
-/* Butonlar - Tactical Button */
+/* Butonlar - Askeri Ekipman */
 .btn-primary,
 .bg-gradient-to-r.from-purple-600 {
     background: linear-gradient(135deg, 
         var(--cod-primary) 0%, 
-        var(--cod-accent) 100%) !important;
+        var(--cod-secondary) 50%,
+        var(--cod-primary) 100%) !important;
     box-shadow: 
-        0 0 25px var(--cod-glow),
-        0 4px 15px rgba(92, 135, 39, 0.4),
-        inset 0 1px 0 rgba(139, 195, 74, 0.3);
+        0 0 30px var(--cod-glow), 
+        0 0 60px rgba(92, 135, 39, 0.3),
+        inset 0 1px 0 rgba(139, 195, 74, 0.5);
     border: 2px solid var(--cod-secondary);
     position: relative;
     overflow: hidden;
-    clip-path: polygon(
-        8px 0, 100% 0, 100% calc(100% - 8px), 
-        calc(100% - 8px) 100%, 0 100%, 0 8px
-    );
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 900;
 }
 
+/* Holografik Efekt */
 .btn-primary::before {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: repeating-linear-gradient(
-        45deg,
-        transparent,
-        transparent 10px,
-        rgba(255, 255, 255, 0.05) 10px,
-        rgba(255, 255, 255, 0.05) 20px
-    );
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, 
+        transparent 30%, 
+        rgba(255, 215, 0, 0.4) 50%, 
+        transparent 70%);
+    animation: hologram 3s infinite;
 }
 
+@keyframes hologram {
+    0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+    100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+}
+
+/* Hedef Kilidi Efekti */
 .btn-primary::after {
-    content: '';
+    content: '⊕';
     position: absolute;
     top: 50%;
-    left: -100%;
-    width: 100%;
-    height: 2px;
-    background: linear-gradient(90deg, 
-        transparent 0%, 
-        rgba(255, 255, 255, 0.6) 50%, 
-        transparent 100%);
-    animation: scan-line 3s infinite;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 40px;
+    color: var(--cod-gold);
+    opacity: 0;
+    transition: all 0.3s;
 }
 
-@keyframes scan-line {
-    0% { left: -100%; }
-    100% { left: 200%; }
+.btn-primary:hover::after {
+    opacity: 0.3;
+    font-size: 60px;
 }
 
 .btn-primary:hover {
-    transform: translateY(-2px) scale(1.03);
+    transform: translateY(-3px) scale(1.05);
     box-shadow: 
-        0 0 35px var(--cod-glow),
-        0 6px 20px rgba(92, 135, 39, 0.6),
-        inset 0 1px 0 rgba(139, 195, 74, 0.5);
+        0 0 40px var(--cod-glow), 
+        0 0 80px rgba(92, 135, 39, 0.5),
+        0 10px 30px rgba(0, 0, 0, 0.5);
+    border-color: var(--cod-gold);
 }
 
-/* Kartlar - Military Panel */
+/* Kartlar - Taktik Ekran */
 .glass-card,
 .bg-black\/50 {
     background: linear-gradient(135deg, 
-        rgba(10, 18, 8, 0.9) 0%, 
-        rgba(20, 28, 18, 0.7) 100%) !important;
+        rgba(10, 15, 10, 0.9) 0%, 
+        rgba(45, 58, 31, 0.7) 50%,
+        rgba(10, 15, 10, 0.9) 100%) !important;
     border: 2px solid rgba(92, 135, 39, 0.4) !important;
-    border-left: 4px solid var(--cod-primary) !important;
     box-shadow: 
-        0 8px 32px rgba(92, 135, 39, 0.2),
-        inset 0 1px 0 rgba(139, 195, 74, 0.1);
+        0 8px 32px rgba(92, 135, 39, 0.3),
+        inset 0 1px 0 rgba(139, 195, 74, 0.2);
     backdrop-filter: blur(15px);
     position: relative;
-    clip-path: polygon(
-        10px 0, 100% 0, 100% calc(100% - 10px), 
-        calc(100% - 10px) 100%, 0 100%, 0 10px
-    );
+    overflow: hidden;
 }
 
+/* Köşe İşaretleri */
 .glass-card::before {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
-    background: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 4px,
-        rgba(92, 135, 39, 0.03) 4px,
-        rgba(92, 135, 39, 0.03) 8px
-    );
+    right: 0;
+    bottom: 0;
+    background: 
+        linear-gradient(90deg, var(--cod-gold) 0%, transparent 10%) top left,
+        linear-gradient(0deg, var(--cod-gold) 0%, transparent 10%) top left,
+        linear-gradient(90deg, transparent 90%, var(--cod-gold) 100%) top right,
+        linear-gradient(180deg, var(--cod-gold) 0%, transparent 10%) top right,
+        linear-gradient(270deg, var(--cod-gold) 0%, transparent 10%) bottom right,
+        linear-gradient(180deg, transparent 90%, var(--cod-gold) 100%) bottom right,
+        linear-gradient(270deg, transparent 90%, var(--cod-gold) 100%) bottom left,
+        linear-gradient(0deg, transparent 90%, var(--cod-gold) 100%) bottom left;
+    background-size: 20px 2px, 2px 20px;
+    background-repeat: no-repeat;
+    opacity: 0.5;
     pointer-events: none;
 }
 
+/* Tarama Çizgisi Efekti */
 .glass-card::after {
     content: '';
     position: absolute;
-    top: 10px;
-    left: 10px;
-    right: 10px;
-    height: 1px;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
     background: linear-gradient(90deg, 
-        var(--cod-secondary) 0%, 
+        transparent 0%, 
+        rgba(139, 195, 74, 0.2) 50%, 
         transparent 100%);
-    opacity: 0.5;
+    animation: card-scan 3s ease-in-out infinite;
+}
+
+@keyframes card-scan {
+    0%, 100% { left: -100%; }
+    50% { left: 100%; }
 }
 
 .glass-card:hover {
-    border-color: var(--cod-primary) !important;
+    border-color: var(--cod-gold) !important;
     box-shadow: 
-        0 12px 48px rgba(92, 135, 39, 0.4),
-        inset 0 1px 0 rgba(139, 195, 74, 0.2);
-    transform: translateY(-4px);
+        0 12px 48px rgba(92, 135, 39, 0.5),
+        0 0 60px rgba(255, 215, 0, 0.3);
+    transform: translateY(-5px);
 }
 
-/* Başlıklar - Military Text */
+/* Başlıklar - Askeri Kod */
 h1, h2, h3 {
     background: linear-gradient(135deg, 
-        var(--cod-secondary) 0%, 
-        var(--cod-primary) 50%, 
-        var(--cod-accent) 100%);
+        var(--cod-gold) 0%, 
+        var(--cod-secondary) 30%,
+        var(--cod-primary) 60%,
+        var(--cod-gold) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    text-shadow: 0 0 20px rgba(92, 135, 39, 0.5);
+    text-shadow: 0 0 40px rgba(92, 135, 39, 0.6);
     font-weight: 900;
-    letter-spacing: 0.1em;
+    letter-spacing: -0.03em;
     text-transform: uppercase;
-    font-family: 'Courier New', monospace;
+    position: relative;
 }
 
-/* Badge'ler - Rank Badge */
+/* Başlık Altı Çizgi */
+h1::after, h2::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--cod-gold), transparent);
+}
+
+/* Badge'ler - Askeri Rütbe */
 .badge,
 .bg-purple-500\/20 {
     background: linear-gradient(135deg, 
-        rgba(92, 135, 39, 0.3) 0%, 
-        rgba(139, 195, 74, 0.2) 100%) !important;
-    border: 1px solid var(--cod-primary);
-    border-left: 3px solid var(--cod-secondary);
-    color: var(--cod-secondary) !important;
+        rgba(92, 135, 39, 0.4) 0%, 
+        rgba(139, 195, 74, 0.3) 100%) !important;
+    border: 2px solid var(--cod-primary);
+    color: var(--cod-gold) !important;
     box-shadow: 
-        0 0 15px rgba(92, 135, 39, 0.3),
-        inset 0 0 10px rgba(92, 135, 39, 0.1);
-    clip-path: polygon(
-        5px 0, 100% 0, 100% calc(100% - 5px), 
-        calc(100% - 5px) 100%, 0 100%, 0 5px
-    );
-    font-family: 'Courier New', monospace;
-    font-weight: bold;
+        0 0 15px rgba(92, 135, 39, 0.4),
+        inset 0 1px 0 rgba(139, 195, 74, 0.3);
+    text-transform: uppercase;
+    font-weight: 800;
+    letter-spacing: 1px;
 }
 
-/* Input'lar - Tactical Input */
+/* Input'lar - Taktik Terminal */
 input, textarea, select {
-    background: rgba(10, 18, 8, 0.8) !important;
-    border: 2px solid rgba(92, 135, 39, 0.3) !important;
-    border-left: 4px solid var(--cod-primary) !important;
+    background: rgba(10, 15, 10, 0.8) !important;
+    border: 2px solid rgba(92, 135, 39, 0.4) !important;
     color: var(--cod-secondary) !important;
     font-family: 'Courier New', monospace;
-    clip-path: polygon(
-        8px 0, 100% 0, 100% calc(100% - 8px), 
-        calc(100% - 8px) 100%, 0 100%, 0 8px
-    );
 }
 
 input:focus, textarea:focus, select:focus {
-    border-color: var(--cod-primary) !important;
+    border-color: var(--cod-gold) !important;
     box-shadow: 
         0 0 20px rgba(92, 135, 39, 0.5),
-        inset 0 0 15px rgba(92, 135, 39, 0.1) !important;
+        0 0 40px rgba(255, 215, 0, 0.3) !important;
     outline: none;
+    background: rgba(10, 15, 10, 0.95) !important;
 }
 
-/* Hover Efektleri - Target Acquired */
+/* Placeholder */
+input::placeholder, textarea::placeholder {
+    color: rgba(139, 195, 74, 0.5) !important;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Hover Efektleri - Hedef Kilidi */
 a:hover, button:hover {
-    color: var(--cod-secondary) !important;
-    text-shadow: 0 0 10px rgba(139, 195, 74, 0.6);
+    color: var(--cod-gold) !important;
+    text-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
 }
 
-/* Scrollbar - Ammo Belt */
+/* Scrollbar - Mermi Şeridi */
 ::-webkit-scrollbar {
-    width: 12px;
-    background: rgba(10, 18, 8, 0.9);
+    width: 14px;
+    background: rgba(10, 15, 10, 0.9);
+}
+
+::-webkit-scrollbar-track {
+    background: linear-gradient(180deg, 
+        rgba(92, 135, 39, 0.1) 0%, 
+        transparent 50%, 
+        rgba(92, 135, 39, 0.1) 100%);
 }
 
 ::-webkit-scrollbar-thumb {
     background: linear-gradient(180deg, 
         var(--cod-primary) 0%, 
-        var(--cod-accent) 100%);
-    border-radius: 6px;
-    border: 2px solid rgba(10, 18, 8, 0.9);
+        var(--cod-secondary) 50%,
+        var(--cod-primary) 100%);
+    border-radius: 7px;
+    border: 2px solid rgba(10, 15, 10, 0.9);
     box-shadow: 0 0 10px rgba(92, 135, 39, 0.5);
 }
 
 ::-webkit-scrollbar-thumb:hover {
     background: linear-gradient(180deg, 
-        var(--cod-secondary) 0%, 
-        var(--cod-primary) 100%);
-    box-shadow: 0 0 20px rgba(92, 135, 39, 0.8);
+        var(--cod-gold) 0%, 
+        var(--cod-secondary) 50%,
+        var(--cod-gold) 100%);
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
 }
 
-/* Animasyonlar - Radar Ping */
-@keyframes radar-ping {
-    0% { 
-        box-shadow: 0 0 0 0 rgba(92, 135, 39, 0.7);
-        transform: scale(1);
+/* Animasyonlar - Askeri Operasyon */
+@keyframes tactical-pulse {
+    0%, 100% { 
+        box-shadow: 0 0 20px rgba(92, 135, 39, 0.4);
+        border-color: var(--cod-primary);
     }
-    50% {
-        box-shadow: 0 0 0 10px rgba(92, 135, 39, 0);
-        transform: scale(1.05);
-    }
-    100% { 
-        box-shadow: 0 0 0 0 rgba(92, 135, 39, 0);
-        transform: scale(1);
+    50% { 
+        box-shadow: 0 0 40px rgba(92, 135, 39, 0.8);
+        border-color: var(--cod-gold);
     }
 }
 
 .animate-pulse {
-    animation: radar-ping 2s ease-out infinite;
+    animation: tactical-pulse 2s ease-in-out infinite;
 }
 
-/* Parçacık Efekti - Shell Casings */
-@keyframes shell-drop {
+/* Hedef İşaretleyici */
+@keyframes target-lock {
+    0%, 100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.2) rotate(180deg);
+        opacity: 0.7;
+    }
+}
+
+/* Askeri Kod Efekti */
+@keyframes matrix-rain {
     0% {
-        transform: translateY(0) rotate(0deg);
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    50% {
         opacity: 1;
     }
     100% {
-        transform: translateY(100vh) rotate(720deg);
+        transform: translateY(100vh);
         opacity: 0;
     }
 }
 
-body::after {
-    content: '▮';
-    position: fixed;
-    top: -50px;
-    left: 30%;
+/* Taktik İşaretler */
+.tactical-marker {
+    position: relative;
+}
+
+.tactical-marker::before {
+    content: '⊕';
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    color: var(--cod-gold);
     font-size: 20px;
+    animation: target-lock 2s infinite;
+}
+
+/* Askeri HUD Overlay */
+.hud-overlay {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px;
+    background: rgba(10, 15, 10, 0.9);
+    border: 2px solid var(--cod-primary);
+    border-radius: 10px;
+    font-family: 'Courier New', monospace;
     color: var(--cod-secondary);
-    animation: shell-drop 8s linear infinite;
-    pointer-events: none;
-    z-index: 1;
-    text-shadow: 0 0 10px var(--cod-glow);
+    box-shadow: 0 0 20px rgba(92, 135, 39, 0.5);
+    z-index: 1000;
+}
+
+/* Glow Text */
+.glow-text {
+    color: var(--cod-gold);
+    text-shadow: 
+        0 0 10px rgba(255, 215, 0, 0.8),
+        0 0 20px rgba(255, 215, 0, 0.6),
+        0 0 30px rgba(255, 215, 0, 0.4);
+    animation: glow-pulse 2s ease-in-out infinite;
+}
+
+@keyframes glow-pulse {
+    0%, 100% {
+        text-shadow: 
+            0 0 10px rgba(255, 215, 0, 0.8),
+            0 0 20px rgba(255, 215, 0, 0.6),
+            0 0 30px rgba(255, 215, 0, 0.4);
+    }
+    50% {
+        text-shadow: 
+            0 0 20px rgba(255, 215, 0, 1),
+            0 0 30px rgba(255, 215, 0, 0.8),
+            0 0 40px rgba(255, 215, 0, 0.6);
+    }
+}
+
+/* Askeri Şerit Dekorasyon */
+.military-stripe {
+    position: relative;
+    padding-left: 20px;
+}
+
+.military-stripe::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 5px;
+    background: repeating-linear-gradient(
+        0deg,
+        var(--cod-primary) 0px,
+        var(--cod-primary) 10px,
+        var(--cod-gold) 10px,
+        var(--cod-gold) 20px
+    );
+}
+
+/* Taktik Grid */
+.tactical-grid {
+    background-image: 
+        linear-gradient(rgba(92, 135, 39, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(92, 135, 39, 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+}
+
+/* Komuta Butonu */
+.command-button {
+    position: relative;
+    overflow: hidden;
+}
+
+.command-button::before {
+    content: '▶';
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--cod-gold);
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+}
+
+/* Radar Nokta */
+.radar-dot {
+    width: 10px;
+    height: 10px;
+    background: var(--cod-gold);
+    border-radius: 50%;
+    box-shadow: 0 0 10px var(--cod-gold);
+    animation: radar-ping 2s infinite;
+}
+
+@keyframes radar-ping {
+    0% {
+        box-shadow: 0 0 10px var(--cod-gold);
+    }
+    50% {
+        box-shadow: 0 0 30px var(--cod-gold), 0 0 60px var(--cod-gold);
+    }
+    100% {
+        box-shadow: 0 0 10px var(--cod-gold);
+    }
 }
