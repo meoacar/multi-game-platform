@@ -19,7 +19,7 @@
                 <div>
                     <div class="text-sm font-bold text-white/80 uppercase tracking-wider">Türkiye'nin En Büyük</div>
                     <h1 class="text-4xl md:text-6xl font-black animate-fade-in">
-                        <span class="text-yellow-300">{{ $currentGame->name ?? 'Oyun' }}</span> Topluluğu
+                        <span class="text-yellow-300">{{ isset($currentGame) && $currentGame ? $currentGame->name : 'Oyun' }}</span> Topluluğu
                     </h1>
                 </div>
             </div>
