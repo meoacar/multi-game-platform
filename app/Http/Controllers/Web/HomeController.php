@@ -71,6 +71,15 @@ class HomeController extends Controller
             // Oyuna özel view'ı seç
             $viewPath = "games.{$gameSlug}.home";
             
+            // DEBUG LOG
+            \Log::info('HomeController DEBUG', [
+                'gameSlug' => $gameSlug,
+                'viewPath' => $viewPath,
+                'viewExists' => view()->exists($viewPath),
+                'sessionGameId' => session('game_id'),
+                'currentGameName' => $currentGame?->name,
+            ]);
+            
             // Eğer oyuna özel view yoksa, default home'u kullan
             if (!view()->exists($viewPath)) {
                 $viewPath = 'home';
