@@ -102,7 +102,8 @@ Route::post('/cikis', [AuthController::class, 'logout'])->middleware('auth')->na
 
 // Onboarding Routes
 Route::middleware(['auth'])->prefix('onboarding')->name('onboarding.')->group(function () {
-    Route::get('/', [OnboardingController::class, 'index'])->name('index');
+    Route::get('/', [OnboardingController::class, 'start'])->name('index');
+    Route::get('/step/{step}', [OnboardingController::class, 'step'])->name('step');
     Route::post('/step0', [OnboardingController::class, 'step0'])->name('step0');
     Route::post('/step1', [OnboardingController::class, 'step1'])->name('step1');
     Route::post('/step2', [OnboardingController::class, 'step2'])->name('step2');
