@@ -181,8 +181,8 @@ class OnboardingController extends Controller
         }
 
         // Adım 2'ye yönlendir
-        return redirect()->route('onboarding.index')
-            ->with('success', 'PUBG profil bilgileriniz kaydedildi!');
+        return redirect()->route('onboarding.step', 2)
+            ->with('success', 'Profil bilgileriniz kaydedildi!');
     }
 
     /**
@@ -205,7 +205,7 @@ class OnboardingController extends Controller
         }
 
         // Adım 3'e yönlendir
-        return redirect()->route('onboarding.index')
+        return redirect()->route('onboarding.step', 3)
             ->with('success', 'Oyun tercihleriniz kaydedildi!');
     }
 
@@ -229,7 +229,7 @@ class OnboardingController extends Controller
         }
 
         // Adım 4'e yönlendir
-        return redirect()->route('onboarding.index')
+        return redirect()->route('onboarding.step', 4)
             ->with('success', 'İlgi alanlarınız kaydedildi!');
     }
 
