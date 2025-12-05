@@ -2,6 +2,8 @@
 
 @section('title', 'Call of Duty Mobile Türkiye')
 
+{{-- DEBUG: Bu COD view'ı yüklendi! --}}
+
 @section('content')
 <div class="min-h-screen bg-[#0f0f0f]">
     <!-- HERO - Discord Style -->
