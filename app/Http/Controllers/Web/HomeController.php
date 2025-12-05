@@ -18,10 +18,10 @@ class HomeController extends Controller
     public function index(Request $request)
     {
         try {
-            // Mevcut oyunu al
-            $currentGame = $request->attributes->get('current_game');
+            // Mevcut oyunu al - session'dan
+            $currentGame = session('game');
             
-            // Debug: Eğer null ise session'dan al
+            // Fallback: session'da yoksa game_id ile bul
             if (!$currentGame) {
                 $gameId = session('game_id');
                 if ($gameId) {
