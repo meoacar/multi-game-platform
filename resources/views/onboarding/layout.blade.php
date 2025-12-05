@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hoşgeldin - PUBG Mobile Topluluk</title>
+    <title>Hoşgeldin - {{ $game->name ?? 'Oyun' }} Topluluk</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 min-h-screen relative">
@@ -18,7 +18,7 @@
             <!-- Logo & Başlık -->
             <div class="text-center mb-8 animate-fade-in">
                 <div class="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-game-primary to-game-blue rounded-2xl shadow-2xl shadow-game-primary/30 mb-4 animate-bounce-in hw-accelerate">
-                    <span class="text-white font-black text-4xl">P</span>
+                    <span class="text-white font-black text-4xl">{{ substr($game->name ?? 'G', 0, 1) }}</span>
                 </div>
                 <h1 class="text-3xl sm:text-4xl font-black text-white mb-2">
                     Hoşgeldin! 🎮

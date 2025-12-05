@@ -624,4 +624,25 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->is_admin && $this->hasRole('content_manager');
     }
+
+    /**
+     * Onboarding adımını güncelle
+     * 
+     * @param int $step
+     * @return void
+     */
+    public function updateOnboardingStep(int $step): void
+    {
+        $gameId = session('game_id');
+        
+        if (!$gameId) {
+            return;
+        }
+
+        $profile = $this->profileForGame($gameId)->first();
+        
+        if ($profile) {
+            $profile->update(['onboarding_step' => $step]);
+        }
+    }
 }

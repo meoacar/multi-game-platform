@@ -5,7 +5,7 @@
     <!-- Başlık -->
     <div class="text-center">
         <h2 class="text-2xl sm:text-3xl font-bold text-white mb-2">
-            PUBG Profil Bilgilerin 🎯
+            {{ $game->name ?? 'Oyun' }} Profil Bilgilerin 🎯
         </h2>
         <p class="text-gray-300">
             Oyun bilgilerini paylaş, benzer seviyedeki oyuncularla eşleş
@@ -16,10 +16,10 @@
     <form action="{{ route('onboarding.step1') }}" method="POST" class="space-y-5">
         @csrf
 
-        <!-- PUBG ID -->
+        <!-- Game ID -->
         <div>
             <label for="pubg_id" class="block text-sm font-semibold text-gray-200 mb-2">
-                PUBG ID <span class="text-game-danger">*</span>
+                {{ $game->name ?? 'Oyun' }} ID <span class="text-game-danger">*</span>
             </label>
             <input type="text" 
                    id="pubg_id" 
