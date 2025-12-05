@@ -1,18 +1,30 @@
 @extends('layouts.app')
 
-@section('title', 'Ana Sayfa - PUBG Mobile Topluluk')
+@section('title', 'Ana Sayfa - ' . ($currentGame->name ?? 'Oyun') . ' Topluluk')
 
 @section('content')
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <!-- Hero Section -->
-    <div class="bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 rounded-3xl shadow-2xl overflow-hidden mb-12">
-        <div class="px-8 py-16 md:px-16 md:py-24 text-white">
-            <h1 class="text-4xl md:text-6xl font-black mb-6 animate-fade-in">
-                Türkiye'nin En Büyük<br>
-                <span class="text-yellow-300">PUBG Mobile</span> Topluluğu
-            </h1>
+    <div class="relative bg-gradient-to-br from-game-primary via-game-secondary to-game-primary rounded-3xl shadow-2xl overflow-hidden mb-12">
+        <!-- Animated Background Pattern -->
+        <div class="absolute inset-0 opacity-10">
+            <div class="absolute inset-0" style="background-image: repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255,255,255,.1) 35px, rgba(255,255,255,.1) 70px);"></div>
+        </div>
+        
+        <div class="relative px-8 py-16 md:px-16 md:py-24 text-white">
+            <div class="flex items-center gap-4 mb-6">
+                <div class="w-16 h-16 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center text-4xl">
+                    {{ $currentGame->icon ?? '🎮' }}
+                </div>
+                <div>
+                    <div class="text-sm font-bold text-white/80 uppercase tracking-wider">Türkiye'nin En Büyük</div>
+                    <h1 class="text-4xl md:text-6xl font-black animate-fade-in">
+                        <span class="text-yellow-300">{{ $currentGame->name ?? 'Oyun' }}</span> Topluluğu
+                    </h1>
+                </div>
+            </div>
             <p class="text-xl md:text-2xl mb-8 text-white/90 max-w-2xl">
-                Binlerce oyuncu ile takım kur, klan oluştur, turnuvalara katıl ve topluluğun bir parçası ol!
+                {{ $currentGame->description ?? 'Binlerce oyuncu ile takım kur, klan oluştur, turnuvalara katıl ve topluluğun bir parçası ol!' }}
             </p>
             <div class="flex flex-wrap gap-4">
                 @auth
