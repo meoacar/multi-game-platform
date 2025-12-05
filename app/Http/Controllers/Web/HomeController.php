@@ -20,6 +20,15 @@ class HomeController extends Controller
         try {
             // Mevcut oyunu al
             $currentGame = $request->attributes->get('current_game');
+            
+            // Debug: Eğer null ise session'dan al
+            if (!$currentGame) {
+                $gameId = session('game_id');
+                if ($gameId) {
+                    $currentGame = \App\Models\Game::find($gameId);
+                }
+            }
+            
             $gameSlug = $currentGame ? $currentGame->slug : 'pubg';
             
             // Cache ile istatistikleri 5 dakika boyunca sakla
