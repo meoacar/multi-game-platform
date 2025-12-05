@@ -67,7 +67,7 @@ class HomeController extends Controller
                 $viewPath = 'home';
             }
 
-            return view($viewPath, compact('stats', 'recentLfg', 'popularClans'));
+            return view($viewPath, compact('stats', 'recentLfg', 'popularClans', 'currentGame'));
         } catch (\Exception $e) {
             \Log::error('HomeController error: ' . $e->getMessage(), [
                 'file' => $e->getFile(),
